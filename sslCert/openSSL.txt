@@ -1,0 +1,35 @@
+How to create HTTPS local server.
+____________________________________
+-----------------------------------------------------------------------------------start----------------------------------------------------------------------------- 
+1: download (win64 Opnssl v**) cli from (https://slproweb.com/products/Win32OpenSSL.html).
+2: install openssl software.
+3: open program_file/openssl/bin full path and copy the full path.
+4: open system propoties and then advanced system settings.
+5: click on enviroment veriables edit the path variable then add the full path of the above and press ok.
+6: open / restart command prompt / power sheel and run command openssl version to check installed or not.
+7: run command 
+[
+ openssl req -x509 -newkey rsa:4096 -sha256 -days 365 -nodes -out localhost.crt -keyout localhost.key -subj "/CN=localhost" -addext "subjectAltName=DNS:localhost"
+]
+ and replace values as required to generate ssl certificate (localhost.crt) and key (localhost.key) on the spesific folder.
+8: to avoid browser warnings about the certificate being untrusted, Open "Manage computer certificates" through the Control Panel or Start Menu ,click on trusted root certification authorities / certificates then right click to import the .crt file into "Trusted Root Certification Authorities."
+9: configure the node.js file as
+[
+
+const fs = require('fs');
+const https = require('https');
+const path = require('path');
+
+const options = {
+  key: fs.readFileSync(path.join(__dirname, 'sslCert/localhost.key')),
+  cert: fs.readFileSync(path.join(__dirname, 'sslCert/localhost.crt')),
+};
+
+https.createServer(options, app).listen(3000, () => {
+  console.log('Server listening on https://localhost:3000');
+});
+
+]
+
+10: run ths url with https protocol (https://localhost:3000).
+------------------------------------------------------------------------------------END------------------------------------------------------------------------------
