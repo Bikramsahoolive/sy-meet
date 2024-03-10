@@ -15,7 +15,7 @@ let screenBtn = document.getElementById('screen-btn');
 
 async function videoShare() {
     let isClass = cameraBtn.classList.contains('fa-video-slash');
-    cameraBtn.classList = isClass ? 'fa-solid fa-video' : 'fa-solid fa-video-slash'
+    cameraBtn.classList = isClass ? 'fa-solid fa-video red' : 'fa-solid fa-video-slash red'
     isVideoShared = !isVideoShared;
     let clientVideo = document.getElementById('client-video');
     if (isVideoShared) {
@@ -53,7 +53,7 @@ async function videoShare() {
 
 function audioShare() {
     let isClass = audioBtn.classList.contains('fa-microphone-slash');
-    audioBtn.classList = isClass ? 'fa-solid fa-microphone' : 'fa-solid fa-microphone-slash'
+    audioBtn.classList = isClass ? 'fa-solid fa-microphone red' : 'fa-solid fa-microphone-slash red'
     isAudioShared = !isAudioShared;
     // let clientAudio = document.getElementById('client-audio');
     if (isAudioShared) {
@@ -141,19 +141,34 @@ const socket = io();
 
 
 socket.on('text',({from,message})=>{
-  let p = document.createElement('p');
-  p.innerHTML=`${from} : ${message}`;
-  document.getElementById('text').appendChild(p);
-
+  let pre = document.createElement('pre');
+  pre.innerHTML=`${from} : ${message}`;
+  document.getElementById('text').appendChild(pre);
+  scrollDown();
 })
 
+function scrollDown(){
+  let messageArea = document.getElementById('text');
+  messageArea.scrollTop = messageArea.scrollHeight;
+}
+
+function chatToggle(){
+  let chatbox = document.getElementById('chat-box');
+  chatbox.classList.toggle('textdoc-open');
+  let chatInput = document.getElementById('msgInput');
+  chatInput.classList.toggle('msg-input-open');
+}
+
 function sendMsg(){
-  let msgVal = document.getElementById('text-msg').value;
-  let paramid = window.location.search;
-  let urlparams =new URLSearchParams(paramid);
-  let id =urlparams.get('id');
-  let name =urlparams.get('name');
-  socket.emit('text',{from:name ,to:id, message:msgVal});
+  let msgVal = document.getElementById('text-msg');
+  if(msgVal.value!==""){
+    let paramid = window.location.search;
+    let urlparams =new URLSearchParams(paramid);
+    let id =urlparams.get('id');
+    let name =urlparams.get('name');
+    socket.emit('text',{from:name ,to:id, message:msgVal.value});
+    msgVal.value=""
+  }
 }
 
 function videoPaused(){
@@ -273,8 +288,8 @@ function displayUsers(users) {
     if (user.id === socket.id) return;
     sessionStorage.setItem('uid',user.id);
     const userElement = document.createElement('li');
-    userElement.value = user.id;
-    userElement.textContent = `${user.name} joined...`;
+    let contentDiv = `<div></div><strong>${user.name}</strong>`;
+    userElement.innerHTML = contentDiv;
     userElement.addEventListener('click', () =>{
     // console.log("clicked");
      initiateCall(socket.id,user.id);
