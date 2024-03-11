@@ -39,8 +39,24 @@ color: white;
  .red:hover{
     background-color: rgb(124, 124, 124);
 }
+#switch-cam{
+    display: none;
+    width: 60px;
+    height: 60px;
+    padding: 22px 20px 20px 22px;
+    border-radius: 50%;
+    border: none;
+    outline: none;
+    background-color: rgb(219, 219, 219);
+    color: black;
+    cursor: pointer;
+}
 #chat-btn{
     display: none;
+}
+.new-msg{
+   display: none;
+
 }
 .content{
     display: flex;
@@ -197,26 +213,27 @@ li div{
 }
 .container{
 background-color: white;
-height: 350px;
-width: 400px;
+height: 480px;
+width: 500px;
 box-shadow: 0 0 5px 2px gray;
 text-align: center;
 display: flex;
 flex-direction: column;
-gap: 20px;
+/* gap: 20px; */
 padding: 30px 80px;
 }
 .container input{
+    width: 100%;
     border: none;
     border-bottom: 2px solid rgb(82, 82, 82);
     outline: none;
     height: 30px;
     text-align: center;
     font-size: 18px;
-    margin-top: 25px;
+    margin-top: 15px;
 }
 .container input[type=submit]{
-    margin: 30px 0;
+    margin:0;
     height: 30px;
     width: 100%;
     outline: none;
@@ -231,8 +248,8 @@ padding: 30px 80px;
 .container h2{
     font-family: "Madimi One", sans-serif;
     border-bottom: 3px double gray;
-    padding: 15px;
-    margin-bottom: 10px;
+    padding: 10px;
+    margin-top: 10px;
 }
 .container h5{
     color: white;
@@ -258,6 +275,7 @@ padding: 30px 80px;
         right: 0;
         min-width: 0;
         width: 0;
+        transition: all ease-in-out 0.2s;
         
     }
     .textdoc-open{
@@ -271,7 +289,32 @@ padding: 30px 80px;
     .screen{
         width: 85%;
     }
+    #screen-btn{
+        display: none;
+    }
+    .msg-notification{
+        width: 10px;
+        height: 10px;
+        background-color: red;
+        border-radius: 50%;
+        position: absolute;
+        right: 10px;
+        top:10px;
+        /* display: none; */
+        visibility: hidden;
+    }
+    #switch-cam{
+        display: block;
+    }
+    .new-msg{
+        display: block;
+        text-align: center;
+        background-color: #424040;
+        color: wheat;
+        padding: 5px 15px;
+        border-radius: 20px;
     
+    }
 }
 
 @media screen and (max-width:425px){

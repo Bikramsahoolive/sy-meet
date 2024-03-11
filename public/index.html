@@ -29,6 +29,7 @@
             <span>MeeT ID : <strong id="room-id"></strong> </span>
         </div>
         <i class="fa-solid fa-message" id="chat-btn" onclick="chatToggle()"></i>
+        <div class="msg-notification"></div>
     </div>
 
     <section class="join">
@@ -39,8 +40,12 @@
                 <input type="text" name="name" placeholder="Enter Name" autofocus required>
                 <input type="text" name="id" placeholder="Enter MeeT ID" required>
                 <input type="submit" value="Join">
-                <a href="http://localhost:3000" style="text-decoration: none;">Back To Home.</a>
             </form>
+            <h2>Create MeeTing</h2>
+            <h5 id="err2"></h5>
+            <input type="text" id="client-name" placeholder="Enter Name" autofocus required style="margin-top: 15px;">
+            <input type="submit" value="Create" onclick="createMeet()">
+            <!-- <a href="http://localhost:3000" style="text-decoration: none;">Back To Home.</a> -->
         </div>
     </section>
 
@@ -62,6 +67,9 @@
             </div>
             <div class="textdoc" id="chat-box">
                 <div class="text" id="text">
+                    
+                    <!-- <p class="new-msg">Unread Messages</p> -->
+                    
                 </div>
                 <div class="msg-input" id="msgInput">
                     <textarea id="text-msg" placeholder="Type a mssage..."></textarea>
@@ -75,6 +83,7 @@
         <div class="button">
             <i class="fa-solid fa-video-slash red" id="camera-btn"></i>
             <i class="fa-solid fa-microphone-slash red" id="audio-btn"></i>
+            <i class="fa-solid fa-arrows-rotate" id="switch-cam"></i>
             <i class="fa-solid fa-desktop red" id="screen-btn"></i>
             <i class="fa-solid fa-phone-flip red" id="hang-up"></i>
 
@@ -85,7 +94,6 @@
     <script src="/socket.io/socket.io.js"></script>
     <!-- <script src="socket.js"></script> -->
     <script src="index.js"></script>
-    <script src="./script.js"></script>
 </body>
 
 </html>
