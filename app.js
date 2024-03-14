@@ -1,7 +1,7 @@
 const express =require('express');
-const https = require('https');
-// const http = require('http');
-const fs = require('fs');
+// const https = require('https');
+const http = require('http');
+// const fs = require('fs');
 const socketIo= require('socket.io');
 const path = require('path');
 const app = express();
@@ -13,21 +13,35 @@ app.use(express.static(path.join(__dirname,'public')));
 
 
 
-const options = {
-  key:fs.readFileSync(path.join(__dirname,'sslCert/localhost.key')),
-  cert:fs.readFileSync(path.join(__dirname,'sslCert/localhost.crt'))
-}
+// const options = {
+//   key:fs.readFileSync(path.join(__dirname,'sslCert/localhost.key')),
+//   cert:fs.readFileSync(path.join(__dirname,'sslCert/localhost.crt'))
+// }
 
 
 
 
 
-const server = https.createServer(options,app);
-// const server =http.createServer(app);
-const io = socketIo(server);
+// const server = https.createServer(options,app);
+const server =http.createServer(app);
+
 
 let roomUsers = {};
+let roomIds=[];
+let defultRoomIds= ['9776999202'];
+
+
+
+
+const io = socketIo(server);
+
 io.on('connection', (socket) => {
+
+    socket.on('create-meet',({name})=>{
+      let id = Math.floor(Math.random()*1000000+100000);
+      roomIds.push(id);
+      socket.emit('create-meet',{status:true,rid:id,name:name});
+    });
 
     socket.on('room', ({roomId,userName}) => {
 
@@ -36,14 +50,31 @@ io.on('connection', (socket) => {
         return;
         }
 
+        defultRoomIds.forEach((id)=>{
+          if(roomId==id){
+            roomIds.push(roomId);
+          }
+        });
+        
+
+        let roomAvail = roomIds.filter((id)=>{
+              if(id==roomId){
+                return id;
+              }
+        });
+
+        if(roomAvail.length==0){
+          socket.emit('room', {message:'Meet ID was closed or invalid',status:false});
+          return;
+        }
+        
 
       if (!roomUsers[roomId]) {
         roomUsers[roomId] = { users: {}, userCount: 0, maxUsers: 2 };
         }
 
-    // Check if the room is full
     if (roomUsers[roomId].userCount >= roomUsers[roomId].maxUsers) {
-        socket.emit('room', {message:'Sorry, this room is full.',status:false});
+        socket.emit('room', {message:'sorry! this room is full.',status:false});
         return;
     }
 
@@ -70,6 +101,16 @@ io.on('connection', (socket) => {
             socket.on('disconnect', () => {
               Object.keys(roomUsers).forEach((roomId) => {
                 if (roomUsers[roomId].users[socket.id]) {
+                  
+                  Object.keys(roomUsers).forEach((roomId) => {
+                    if (roomUsers[roomId].users[socket.id]) {
+                        roomIds.pop(roomId);
+                        
+                    }
+
+
+                    });
+
                     delete roomUsers[roomId].users[socket.id];
                     roomUsers[roomId].userCount--;
                     io.to(roomId).emit('update-user-list', { users: Object.values(roomUsers[roomId].users) });
@@ -79,10 +120,28 @@ io.on('connection', (socket) => {
     });
 
 //////////////////////////////////////
+//////////  SIGNALING  ///////////////
+//////////////////////////////////////
+              //////
+              //////
+              //////
+              //////
+        /////////////////
+         ///////////////
+          ////////////
+           /////////
+            ///////
+             ////
+              //
+              
 
-socket.on('paused',(data)=>{
-  socket.to(data.to).emit('paused',{paused:true});
-})
+socket.on('video-paused',(data)=>{
+  socket.to(data.to).emit('video-paused',{paused:true});
+});
+
+socket.on('audio-paused',(data)=>{
+  socket.to(data.to).emit('audio-paused',{paused:true});
+});
         
     socket.on('ice-candidate', (data) => {
       // console.log(data);
@@ -99,8 +158,30 @@ socket.on('paused',(data)=>{
     });
   });
 
+  function deleteMeetId(idb){
+
+    defultRoomIds.forEach((id)=>{
+      if (id==idb){
+        defultRoomIds.pop(id)
+      }
+    })
+  }
+
   app.get('/',(req,res)=>{
     res.send({file:'index.html'});
-})
+  })
+  
+  app.get('/connect/:id',(req,res)=>{
+    let id= req.params.id;
+    defultRoomIds.push(id)
+    res.redirect(`/?name=Admin&id=${id}`);
+     setTimeout(()=>deleteMeetId(id),18000);
+  });
+  
+  app.get('/disconnect/:id',(req,res)=>{
+    let id= req.params.id;
+    deleteMeetId(id);
+    res.redirect('http://localhost:3000/');
+  })
 
 server.listen(PORT,()=>console.log(`https://localhost:${PORT}`))

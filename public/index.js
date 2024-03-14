@@ -3,8 +3,10 @@ let isScreenShared = false;
 let isVideoShared = false;
 let isAudioShared = false;
 
-let videoActive = false;
+// let videoActive = false;
 let camSwithc = true;
+
+let isMuted=true;
 
 let videoStream = null;
 let audioStream = null;
@@ -14,23 +16,28 @@ let cameraBtn = document.getElementById('camera-btn');
 let audioBtn = document.getElementById('audio-btn');
 let switchCam = document.getElementById('switch-cam');
 let screenBtn = document.getElementById('screen-btn');
+let speakerBtn = document.getElementById('speaker');
 
 
 
-async function videoShare(){
-    isVideoShared = !isVideoShared;
-    videoActive = !videoActive;
+ function videoShare(){
+  isVideoShared = !isVideoShared;
+    // videoActive = !videoActive;
     let clientVideo = document.getElementById('client-video');
     
     if (isVideoShared) {
-    cameraBtn.classList = 'fa-solid fa-video red'
-        cameraBtn.style.backgroundColor = 'rgb(69, 96, 214)';
-        navigator.mediaDevices.getUserMedia({ video:{facingMode:"user"} })
+      
+        navigator.mediaDevices.getUserMedia({ video:true })
             .then((stream) => {
               videoStream=stream;
                 stream.getTracks().forEach(track => {
                   peerConnection.addTrack(track, videoStream);
               });
+              
+              switchCam.style.display='block';
+              cameraBtn.classList = 'fa-solid fa-video red';
+              cameraBtn.style.backgroundColor = 'rgb(69, 96, 214)';
+              
               clientVideo.style.display='block'
               clientVideo.srcObject = stream;
               let uid =  sessionStorage.getItem('uid');
@@ -40,26 +47,26 @@ async function videoShare(){
             .catch(err => console.log(err));
 
     } else {
-        cameraBtn.classList ='fa-solid fa-video-slash red'
-        cameraBtn.style.backgroundColor = 'rgb(211, 7, 7)';
         let tracks = videoStream.getTracks();
         tracks.forEach(track => {
-            track.stop();         //bug
+            track.stop();        
         });
+        isVideoShared=false;
+        switchCam.style.display='none';
         videoStream = null;
         clientVideo.style.display='none';
+
+        cameraBtn.classList ='fa-solid fa-video-slash red';
+        cameraBtn.style.backgroundColor = 'rgb(211, 7, 7)';
+        
         videoPaused();
 
        if (isScreenShared){
-        console.log("screen available");
         isScreenShared= false;
         screenShare();
        }
 
-        
-
     }
-
 
 }
 
@@ -108,11 +115,10 @@ async function videoShare(){
 }
 
 function audioShare() {
-    let isClass = audioBtn.classList.contains('fa-microphone-slash');
-    audioBtn.classList = isClass ? 'fa-solid fa-microphone red' : 'fa-solid fa-microphone-slash red'
+    
     isAudioShared = !isAudioShared;
     if (isAudioShared) {
-        audioBtn.style.backgroundColor = 'rgb(69, 96, 214)';
+        
         navigator.mediaDevices.getUserMedia({ audio: true })
             .then((stream) => {
                 audioStream = stream
@@ -120,6 +126,8 @@ function audioShare() {
                 stream.getTracks().forEach(track => {
                   peerConnection.addTrack(track, audioStream);
               });
+              audioBtn.style.backgroundColor = 'rgb(69, 96, 214)';
+              audioBtn.classList = 'fa-solid fa-microphone red';
 
               let uid = sessionStorage.getItem('uid');
               let sid = sessionStorage.getItem('sid');
@@ -128,37 +136,46 @@ function audioShare() {
             })
             .catch(err => console.log(err))
     } else {
-        audioBtn.style.backgroundColor = 'rgb(211, 7, 7)';
+        
         let tracks = audioStream.getTracks();
         tracks.forEach(track => {
             track.stop();
         });
+        audioBtn.style.backgroundColor = 'rgb(211, 7, 7)';
+        audioBtn.classList = isClass= 'fa-solid fa-microphone-slash red';
         audioStream = null;
+        audioPaused();
+
     }
-
-
 
 }
 
 function screenShare() {
-    isScreenShared = !isScreenShared;
+  isScreenShared = !isScreenShared;
     let clientScreen = document.getElementById('client-screen')
     if (isScreenShared) {
-        screenBtn.style.backgroundColor = 'rgb(69, 96, 214)';
-        navigator.mediaDevices.getDisplayMedia({ video: true })
+        try {
+          navigator.mediaDevices.getDisplayMedia({ video: true })
             .then((stream) => {
               screenStream = stream
                 stream.getTracks().forEach(track => {
                   peerConnection.addTrack(track, screenStream);
               });
+              
+              screenBtn.style.backgroundColor = 'rgb(69, 96, 214)';
               clientScreen.style.display='block';
               clientScreen.srcObject = stream;
               let uid = sessionStorage.getItem('uid');
               let sid = sessionStorage.getItem('sid');
               initiateCall(sid,uid);
-
             })
-            .catch(err => console.log(err))
+            .catch(err =>console.log(err));
+          
+        } catch (error) {
+          console.log(error);
+          alert('Sorry! Your Browser not support screen sharing.');
+        }
+        
 
     } else {
         screenBtn.style.backgroundColor = 'rgb(211, 7, 7)';
@@ -166,14 +183,17 @@ function screenShare() {
         tracks.forEach(track => {
             track.stop();
         });
+        isScreenShared = false;
         screenStream = null;
         clientScreen.style.display='none';
         videoPaused();
 
         if(isVideoShared){
-          console.log("video available");
           isVideoShared=false;
-          videoActive=false;
+          // videoActive=false;
+          tracks.forEach(track => {
+            track.stop();         
+        });
           videoShare();
         }
 
@@ -193,57 +213,143 @@ function switchCamera(){
     }
   }
 }
+
+
+
+const textarea = document.querySelector('#text-msg');
+const parentMaxHeight = parseInt(window.getComputedStyle(textarea.parentElement).maxHeight);
+
+function adjustHeight() {
+    textarea.style.height = 'auto';
+    let newHeight = textarea.scrollHeight;
+    if (newHeight > parentMaxHeight) {
+        textarea.style.overflowY = 'scroll';
+        newHeight = parentMaxHeight;
+    } else {
+        textarea.style.overflowY = 'hidden';
+    }
+    textarea.style.height = `${newHeight}px`;
+}
+
+
+
+
+
+
 cameraBtn.addEventListener('click', videoShare);
 audioBtn.addEventListener('click', audioShare);
 screenBtn.addEventListener('click', screenShare);
 switchCam.addEventListener('click',switchCamera);
+speakerBtn.addEventListener('click',muteAudio);
+textarea.addEventListener('input', adjustHeight);
 
 
 
-function createMeet(){
-  let name =document.getElementById('client-name').value;
-  console.log(name);
-  if(name==""){
-    let err=document.getElementById('err2');
-    err.style.visibility='visible';
-    err.innerText="Please enter your name.";
-    setTimeout(()=>err.style.visibility='hidden',5000);
-  }else{
-    let id = Math.floor(Math.random()*1000000+100000);
-    location.href=`/?name=${name}&id=${id}`;
-  }
 
+
+
+
+
+ 
+function redirectToSYI(){
+  let rid = sessionStorage.getItem('rid');
+  window.location.href=`/disconnect/${rid}`;
+  sessionStorage.clear();
 }
+
+
+
+
+ //  MODEL VIEW.
+  
+  document.querySelector('.close').addEventListener('click', function() {
+    document.querySelector('.modal-content').classList.remove('popup');
+    setTimeout(()=>{
+      document.getElementById('myModal').style.display = 'none';
+    },500)
+    
+  });
+  
+  window.addEventListener('click', function(event) {
+    if (event.target == document.getElementById('myModal')) {
+      document.querySelector('.modal-content').classList.remove('popup');
+      setTimeout(()=>{
+        document.getElementById('myModal').style.display = 'none';
+      },500)
+    }
+  });
+  
 
 
 /////////////////////////////////////////////////////////////////////////////
 
 
-// const remoteScreen = document.getElementById('remote-screen');
 const remoteVideo = document.getElementById('remote-video');
-const remoteAudio =document.getElementById('remote-audio');
-
+const remoteAudio =document.getElementById('remoteAudio');
 const hangupButton = document.getElementById('hang-up');
+
+
+
+
+
+
+
+
+function muteAudio(){
+  isMuted= !isMuted;
+  if(isMuted){
+    remoteAudio.muted=true;
+    document.getElementById('speaker').classList='fa-solid fa-volume-high';
+  }else{
+    remoteAudio.muted=false;
+    document.getElementById('speaker').classList='fa-solid fa-volume-xmark';
+  }
+
+
+}
 
 
 
 const socket = io();
 
 let chatArea = document.getElementById('text');
+let msgCount = 0;
+
+function createMeet(){
+  let name;
+  do{
+    name = prompt('Enter Your Name.');
+  }while(name=="")
+  
+  if( name!==null){
+    socket.emit('create-meet',{name:name});
+  }
+}
+
+socket.on('create-meet',({status,rid,name})=>{
+    if(status){
+      location.href=`/?name=${name}&id=${rid}`;
+    }
+    
+
+})
 
 socket.on('text',({from,message})=>{
   let chatBox = document.getElementById('chat-box');
   let isOpened = chatBox.classList.contains('textdoc-open');
+  let hasPTag = chatArea.querySelector('p') !== null;
+    
   if(!isOpened){
-    let hasPTag = chatArea.querySelector('p') !== null;
     if(!hasPTag){
       let unReadTag = document.createElement('p');
       unReadTag.classList.add('new-msg');
       unReadTag.innerHTML="Unread Messages";
       chatArea.appendChild(unReadTag);
     }
-    document.querySelector('.msg-notification').style.visibility='visible';
-  
+    msgCount++;
+    let notifyBadge = document.querySelector('.msg-notification');
+    notifyBadge.innerHTML = msgCount;
+    notifyBadge.style.visibility='visible';
   }
   let pre = document.createElement('pre');
   pre.innerHTML=`${from} : ${message}`;
@@ -257,6 +363,7 @@ function scrollDown(){
 }
 
 function chatToggle(){
+  msgCount=0;
   document.querySelector('.msg-notification').style.visibility='hidden';
   let chatbox = document.getElementById('chat-box');
   chatbox.classList.toggle('textdoc-open');
@@ -265,51 +372,63 @@ function chatToggle(){
 }
 
 function sendMsg(){
-  let msgVal = document.getElementById('text-msg');
-  if(msgVal.value!==""){
+  if(textarea.value!==""){
     let paramid = window.location.search;
     let urlparams =new URLSearchParams(paramid);
     let id =urlparams.get('id');
     let name =urlparams.get('name');
-    socket.emit('text',{from:name ,to:id, message:msgVal.value});
-    msgVal.value=""
+    socket.emit('text',{from:name ,to:id, message:textarea.value});
+    textarea.value="";
+    textarea.style.height='50px';
     let hasPTag = chatArea.querySelector('p');
     if(hasPTag !== null){
       hasPTag.remove();
     }
-   
   }
 }
 
 function videoPaused(){
   let uid = sessionStorage.getItem('uid');
-  socket.emit('paused',{to:uid});
+  socket.emit('video-paused',{to:uid});
 }
 
-socket.on('paused',(data)=>{
-  // console.log('video paused');
+socket.on('video-paused',(data)=>{
   if(data.paused){
     remoteVideo.style.display='none';
   }
-})
+});
 
-function joinroom(){
+function audioPaused(){
+  let uid = sessionStorage.getItem('uid');
+  socket.emit('audio-paused',{to:uid});
+}
+
+socket.on('audio-paused',(data)=>{
+  if(data.paused){
+    document.querySelector('.mic').style.display='none';
+    speakerBtn.style.display='none';
+  }
+});
+
+
+function joinMeeT(){
   let paramid = window.location.search;
   let urlparams =new URLSearchParams(paramid);
   let id =urlparams.get('id');
   let name =urlparams.get('name');
   if(id!==null && name!==null && id!=='' && name !==''){
     socket.emit('room',{roomId:id,userName:name});
+
   }
 }
 
 socket.on('room',(data)=>{
-  // console.log(data);
     if (data.status){
       let paramid = window.location.search;
       let urlparams =new URLSearchParams(paramid);
       let id =urlparams.get('id');
       let name =urlparams.get('name');
+      sessionStorage.setItem('rid',id);
 
       document.getElementById('name').innerHTML=name;
       document.getElementById('room-id').innerHTML=id;
@@ -317,6 +436,11 @@ socket.on('room',(data)=>{
       document.querySelector('.user-details').style.display='flex';
       document.querySelector('.join').style.display='none';
       document.querySelector('.main').style.display='block';
+      document.getElementById('myModal').style.display = 'block';
+      setTimeout(()=>{
+        document.querySelector('.modal-content').classList.add('popup');
+      },500);
+      
     }else{
       let err = document.querySelector('.container h5');
       err.style.visibility = 'visible';
@@ -341,11 +465,13 @@ peerConnection.ontrack = (event) => {
         remoteVideo.srcObject = event.streams[0];
     
 } else if (event.track.kind === 'audio') {
-  
-    // if (!remoteVideoElement.srcObject.getAudioTracks().length) {
-    //     remoteVideoElement.srcObject.addTrack(event.track);
+    document.querySelector('.mic').style.display='inline-block';
+    speakerBtn.style.display='block';
     remoteAudio.srcObject = event.streams[0];
-    remoteAudio.play();
+    remoteAudio.play()
+    .catch((err)=>{
+      console.log(err);
+    });
     }
 }          
 peerConnection.onicecandidate = (event) => {
@@ -359,7 +485,6 @@ let otherUserId;
 
 
 socket.on('update-user-list', ( users ) => {
-  // console.log(users.users[0]);
   displayUsers(users.users);
 });
 
@@ -375,7 +500,6 @@ socket.on('offer', (data) => {
 });
 
 socket.on('answer', (data) => {
-  // console.log(data);
   const remoteAnswer = data.sdp;
   peerConnection.setRemoteDescription(new RTCSessionDescription(remoteAnswer))
   .then(()=>{
@@ -397,10 +521,9 @@ function displayUsers(users) {
     if (user.id === socket.id) return;
     sessionStorage.setItem('uid',user.id);
     const userElement = document.createElement('li');
-    let contentDiv = `<div></div><strong>${user.name}</strong>`;
+    let contentDiv = `<div></div><strong>${user.name}</strong><i class="fa-solid fa-microphone mic"></i>`;
     userElement.innerHTML = contentDiv;
     userElement.addEventListener('click', () =>{
-    // console.log("clicked");
      initiateCall(socket.id,user.id);
     });
     userList.appendChild(userElement);
@@ -408,7 +531,6 @@ function displayUsers(users) {
 }
 
 function initiateCall(fromId,toId) {
-  // console.log(fromId,toId);
   peerConnection.createOffer()
     .then((offer) => peerConnection.setLocalDescription(offer))
     .then(() => socket.emit('offer', { from:fromId,to: toId, sdp: peerConnection.localDescription }))
@@ -422,7 +544,7 @@ hangupButton.addEventListener('click', () => {
         peerConnection.close();
     }
 
-    // socket.emit('hangup', { /* details if needed */ });
+    // socket.emit('hangup', { });
 
     window.location.href='/';
 });
@@ -430,4 +552,4 @@ hangupButton.addEventListener('click', () => {
 
 
 
-window.onload=joinroom;
+window.onload=joinMeeT;

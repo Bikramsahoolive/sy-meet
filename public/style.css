@@ -28,28 +28,20 @@ color: white;
 .red{
     width: 60px;
     height: 60px;
-    padding: 22px 20px 20px 22px;
+    padding: 22px 20px;
     border-radius: 50%;
     border: none;
     outline: none;
     background-color: rgb(211, 7, 7);
     color: white;
     cursor: pointer;
+    text-align: center;
 }
  .red:hover{
     background-color: rgb(124, 124, 124);
 }
-#switch-cam{
+.control #switch-cam{
     display: none;
-    width: 60px;
-    height: 60px;
-    padding: 22px 20px 20px 22px;
-    border-radius: 50%;
-    border: none;
-    outline: none;
-    background-color: rgb(219, 219, 219);
-    color: black;
-    cursor: pointer;
 }
 #chat-btn{
     display: none;
@@ -60,6 +52,13 @@ color: white;
 }
 .content{
     display: flex;
+}
+.control{
+    display: flex;
+    gap: 20px;
+}
+.control #speaker{
+    display:none;
 }
 .video{
     box-shadow: 0 0 5px 2px wheat;
@@ -74,7 +73,7 @@ color: white;
 
 }
 .screen{
-    box-shadow: 5px 35px 0 -33px wheat;
+    box-shadow: 0px 35px 0 -33px wheat;
     width: 60%;
     height: 70vh;
 }
@@ -119,6 +118,7 @@ ul li{
     padding: 8px 15px;
     border-radius: 20px;
     margin-right:10px;
+    cursor: pointer;
 }
 li div{
     display: inline-block;
@@ -127,7 +127,11 @@ li div{
     background-color: rgb(17, 243, 17);
     border-radius: 50%;
     margin-right: 10px;
-    
+}
+li .mic{
+    margin-left: 5px;
+    color: orange;
+    display: none;
 }
 #client-screen{
     width: 100%;
@@ -150,6 +154,9 @@ li div{
     transform: rotate(-135deg);
 }
 .msg-input{
+    width: 100%;
+    height:auto;
+    max-height:400px;
     position: absolute;
     right: 5px;
     bottom: 0;
@@ -158,13 +165,15 @@ li div{
 
 }
 .msg-input textarea{
-    height: 50px;
-    width: 250px;
+    height: 100%;
+    min-height: 50px;
+    width: 100%;
     margin-top: 10px;
     outline: none;
     border: 2px solid #e4e1dc;
     padding: 10px 16px;
-    resize:vertical;
+    resize:none;
+    overflow:auto;
 }
 .msg-input .msg-btn{
     background-color: #2e4db6;
@@ -187,7 +196,7 @@ li div{
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #383838;
+    background-color: whitesmoke;
 }
 .user-details{
     background-color: rgb(11, 83, 192);
@@ -213,13 +222,12 @@ li div{
 }
 .container{
 background-color: white;
-height: 480px;
+height: 460px;
 width: 500px;
 box-shadow: 0 0 5px 2px gray;
 text-align: center;
 display: flex;
 flex-direction: column;
-/* gap: 20px; */
 padding: 30px 80px;
 }
 .container input{
@@ -232,9 +240,11 @@ padding: 30px 80px;
     font-size: 18px;
     margin-top: 15px;
 }
-.container input[type=submit]{
-    margin:0;
-    height: 30px;
+.container button{
+    margin-bottom:15px;
+    padding: 10px 0;
+    font-size: 18px;
+    height: 40px;
     width: 100%;
     outline: none;
     border: none;
@@ -242,14 +252,13 @@ padding: 30px 80px;
     color: white;
     cursor: pointer;
 }
-.container input[type=submit]:hover{
+.container button:hover{
     background-color: rgb(10, 60, 155);
 }
 .container h2{
     font-family: "Madimi One", sans-serif;
     border-bottom: 3px double gray;
     padding: 10px;
-    margin-top: 10px;
 }
 .container h5{
     color: white;
@@ -258,8 +267,78 @@ padding: 30px 80px;
     height: 20px;
     font-size: 15px;
     visibility: hidden;
+    margin-bottom: 15px;
+}
+.msg-notification{
+    display: none;
+}
+.dev{
+    margin-top: 100px;
 }
 
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.644);
+  }
+  
+  .modal-content {
+    background-color: #1047ad;
+    padding: 10px;
+    border: none;
+    width: 30%;
+    height: 35%;
+    min-width: 305px;
+    position: absolute;
+    top:-30%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    transition: top 0.5s;
+  }
+  .popup{
+    transition: top 0.5s;
+    top: 30%;
+  }
+  .modal-content .data{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 50px;
+  }
+  .data h3{
+    font-family: "Anton", sans-serif;
+    font-size: 30px;
+    color: white;
+
+  }
+  .data h6{
+    font-family:"Madimi One", sans-serif;
+    font-size: 18px;
+    color: rgb(241, 136, 136);
+  }
+  
+  .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  
+  .close:hover,
+  .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }
 @media screen and (max-width:1320px){
     #chat-btn{
         display: block;
@@ -289,18 +368,20 @@ padding: 30px 80px;
     .screen{
         width: 85%;
     }
-    #screen-btn{
-        display: none;
-    }
     .msg-notification{
-        width: 10px;
-        height: 10px;
+        display: block;
+        width: 15px;
+        height: 15px;
+        padding:0 3px;
+        font-size: 12px;
         background-color: red;
+        text-align: center;
+        color: white;
         border-radius: 50%;
         position: absolute;
-        right: 10px;
-        top:10px;
-        /* display: none; */
+        right: 5px;
+        top:5px;
+        cursor: pointer;
         visibility: hidden;
     }
     #switch-cam{
@@ -317,7 +398,7 @@ padding: 30px 80px;
     }
 }
 
-@media screen and (max-width:425px){
+@media screen and (max-width:800px){
     .video{
         display: flex;
         height:fit-content;
@@ -330,10 +411,32 @@ padding: 30px 80px;
     .msg-input textarea{
         height: 100px;
     }
+    #client-video{
+        margin: 0;
+    }
+    #screen-btn{
+        display: none;
+    }
+    .modal-content {
+        margin: 20% auto;
+        top: -50%;
+    }
+    .popup{
+        transition: top 0.5s;
+        top: 15%;
+      }
+}
+@media screen and (max-width:500px) {
     .join{
         align-items: start;
     }
     .join .container{
         height: 90vh;
+    }
+    .dev{
+        margin-top: 200px;
+    }
+    .modal-content {
+        margin: 40% auto;
     }
 }
