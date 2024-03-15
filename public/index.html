@@ -35,12 +35,45 @@
         <div class="control">
             <i class="fa-solid fa-volume-xmark" id="speaker"></i>
             <i class="fa-solid fa-arrows-rotate" id="switch-cam"></i>
+            <i class="fa-solid fa-arrow-up-right-from-square share-id" onclick="shareMeetId()"></i>
             <i class="fa-solid fa-message" id="chat-btn" onclick="chatToggle()"></i>
             <div class="msg-notification"></div>
 
         </div>
 
     </div>
+
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+          <span class="close">&times;</span>
+          <dic class="data">
+              <h4>Welcome to SYI MeeT</h4>
+              <p> * This is the beta version, some interoption may occurred...</p>
+              <p>* If camera or microphone not connecting  please turn off it and on again or click on joiner name. </p>
+              <strong>[ Bikram Sahoo ]</strong>
+              <h6>Do not refresh the browser.</h6>
+          </dic>
+        </div>
+      
+        <div class="modal-content-form">
+          <span class="close up">&times;</span>
+          <dic class="data">
+              <label>Enter joiner name :</label>
+              <input type="text" id="remote-name" maxlength="15">
+              <button id="send-id" onclick="submitNameToShare()">send</button>
+          </dic>
+        </div>
+      
+        <div class="modal-content-new">
+          <span class="close down">&times;</span>
+          <dic class="data">
+              <label>Enter your name :</label>
+              <input type="text" id="client-name" maxlength="15">
+              <button id="" onclick="createMeet()">Create</button>
+          </dic>
+        </div>
+      </div>
+
     
     <section class="join">
         <div class="container">
@@ -52,8 +85,7 @@
                 <button type="submit">Join</button>
             </form>
 
-            <button onclick="createMeet()">Create New MeeT</button>
-            <a onclick="redirectToSYI()" style="text-decoration: none;">Back To SYI.</a>
+            <button onclick="openCreateMeet()">Create Meeting</button>
         <span class="dev">Design & Developed by <strong>Bikram Sahoo</strong></span>
 
         </div>
@@ -65,15 +97,7 @@
 
     <section class="main">
 
-<div id="myModal" class="modal">
-  <div class="modal-content">
-    <span class="close">&times;</span>
-    <dic class="data">
-        <h3>Welcome to SYI MeeT.</h3>
-        <h6>Do not refresh the browser.</h6>
-    </dic>
-  </div>
-</div>
+
 
         <div class="content">
             <ul id="userList">

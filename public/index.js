@@ -251,11 +251,11 @@ textarea.addEventListener('input', adjustHeight);
 
 
  
-function redirectToSYI(){
-  let rid = sessionStorage.getItem('rid');
-  window.location.href=`/disconnect/${rid}`;
-  sessionStorage.clear();
-}
+// function redirectToSYI(){
+//   let rid = sessionStorage.getItem('rid');
+//   window.location.href=`/disconnect/${rid}`;
+//   
+// }
 
 
 
@@ -278,7 +278,40 @@ function redirectToSYI(){
       },500)
     }
   });
-  
+
+
+  document.querySelector('.up').addEventListener('click', function() {
+    document.querySelector('.modal-content-form').classList.remove('popup-form');
+    setTimeout(()=>{
+      document.getElementById('myModal').style.display = 'none';
+    },500)
+    
+  });
+  window.addEventListener('click', function(event) {
+    if (event.target == document.getElementById('myModal')) {
+      document.querySelector('.modal-content-form').classList.remove('popup-form');
+      setTimeout(()=>{
+        document.getElementById('myModal').style.display = 'none';
+      },500)
+    }
+  });
+
+
+  document.querySelector('.down').addEventListener('click', function() {
+    document.querySelector('.modal-content-new').classList.remove('popup-new');
+    setTimeout(()=>{
+      document.getElementById('myModal').style.display = 'none';
+    },500)
+    
+  });
+  window.addEventListener('click', function(event) {
+    if (event.target == document.getElementById('myModal')) {
+      document.querySelector('.modal-content-new').classList.remove('popup-new');
+      setTimeout(()=>{
+        document.getElementById('myModal').style.display = 'none';
+      },500)
+    }
+  });
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -287,7 +320,59 @@ function redirectToSYI(){
 const remoteVideo = document.getElementById('remote-video');
 const remoteAudio =document.getElementById('remoteAudio');
 const hangupButton = document.getElementById('hang-up');
+const sendIdBtn = document.getElementById('send-id');
 
+
+
+async function shareMeetId(){
+  if(navigator.share){
+
+  document.getElementById('myModal').style.display = 'block';
+    setTimeout(()=>{
+      document.querySelector('.modal-content-form').classList.add('popup-form');
+        },500)
+
+
+    
+  }else{
+    alert('your browser does not support shareing.');
+  }
+}
+
+function openCreateMeet(){
+  
+  document.getElementById('myModal').style.display = 'block';
+  setTimeout(()=>{
+    document.querySelector('.modal-content-new').classList.add('popup-new');
+      },500)
+}
+
+
+function submitNameToShare(){
+  document.querySelector('.modal-content-form').classList.remove('popup-form');
+  setTimeout(()=>{
+    document.getElementById('myModal').style.display = 'none';
+  },500);
+
+  let paramid = window.location.search;
+  let urlparams =new URLSearchParams(paramid);
+  let id =urlparams.get('id');
+
+  let clientName = document.getElementById('remote-name');
+   let name = clientName.value;
+   clientName.value="";
+    name = name.split(" ");
+    name = name[0];
+  if (name ==null) return;
+   navigator.share({
+    title:'Join Request on SYI MeeT.',
+    text:'Join me now on SYI MeeT click on the link :',
+    url:`?name=${name}&id=${id}`
+  })
+  .catch((err)=>console.log(err));
+  name.value = "";
+  
+}
 
 
 
@@ -316,14 +401,16 @@ let chatArea = document.getElementById('text');
 let msgCount = 0;
 
 function createMeet(){
-  let name;
-  do{
-    name = prompt('Enter Your Name.');
-  }while(name=="")
-  
-  if( name!==null){
+  let clientName = document.getElementById('client-name');
+  let name = clientName.value;
+   clientName.value="";
+    name = name.split(" ");
+    name = name[0];
+    var regex = /^[a-zA-Z]+$/;
+  if( name=='')return;
+  if (!regex.test(name))return;
     socket.emit('create-meet',{name:name});
-  }
+  
 }
 
 socket.on('create-meet',({status,rid,name})=>{
@@ -519,6 +606,7 @@ function displayUsers(users) {
   sessionStorage.setItem('sid',socket.id);
   users.forEach(user => {
     if (user.id === socket.id) return;
+    document.querySelector('.share-id').style.display='none';
     sessionStorage.setItem('uid',user.id);
     const userElement = document.createElement('li');
     let contentDiv = `<div></div><strong>${user.name}</strong><i class="fa-solid fa-microphone mic"></i>`;
@@ -545,7 +633,7 @@ hangupButton.addEventListener('click', () => {
     }
 
     // socket.emit('hangup', { });
-
+    sessionStorage.clear();
     window.location.href='/';
 });
 

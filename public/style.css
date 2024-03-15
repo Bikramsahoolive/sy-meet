@@ -96,6 +96,7 @@ color: white;
 .text pre{
     background-color: rgb(196, 196, 196);
     width: max-content;
+    min-width: 200px;
     border-radius: 5px;
     margin: 10px 2px;
     padding: 10px 5px;
@@ -174,6 +175,7 @@ li .mic{
     padding: 10px 16px;
     resize:none;
     overflow:auto;
+    margin-left: 5px;
 }
 .msg-input .msg-btn{
     background-color: #2e4db6;
@@ -196,7 +198,7 @@ li .mic{
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: whitesmoke;
+    background-color:#f5f5f591;
 }
 .user-details{
     background-color: rgb(11, 83, 192);
@@ -211,10 +213,14 @@ li .mic{
     position: relative;
     z-index: 1;
 }
+.client-dtls{
+    width: 50%;
+}
 .user-details span{
-    margin-right:20px ;
+    margin:0 10px ;
     font-family: "Roboto", sans-serif;
     font-style: normal;
+    display: inline-block;
 }
 .user-details i{
     margin-right: 10px;
@@ -275,11 +281,13 @@ padding: 30px 80px;
 .dev{
     margin-top: 100px;
 }
-
+.dev strong{
+    display:inline-block;
+}
 .modal {
     display: none;
     position: fixed;
-    z-index: 1;
+    z-index: 6;
     left: 0;
     top: 0;
     width: 100%;
@@ -289,21 +297,25 @@ padding: 30px 80px;
   }
   
   .modal-content {
-    background-color: #1047ad;
+    background-image: linear-gradient( rgb(26, 82, 167),rgb(11, 29, 107));
     padding: 10px;
     border: none;
+    border-radius: 10px;
     width: 30%;
-    height: 35%;
+    height: 70%;
     min-width: 305px;
     position: absolute;
-    top:-30%;
+    top:-100%;
     left: 50%;
     transform: translate(-50%,-50%);
+    opacity: 0.3;
+
     transition: top 0.5s;
   }
   .popup{
     transition: top 0.5s;
-    top: 30%;
+    top: 40%;
+    opacity: 1;
   }
   .modal-content .data{
     height: 100%;
@@ -314,9 +326,9 @@ padding: 30px 80px;
     align-items: center;
     gap: 50px;
   }
-  .data h3{
-    font-family: "Anton", sans-serif;
-    font-size: 30px;
+  .data h4{
+    font-family: "Roboto", sans-serif;
+    font-size: 25px;
     color: white;
 
   }
@@ -324,6 +336,69 @@ padding: 30px 80px;
     font-family:"Madimi One", sans-serif;
     font-size: 18px;
     color: rgb(241, 136, 136);
+  }
+  .data p,.data strong{
+    text-align: center;
+    color: white;
+  }
+  .modal-content-form{
+    background-color: #1047ad;
+    border-radius: 10px;
+    padding: 10px;
+    border: none;
+    width: 30%;
+    height: 20%;
+    min-width: 305px;
+    position: absolute;
+    top:-100%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    transition: top 0.5s;
+  }
+  .popup-form{
+    transition: top 0.5s;
+    top: 40%;
+  }
+  .data input{
+    border:none;
+    outline: none;
+    border-radius: 3px;
+    margin: 40px 10px;
+    height: 28px;
+    width: 65%;
+    padding: 0 8px;
+
+  }
+  .data label{
+    font-family: Arial, Helvetica, sans-serif;
+    color: white;
+  }
+  .data button{
+    border: none;
+    background-color: darkgray;
+    color: black;
+    padding: 6px 8px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .modal-content-new{
+    background-color: #1047ad;
+    border-radius: 10px;
+    padding: 10px;
+    border: none;
+    width: 30%;
+    height: 20%;
+    min-width: 305px;
+    position: absolute;
+    top:-100%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    transition: top 0.5s;
+  }
+  .popup-new{
+    transition: top 0.5s;
+    top: 40%;
   }
   
   .close {
@@ -379,8 +454,8 @@ padding: 30px 80px;
         color: white;
         border-radius: 50%;
         position: absolute;
-        right: 5px;
-        top:5px;
+        right: 7px;
+        top:8px;
         cursor: pointer;
         visibility: hidden;
     }
@@ -437,6 +512,9 @@ padding: 30px 80px;
         margin-top: 200px;
     }
     .modal-content {
-        margin: 40% auto;
+        margin: 45% auto;
+    }
+    ul{
+        top: 85px;
     }
 }
