@@ -1,7 +1,7 @@
 const express =require('express');
-// const https = require('https');
-const http = require('http');
-// const fs = require('fs');
+const https = require('https');
+// const http = require('http');
+const fs = require('fs');
 const socketIo= require('socket.io');
 const path = require('path');
 const app = express();
@@ -13,17 +13,17 @@ app.use(express.static(path.join(__dirname,'public')));
 
 
 
-// const options = {
-//   key:fs.readFileSync(path.join(__dirname,'sslCert/localhost.key')),
-//   cert:fs.readFileSync(path.join(__dirname,'sslCert/localhost.crt'))
-// }
+const options = {
+  key:fs.readFileSync(path.join(__dirname,'sslCert/localhost.key')),
+  cert:fs.readFileSync(path.join(__dirname,'sslCert/localhost.crt'))
+}
 
 
 
 
 
-// const server = https.createServer(options,app);
-const server =http.createServer(app);
+const server = https.createServer(options,app);
+// const server =http.createServer(app);
 
 
 let roomUsers = {};
@@ -38,6 +38,7 @@ const io = socketIo(server);
 io.on('connection', (socket) => {
 
     socket.on('create-meet',({name})=>{
+      if(name=='admin'|| name=='Admin')return;
       let id = Math.floor(Math.random()*1000000+100000);
       roomIds.push(id);
       socket.emit('create-meet',{status:true,rid:id,name:name});
@@ -162,7 +163,7 @@ socket.on('audio-paused',(data)=>{
 
     defultRoomIds.forEach((id)=>{
       if (id==idb){
-        defultRoomIds.pop(id)
+        defultRoomIds.pop(id);
       }
     })
   }
@@ -184,4 +185,4 @@ socket.on('audio-paused',(data)=>{
     res.redirect('http://localhost:3000/');
   })
 
-server.listen(PORT,()=>console.log(`https://localhost:${PORT}`))
+server.listen(PORT,()=>console.log(`https://localhost:${PORT}`));

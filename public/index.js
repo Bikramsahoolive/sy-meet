@@ -219,7 +219,7 @@ function switchCamera(){
 const textarea = document.querySelector('#text-msg');
 const parentMaxHeight = parseInt(window.getComputedStyle(textarea.parentElement).maxHeight);
 
-function adjustHeight() {
+function adjustTextareaHeight() {
     textarea.style.height = 'auto';
     let newHeight = textarea.scrollHeight;
     if (newHeight > parentMaxHeight) {
@@ -241,21 +241,7 @@ audioBtn.addEventListener('click', audioShare);
 screenBtn.addEventListener('click', screenShare);
 switchCam.addEventListener('click',switchCamera);
 speakerBtn.addEventListener('click',muteAudio);
-textarea.addEventListener('input', adjustHeight);
-
-
-
-
-
-
-
-
- 
-// function redirectToSYI(){
-//   let rid = sessionStorage.getItem('rid');
-//   window.location.href=`/disconnect/${rid}`;
-//   
-// }
+textarea.addEventListener('input', adjustTextareaHeight);
 
 
 
@@ -280,6 +266,8 @@ textarea.addEventListener('input', adjustHeight);
   });
 
 
+
+
   document.querySelector('.up').addEventListener('click', function() {
     document.querySelector('.modal-content-form').classList.remove('popup-form');
     setTimeout(()=>{
@@ -295,6 +283,8 @@ textarea.addEventListener('input', adjustHeight);
       },500)
     }
   });
+
+
 
 
   document.querySelector('.down').addEventListener('click', function() {
@@ -400,6 +390,10 @@ const socket = io();
 let chatArea = document.getElementById('text');
 let msgCount = 0;
 
+
+
+
+
 function createMeet(){
   let clientName = document.getElementById('client-name');
   let name = clientName.value;
@@ -409,6 +403,15 @@ function createMeet(){
     var regex = /^[a-zA-Z]+$/;
   if( name=='')return;
   if (!regex.test(name))return;
+  if(name.length<3)return;
+  if (name =='admin'|| name == 'Admin')return;
+
+
+  document.querySelector('.modal-content-new').classList.remove('popup-new');
+  setTimeout(()=>{
+    document.getElementById('myModal').style.display = 'none';
+  },500)
+
     socket.emit('create-meet',{name:name});
   
 }
@@ -416,7 +419,7 @@ function createMeet(){
 socket.on('create-meet',({status,rid,name})=>{
     if(status){
       location.href=`/?name=${name}&id=${rid}`;
-    }
+    }else alert('some error occurred while createing meet.');
     
 
 })
@@ -515,7 +518,6 @@ socket.on('room',(data)=>{
       let urlparams =new URLSearchParams(paramid);
       let id =urlparams.get('id');
       let name =urlparams.get('name');
-      sessionStorage.setItem('rid',id);
 
       document.getElementById('name').innerHTML=name;
       document.getElementById('room-id').innerHTML=id;
@@ -631,10 +633,21 @@ hangupButton.addEventListener('click', () => {
     if (peerConnection) {
         peerConnection.close();
     }
-
     // socket.emit('hangup', { });
     sessionStorage.clear();
-    window.location.href='/';
+
+    let paramid = window.location.search;
+    let urlparams =new URLSearchParams(paramid);
+    let id =urlparams.get('id');
+    let name =urlparams.get('name')
+
+    if(name=='admin'|| name =='Admin'){
+      window.location.href=`/disconnect/${id}`;
+    }else{
+      window.location.href='/';
+    }
+
+    
 });
 
 
