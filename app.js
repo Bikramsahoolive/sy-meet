@@ -1,7 +1,7 @@
 const express =require('express');
-const https = require('https');
-// const http = require('http');
-const fs = require('fs');
+// const https = require('https');
+const http = require('http');
+// const fs = require('fs');
 const socketIo= require('socket.io');
 const path = require('path');
 const app = express();
@@ -13,22 +13,23 @@ app.use(express.static(path.join(__dirname,'public')));
 
 
 
-const options = {
-  key:fs.readFileSync(path.join(__dirname,'sslCert/localhost.key')),
-  cert:fs.readFileSync(path.join(__dirname,'sslCert/localhost.crt'))
-}
+// const options = {
+//   key:fs.readFileSync(path.join(__dirname,'sslCert/localhost.key')),
+//   cert:fs.readFileSync(path.join(__dirname,'sslCert/localhost.crt'))
+// }
 
 
 
 
 
-const server = https.createServer(options,app);
-// const server =http.createServer(app);
+// const server = https.createServer(options,app);
+const server =http.createServer(app);
 
 
 let roomUsers = {};
 let roomIds=[];
 let defultRoomIds= ['9776999202'];
+const constDefultRoomIds = ['9776999202'];
 
 
 
@@ -174,9 +175,11 @@ socket.on('audio-paused',(data)=>{
   
   app.get('/connect/:id',(req,res)=>{
     let id= req.params.id;
-    defultRoomIds.push(id)
+    constDefultRoomIds.forEach((ids)=>{
+      if(!ids==id)defultRoomIds.push(id);
+    })
     res.redirect(`/?name=Admin&id=${id}`);
-     setTimeout(()=>deleteMeetId(id),18000);
+     setTimeout(()=>deleteMeetId(id),1800000);
   });
   
   app.get('/disconnect/:id',(req,res)=>{
