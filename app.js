@@ -176,7 +176,7 @@ socket.on('audio-paused',(data)=>{
   app.get('/connect/:id',(req,res)=>{
     let id= req.params.id;
     constDefultRoomIds.forEach((ids)=>{
-      if(!ids==id)defultRoomIds.push(id);
+      if(ids!==id)defultRoomIds.push(id);
     })
     res.redirect(`/?name=Admin&id=${id}`);
      setTimeout(()=>deleteMeetId(id),1800000);
@@ -185,7 +185,7 @@ socket.on('audio-paused',(data)=>{
   app.get('/disconnect/:id',(req,res)=>{
     let id= req.params.id;
     deleteMeetId(id);
-    res.redirect('http://localhost:3000/');
+    res.redirect('https://syi.onrender.com/');
   })
 
 server.listen(PORT,()=>console.log(`https://localhost:${PORT}`));
