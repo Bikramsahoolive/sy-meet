@@ -500,6 +500,13 @@ socket.on('audio-paused',(data)=>{
   }
 });
 
+socket.on('connection-lost',(user)=>{
+  if(user.disconnected){
+    remoteVideo.style.display='none';
+    speakerBtn.style.display='none';
+    document.querySelector('.share-id').style.display='block';
+  }
+})
 
 function joinMeeT(){
   let paramid = window.location.search;

@@ -101,6 +101,7 @@ io.on('connection', (socket) => {
 
             
             socket.on('disconnect', () => {
+              
               Object.keys(roomUsers).forEach((roomId) => {
                 if (roomUsers[roomId].users[socket.id]) {
                   
@@ -116,6 +117,7 @@ io.on('connection', (socket) => {
                     delete roomUsers[roomId].users[socket.id];
                     roomUsers[roomId].userCount--;
                     io.to(roomId).emit('update-user-list', { users: Object.values(roomUsers[roomId].users) });
+                    io.to(roomId).emit('connection-lost',{disconnected:true});
                 }
             });
          });
