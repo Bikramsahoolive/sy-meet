@@ -187,7 +187,7 @@ socket.on('audio-paused',(data)=>{
   app.get('/disconnect/:id',(req,res)=>{
     let id= req.params.id;
     deleteMeetId(id);
-    res.redirect('https://syi.onrender.com/');
+    res.redirect('https://syi.onrender.com/reg-data');
   })
 
 server.listen(PORT,()=>console.log(`https://localhost:${PORT}`));
