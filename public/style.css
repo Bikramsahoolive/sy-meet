@@ -65,7 +65,10 @@ color: white;
     width: 22%;
     height: 70vh;
     background-color: #7a7272;
-    
+    z-index: 1;
+}
+.video i{
+    display: none;
 }
 .audio{
     
@@ -128,6 +131,7 @@ li div{
     background-color: rgb(17, 243, 17);
     border-radius: 50%;
     margin-right: 10px;
+    box-shadow: 0 0 8px 2px #5ae85a;
 }
 li .mic{
     margin-left: 5px;
@@ -144,11 +148,13 @@ li .mic{
     width: 100%;
     height: auto;
     margin-top: 10px;
+    transform: scaleX(-1);
     display: none;
 }
 #remote-video{
     width: 100%;
     height: 70vh;
+    /* transform: scaleX(-1); */
     
 }
 #hang-up{
@@ -214,7 +220,7 @@ li .mic{
     z-index: 1;
 }
 .client-dtls{
-    width: 50%;
+    width: 100%;
 }
 .user-details span{
     margin:0 10px ;
@@ -481,12 +487,23 @@ padding: 30px 80px;
         height:fit-content;
         position: absolute;
         left: 0;
+        flex-direction: column;
+        align-items: center;
+        color: wheat;
+        box-shadow: none;
+        background-color: transparent;
+    }
+    .video i{
+        display: block;
+        font-size: 25px;
+        padding: 10px 0;
+        visibility: hidden;
     }
     .screen{
         width: 100%;
     }
     .msg-input textarea{
-        height: 100px;
+        height: 50px;
     }
     #client-video{
         margin: 0;

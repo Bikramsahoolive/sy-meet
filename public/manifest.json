@@ -1,0 +1,12 @@
+{
+    "name":"SYI MeeT",
+    "icons":[
+        {
+            "src":"images/icon.jpg",
+            "type":"image/jpg",
+            "sizes":"512x512"
+        }
+    ],
+    "display":"fullscreen",
+    "orientation":"portrait"
+}

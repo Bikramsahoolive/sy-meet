@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SYI-MeeT</title>
+    <link rel="manifest" href="manifest.json">
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -107,6 +108,7 @@
             <div class="video">
                 <video id="client-video" muted autoplay></video>
                 <video id="client-screen" muted autoplay></video>
+                <i class="fa-solid fa-angle-up" onclick="hideClientVideo()"></i>
             </div>
             <div class="audio">
                 <audio id="remoteAudio" preload="auto"></audio>

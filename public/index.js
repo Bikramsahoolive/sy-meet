@@ -17,6 +17,7 @@ let audioBtn = document.getElementById('audio-btn');
 let switchCam = document.getElementById('switch-cam');
 let screenBtn = document.getElementById('screen-btn');
 let speakerBtn = document.getElementById('speaker');
+let clientVdoBtn= document.querySelector('.video i');
 
 
 
@@ -33,7 +34,7 @@ let speakerBtn = document.getElementById('speaker');
                 stream.getTracks().forEach(track => {
                   peerConnection.addTrack(track, videoStream);
               });
-              
+              clientVdoBtn.style.visibility='visible';
               switchCam.style.display='block';
               cameraBtn.classList = 'fa-solid fa-video red';
               cameraBtn.style.backgroundColor = 'rgb(69, 96, 214)';
@@ -54,6 +55,8 @@ let speakerBtn = document.getElementById('speaker');
         isVideoShared=false;
         switchCam.style.display='none';
         videoStream = null;
+        clientVdoBtn.style.visibility='hidden';
+        document.querySelector('.video i').classList='fa-solid fa-angle-up';
         clientVideo.style.display='none';
 
         cameraBtn.classList ='fa-solid fa-video-slash red';
@@ -214,7 +217,18 @@ function switchCamera(){
   }
 }
 
-
+function hideClientVideo(){
+  let clientVideo = document.getElementById('client-video');
+  let toggleBtn = document.querySelector('.video i');
+  let isVdoHide = toggleBtn.classList.contains('fa-angle-down');
+  if(!isVdoHide){
+    clientVideo.style.display='none';
+    toggleBtn.classList= 'fa-solid fa-angle-down';
+  }else if(isVdoHide){
+    clientVideo.style.display='block';
+    toggleBtn.classList='fa-solid fa-angle-up';
+  }
+}
 
 const textarea = document.querySelector('#text-msg');
 const parentMaxHeight = parseInt(window.getComputedStyle(textarea.parentElement).maxHeight);
@@ -303,6 +317,18 @@ textarea.addEventListener('input', adjustTextareaHeight);
     }
   });
 
+let clientVdo = document.getElementById('client-video');
+ let cvid =  document.querySelector('.video');
+ let fullScreen = true;
+
+ clientVdo.addEventListener('click',()=>{
+  fullScreen= !fullScreen;
+  if(fullScreen){
+    cvid.style.display='contents';
+  }else{
+    cvid.style.display='flex';
+  }
+ });
 
 /////////////////////////////////////////////////////////////////////////////
 
