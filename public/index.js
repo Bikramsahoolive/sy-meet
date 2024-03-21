@@ -326,7 +326,7 @@ let clientVdo = document.getElementById('client-video');
   if(fullScreen){
     cvid.style.display='contents';
   }else{
-    cvid.style.display='flex';
+    cvid.style.display='block';
   }
  });
 

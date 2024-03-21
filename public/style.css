@@ -5,7 +5,7 @@
 }
 body{
     width: 100%;
-    height: 100vh;
+    height: 100%;
     position: fixed;
     background-color: #383838;
 }
@@ -22,7 +22,7 @@ color: white;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 10px;
+    margin: 10px 0;
     gap: 30px;
 }
 .red{
@@ -52,6 +52,7 @@ color: white;
 }
 .content{
     display: flex;
+    height: 75%;
 }
 .control{
     display: flex;
@@ -153,7 +154,7 @@ li .mic{
 }
 #remote-video{
     width: 100%;
-    height: 70vh;
+    height: 100%;
     /* transform: scaleX(-1); */
     
 }
@@ -197,10 +198,11 @@ li .mic{
 }
 .main{
     display: none;
+    height: 100%;
 }
 .join{
     width: 100%;
-    height: 92vh;
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -447,6 +449,7 @@ padding: 30px 80px;
         height: 70vh;
         min-width: 310px;
         background-color: #e4e1dc;
+        z-index: 1;
     }
     .screen{
         width: 85%;
@@ -501,6 +504,7 @@ padding: 30px 80px;
     }
     .screen{
         width: 100%;
+        height: 100%;
     }
     .msg-input textarea{
         height: 50px;
@@ -517,7 +521,7 @@ padding: 30px 80px;
     }
     .popup{
         transition: top 0.5s;
-        top: 15%;
+        top: 25%;
       }
 }
 @media screen and (max-width:500px) {
@@ -525,7 +529,7 @@ padding: 30px 80px;
         align-items: start;
     }
     .join .container{
-        height: 90vh;
+        height: 100%;
     }
     .dev{
         margin-top: 200px;
