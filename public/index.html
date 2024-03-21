@@ -56,21 +56,21 @@
           </dic>
         </div>
       
-        <div class="modal-content-form">
+        <!-- <div class="modal-content-form">
           <span class="close up">&times;</span>
           <dic class="data">
               <label>Enter joiner name :</label>
               <input type="text" id="remote-name" maxlength="15">
               <button id="send-id" onclick="submitNameToShare()">send</button>
           </dic>
-        </div>
+        </div> -->
       
         <div class="modal-content-new">
           <span class="close down">&times;</span>
           <dic class="data">
               <label>Enter your name :</label>
               <input type="text" id="client-name" maxlength="15">
-              <button id="" onclick="createMeet()">Create</button>
+              <button id="" onclick="createMeet()">Save</button>
           </dic>
         </div>
       </div>
@@ -81,8 +81,13 @@
             <form action="/" method="get">
                 <h2>Join MeeTing</h2>
                 <h5 id="err"></h5>
-                <input type="text" name="name" placeholder="Enter Name" autofocus required>
-                <input type="text" name="id" placeholder="Enter MeeT ID" required>
+                <div class="username">
+                    <img src="./images/profilepic.jpg" height="100px" alt="ProfilePic">
+                    <h3 id="username"></h3>
+                    <a onclick="changeName()">Change Name</a>
+                </div>
+                <!-- <input type="text" name="name" id="join-name" style="display: none;"> -->
+                <input type="text" name="id" placeholder="Enter MeeT ID" autofocus required>
                 <button type="submit">Join</button>
             </form>
 

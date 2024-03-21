@@ -285,21 +285,21 @@ textarea.addEventListener('input', adjustTextareaHeight);
 
 
 
-  document.querySelector('.up').addEventListener('click', function() {
-    document.querySelector('.modal-content-form').classList.remove('popup-form');
-    setTimeout(()=>{
-      document.getElementById('myModal').style.display = 'none';
-    },500)
+  // document.querySelector('.up').addEventListener('click', function() {
+  //   document.querySelector('.modal-content-form').classList.remove('popup-form');
+  //   setTimeout(()=>{
+  //     document.getElementById('myModal').style.display = 'none';
+  //   },500)
     
-  });
-  window.addEventListener('click', function(event) {
-    if (event.target == document.getElementById('myModal')) {
-      document.querySelector('.modal-content-form').classList.remove('popup-form');
-      setTimeout(()=>{
-        document.getElementById('myModal').style.display = 'none';
-      },500)
-    }
-  });
+  // });
+  // window.addEventListener('click', function(event) {
+  //   if (event.target == document.getElementById('myModal')) {
+  //     document.querySelector('.modal-content-form').classList.remove('popup-form');
+  //     setTimeout(()=>{
+  //       document.getElementById('myModal').style.display = 'none';
+  //     },500)
+  //   }
+  // });
 
 
 
@@ -346,10 +346,16 @@ const sendIdBtn = document.getElementById('send-id');
 async function shareMeetId(){
   if(navigator.share){
 
-  document.getElementById('myModal').style.display = 'block';
-    setTimeout(()=>{
-      document.querySelector('.modal-content-form').classList.add('popup-form');
-        },500)
+    let paramid = window.location.search;
+    let urlparams =new URLSearchParams(paramid);
+    let id =urlparams.get('id');
+
+    navigator.share({
+     title:'Join Request on SYI MeeT.',
+     text:'Join me now on SYI MeeT click on the link :',
+     url:`?id=${id}`
+   })
+   .catch((err)=>console.log(err));
 
 
     
@@ -359,39 +365,62 @@ async function shareMeetId(){
 }
 
 function openCreateMeet(){
-  
+
+ let name = localStorage.getItem("name");
+
+
+
+if(name=="" || name==null){
   document.getElementById('myModal').style.display = 'block';
   setTimeout(()=>{
     document.querySelector('.modal-content-new').classList.add('popup-new');
       },500)
+}else{
+  socket.emit('create-meet',{name:name});
 }
 
-
-function submitNameToShare(){
-  document.querySelector('.modal-content-form').classList.remove('popup-form');
-  setTimeout(()=>{
-    document.getElementById('myModal').style.display = 'none';
-  },500);
-
-  let paramid = window.location.search;
-  let urlparams =new URLSearchParams(paramid);
-  let id =urlparams.get('id');
-
-  let clientName = document.getElementById('remote-name');
-   let name = clientName.value;
-   clientName.value="";
-    name = name.split(" ");
-    name = name[0];
-  if (name ==null) return;
-   navigator.share({
-    title:'Join Request on SYI MeeT.',
-    text:'Join me now on SYI MeeT click on the link :',
-    url:`?name=${name}&id=${id}`
-  })
-  .catch((err)=>console.log(err));
-  name.value = "";
   
+  
+  // document.getElementById('myModal').style.display = 'block';
+  // setTimeout(()=>{
+  //   document.querySelector('.modal-content-new').classList.add('popup-new');
+  //     },500)
 }
+
+function changeName(){
+
+  document.getElementById('myModal').style.display = 'block';
+  setTimeout(()=>{
+    document.querySelector('.modal-content-new').classList.add('popup-new');
+      },500);
+}
+
+
+// function submitNameToShare(){
+//   document.querySelector('.modal-content-form').classList.remove('popup-form');
+//   setTimeout(()=>{
+//     document.getElementById('myModal').style.display = 'none';
+//   },500);
+
+//   let paramid = window.location.search;
+//   let urlparams =new URLSearchParams(paramid);
+//   let id =urlparams.get('id');
+
+//   let clientName = document.getElementById('remote-name');
+//    let name = clientName.value;
+//    clientName.value="";
+//     name = name.split(" ");
+//     name = name[0];
+//   if (name ==null) return;
+//    navigator.share({
+//     title:'Join Request on SYI MeeT.',
+//     text:'Join me now on SYI MeeT click on the link :',
+//     url:`?name=${name}&id=${id}`
+//   })
+//   .catch((err)=>console.log(err));
+//   name.value = "";
+  
+// }
 
 
 
@@ -441,13 +470,15 @@ function createMeet(){
     document.getElementById('myModal').style.display = 'none';
   },500)
 
-    socket.emit('create-meet',{name:name});
+  localStorage.setItem("name",name);
+  location.reload();
+    
   
 }
 
-socket.on('create-meet',({status,rid,name})=>{
+socket.on('create-meet',({status,rid})=>{
     if(status){
-      location.href=`/?name=${name}&id=${rid}`;
+      location.href=`/?id=${rid}`;
     }else alert('some error occurred while createing meet.');
     
 
@@ -538,11 +569,22 @@ socket.on('connection-lost',(user)=>{
 })
 
 function joinMeeT(){
+  let name = localStorage.getItem("name");
+  if(name==""|| name==null || name==undefined){
+      document.getElementById('myModal').style.display = 'block';
+  setTimeout(()=>{
+    document.querySelector('.modal-content-new').classList.add('popup-new');
+      },500)
+      return;
+  }
+
+  document.getElementById('username').innerHTML=name;
+  // document.getElementById('join-name').value=name;
   let paramid = window.location.search;
   let urlparams =new URLSearchParams(paramid);
   let id =urlparams.get('id');
-  let name =urlparams.get('name');
-  if(id!==null && name!==null && id!=='' && name !==''){
+  // let name =urlparams.get('name');
+  if(id!==null && id!==''){
     socket.emit('room',{roomId:id,userName:name});
 
   }
@@ -553,7 +595,7 @@ socket.on('room',(data)=>{
       let paramid = window.location.search;
       let urlparams =new URLSearchParams(paramid);
       let id =urlparams.get('id');
-      let name =urlparams.get('name');
+      let name = localStorage.getItem("name");
 
       document.getElementById('name').innerHTML=name;
       document.getElementById('room-id').innerHTML=id;

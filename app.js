@@ -37,11 +37,11 @@ const io = socketIo(server);
 
 io.on('connection', (socket) => {
 
-    socket.on('create-meet',({name})=>{
-      if(name=='admin'|| name=='Admin')return;
+    socket.on('create-meet',({})=>{
+      // if(name=='admin'|| name=='Admin')return;
       let id = Math.floor(Math.random()*1000000+100000);
       roomIds.push(id);
-      socket.emit('create-meet',{status:true,rid:id,name:name});
+      socket.emit('create-meet',{status:true,rid:id});
     });
 
     socket.on('room', ({roomId,userName}) => {

@@ -18,6 +18,15 @@ h1{
 color: white;
 
 }
+.username h3{
+    margin: 10px 0;
+    font-size: 25px;
+}
+.username a{
+    font-size: 15px;
+    color: #1047ad;
+    cursor: pointer;
+}
 .button{
     display: flex;
     justify-content: center;
@@ -208,7 +217,7 @@ li .mic{
     width: 100%;
     height: 100%;
     display: flex;
-    align-items: center;
+    align-items: start;
     justify-content: center;
     background-color:#f5f5f591;
 }
@@ -239,8 +248,8 @@ li .mic{
     cursor: pointer;
 }
 .container{
-background-color: white;
-height: 460px;
+background-color: #e1e8ee;
+height: 490px;
 width: 500px;
 box-shadow: 0 0 5px 2px gray;
 border-radius: 5px;
@@ -248,16 +257,18 @@ text-align: center;
 display: flex;
 flex-direction: column;
 padding: 30px 80px;
+margin: 30px 0;
 }
 .container input{
     width: 100%;
     border: none;
-    border-bottom: 2px solid rgb(82, 82, 82);
+    /* border-bottom: 2px solid rgb(82, 82, 82); */
     outline: none;
     height: 30px;
     text-align: center;
     font-size: 18px;
     margin-top: 15px;
+    background-color: #e1e8ee;
 }
 .container button{
     margin-bottom:15px;
@@ -293,7 +304,7 @@ padding: 30px 80px;
     display: none;
 }
 .dev{
-    margin-top: 100px;
+    margin-top: 15px;
 }
 .dev strong{
     display:inline-block;
@@ -529,19 +540,20 @@ padding: 30px 80px;
       }
 }
 @media screen and (max-width:500px) {
-    .join{
-        align-items: start;
-    }
     .join .container{
+        margin: 0;
         height: 100%;
     }
     .dev{
-        margin-top: 200px;
+        margin-top: 100px;
     }
     .modal-content {
         margin: 45% auto;
     }
     ul{
         top: 85px;
+    }
+    .username{
+        margin-bottom: 70px;
     }
 }
