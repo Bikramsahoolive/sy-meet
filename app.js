@@ -1,7 +1,4 @@
 const express =require('express');
-// const https = require('https');
-const http = require('http');
-// const fs = require('fs');
 const socketIo= require('socket.io');
 const path = require('path');
 const app = express();
@@ -12,17 +9,19 @@ app.use(express.static(path.join(__dirname,'public')));
 
 
 
-
+// const https = require('https');
+// const fs = require('fs');
 // const options = {
 //   key:fs.readFileSync(path.join(__dirname,'sslCert/localhost.key')),
 //   cert:fs.readFileSync(path.join(__dirname,'sslCert/localhost.crt'))
 // }
-
-
-
-
-
 // const server = https.createServer(options,app);
+
+
+
+
+
+const http = require('http');
 const server =http.createServer(app);
 
 

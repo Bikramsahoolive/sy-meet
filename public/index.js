@@ -55,6 +55,7 @@ let clientVdoBtn= document.querySelector('.video i');
         isVideoShared=false;
         switchCam.style.display='none';
         videoStream = null;
+        document.querySelector('.video').style.display='block';
         clientVdoBtn.style.visibility='hidden';
         document.querySelector('.video i').classList='fa-solid fa-angle-up';
         clientVideo.style.display='none';
@@ -86,6 +87,7 @@ let clientVdoBtn= document.querySelector('.video i');
               stream.getTracks().forEach(track => {
                 peerConnection.addTrack(track, videoStream);
             });
+            clientVideo.style.transform='scaleX(-1)';
             clientVideo.srcObject = stream;
             let uid =  sessionStorage.getItem('uid');
             let sid = sessionStorage.getItem('sid');
@@ -108,6 +110,7 @@ let clientVdoBtn= document.querySelector('.video i');
               stream.getTracks().forEach(track => {
                 peerConnection.addTrack(track, videoStream);
             });
+            clientVideo.style.transform='scaleX(1)';
             clientVideo.srcObject = stream;
             let uid =  sessionStorage.getItem('uid');
             let sid = sessionStorage.getItem('sid');
@@ -319,10 +322,10 @@ textarea.addEventListener('input', adjustTextareaHeight);
 
 let clientVdo = document.getElementById('client-video');
  let cvid =  document.querySelector('.video');
- let fullScreen = true;
+ let fullScreen = false;
 
  clientVdo.addEventListener('click',()=>{
-  fullScreen= !fullScreen;
+  fullScreen = !fullScreen;
   if(fullScreen){
     cvid.style.display='contents';
   }else{

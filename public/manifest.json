@@ -7,7 +7,6 @@
             "sizes":"512x512"
         }
     ],
-    "display":"fullscreen",
-    "background_color":"#0b53c0",
+    "display":"standalone",
     "orientation":"portrait"
 }
