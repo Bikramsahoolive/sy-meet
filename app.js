@@ -9,20 +9,20 @@ app.use(express.static(path.join(__dirname,'public')));
 
 
 
-// const https = require('https');
-// const fs = require('fs');
-// const options = {
-//   key:fs.readFileSync(path.join(__dirname,'sslCert/localhost.key')),
-//   cert:fs.readFileSync(path.join(__dirname,'sslCert/localhost.crt'))
-// }
-// const server = https.createServer(options,app);
+const https = require('https');
+const fs = require('fs');
+const options = {
+  key:fs.readFileSync(path.join(__dirname,'sslCert/localhost.key')),
+  cert:fs.readFileSync(path.join(__dirname,'sslCert/localhost.crt'))
+}
+const server = https.createServer(options,app);
 
 
 
 
 
-const http = require('http');
-const server =http.createServer(app);
+// const http = require('http');
+// const server =http.createServer(app);
 
 
 let roomUsers = {};

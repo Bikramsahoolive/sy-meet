@@ -15,7 +15,8 @@ h1{
   font-weight: 400;
   font-style: normal;
   background-color: rgb(11, 83, 192);
-color: white;
+  color: white;
+  height: 5%;
 
 }
 .username h3{
@@ -215,7 +216,7 @@ li .mic{
 }
 .join{
     width: 100%;
-    height: 100%;
+    height: 95%;
     display: flex;
     align-items: start;
     justify-content: center;
@@ -461,7 +462,7 @@ margin: 30px 0;
         transition: all ease-in-out 0.2s;
         box-shadow: 0 0 5px 2px wheat;
         width: 100%;
-        height: 70vh;
+        height: 70%;
         min-width: 310px;
         background-color: #e4e1dc;
         z-index: 1;
@@ -532,11 +533,14 @@ margin: 30px 0;
     }
     .modal-content {
         margin: 20% auto;
-        top: -50%;
+        top: -70%;
     }
     .popup{
         transition: top 0.5s;
         top: 25%;
+      }
+      .textdoc-open{
+        height: 75%;
       }
 }
 @media screen and (max-width:500px) {
