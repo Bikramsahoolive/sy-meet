@@ -526,7 +526,7 @@ function sendMsg(){
     let paramid = window.location.search;
     let urlparams =new URLSearchParams(paramid);
     let id =urlparams.get('id');
-    let name =urlparams.get('name');
+    let name =localStorage.getItem("name");
     socket.emit('text',{from:name ,to:id, message:textarea.value});
     textarea.value="";
     textarea.style.height='50px';
