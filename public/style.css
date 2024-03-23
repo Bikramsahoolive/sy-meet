@@ -90,6 +90,16 @@ h1{
     box-shadow: 0px 35px 0 -33px wheat;
     width: 60%;
     height: 70vh;
+    position: relative;
+}
+.screen i{
+    color: white;
+    position: absolute;
+    right: 40px;
+    bottom: 35px;
+    cursor: pointer;
+    font-size: 20px;
+    display: none;
 }
 .textdoc{
     box-shadow: 0 0 5px 2px wheat;

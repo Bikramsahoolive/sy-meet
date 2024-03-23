@@ -18,6 +18,7 @@ let switchCam = document.getElementById('switch-cam');
 let screenBtn = document.getElementById('screen-btn');
 let speakerBtn = document.getElementById('speaker');
 let clientVdoBtn= document.querySelector('.video i');
+let remoteVdoBtn= document.querySelector('#zoom-remote-video');
 
 
 
@@ -422,7 +423,18 @@ function changeName(){
   
 // }
 
+function zoomRemoreVideo(){
+  const video = document.getElementById('remote-video');
+  if (!document.fullscreenElement) {
+    video.requestFullscreen().catch(err => {
+        alert(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
+    });
+    video.controls = false;
+} else {
+    document.exitFullscreen();
+}
 
+}
 
 
 
@@ -545,6 +557,7 @@ function videoPaused(){
 socket.on('video-paused',(data)=>{
   if(data.paused){
     remoteVideo.style.display='none';
+    remoteVdoBtn.style.display='none';
   }
 });
 
@@ -629,6 +642,7 @@ peerConnection.ontrack = (event) => {
   // console.log(`ontrack ${event.track.kind}`);
   if (event.track.kind === 'video') {
     remoteVideo.style.display='block';
+    remoteVdoBtn.style.display='block';
         remoteVideo.srcObject = event.streams[0];
     
 } else if (event.track.kind === 'audio') {
