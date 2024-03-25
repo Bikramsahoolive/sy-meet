@@ -27,8 +27,8 @@ const server =http.createServer(app);
 
 let roomUsers = {};
 let roomIds=[];
-let defultRoomIds= ['9776999202'];
-const constDefultRoomIds = ['9776999202'];
+let defultRoomIds= ['123456'];
+const constDefultRoomIds = ['123456'];
 
 
 
