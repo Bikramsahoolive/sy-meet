@@ -96,7 +96,25 @@ io.on('connection', (socket) => {
           
       socket.on('text',({from,to,message})=>{
         io.to(to).emit('text',{from,message});
-      })
+      });
+
+      socket.on('image',({from,to,file})=>{
+      
+          io.to(to).emit('image',{from,file});
+        
+      });
+
+      // socket.on('video',({from,to,file})=>{
+      //   io.to(to).emit('video',{from,file});
+      // });
+
+      // socket.on('pdf',({from,to,file})=>{
+      //   io.to(to).emit('pdf',{from,file});
+      // });
+
+      socket.on('file',({from,to,file,message})=>{
+        io.to(to).emit('file',{from,file,message});
+      });
 
             
             socket.on('disconnect', () => {

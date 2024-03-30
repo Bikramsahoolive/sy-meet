@@ -125,13 +125,24 @@
                 <!-- <video id="remote-screen" muted autoplay></video> -->
             </div>
             <div class="textdoc" id="chat-box">
+
+                <!-- <div class="text-menu">
+                    <i class="fa-solid fa-square-xmark"></i>
+                </div> -->
+                
                 <div class="text" id="text">
                     
                     <!-- <p class="new-msg">Unread Messages</p> -->
+                    <!-- <div class="msg-div">
+                        <h4>Bikram</h4>
+                        <img src="images/bikramSahoo.jpg">
+                    </div> -->
                     
                 </div>
                 <div class="msg-input" id="msgInput">
                     <textarea id="text-msg" placeholder="Type a mssage..."></textarea>
+                    <input type="file" id="atch-file" style="display: none;" onchange="showFile()">
+                    <i class="fa-solid fa-paperclip file-send" onclick="sendFile()"></i>
                     <i class="fa-solid fa-share msg-btn" onclick="sendMsg()"></i>
                 </div>
             </div>
@@ -151,6 +162,8 @@
     </section>
 
     <script src="/socket.io/socket.io.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io-stream/0.9.1/socket.io-stream.min.js" integrity="sha512-LTN7WQKvmCiOWbwxE4XRu3NCRqLzkFo28vBDHVhAyKjhmorNGjtvFxQgbvAttO31Ij6An4AIXU4GVaYOC0eNpQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> -->
+    <script src="socket.js"></script>
     <script src="index.js"></script>
 
     

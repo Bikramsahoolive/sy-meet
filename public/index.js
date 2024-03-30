@@ -5,7 +5,7 @@ let isAudioShared = false;
 
 // let videoActive = false;
 let camSwithc = true;
-
+let fullScreen = false;
 let isMuted=true;
 
 let videoStream = null;
@@ -20,7 +20,15 @@ let speakerBtn = document.getElementById('speaker');
 let clientVdoBtn= document.querySelector('.video i');
 let remoteVdoBtn= document.querySelector('#zoom-remote-video');
 
-
+//prevent back button
+history.pushState(null,null,location.href);
+window.onpopstate = function(event){
+  history.go(1);
+  let chatbox = document.getElementById('chat-box');
+  chatbox.classList='textdoc';
+  let chatInput = document.getElementById('msgInput');
+  chatInput.classList = 'msg-input';
+}
 
  function videoShare(){
   isVideoShared = !isVideoShared;
@@ -53,6 +61,7 @@ let remoteVdoBtn= document.querySelector('#zoom-remote-video');
         tracks.forEach(track => {
             track.stop();        
         });
+        fullScreen=false
         isVideoShared=false;
         switchCam.style.display='none';
         videoStream = null;
@@ -209,6 +218,20 @@ function screenShare() {
 
 }
 
+
+let fileReader = document.getElementById('atch-file');
+
+function sendFile(){
+  fileReader.click();
+}
+
+function download(url){
+  let link = document.createElement('a');
+  link.href=url;
+  link.download = "meet_file";
+  link.click();
+}
+
 function switchCamera(){
     if(isVideoShared){
       
@@ -251,17 +274,12 @@ function adjustTextareaHeight() {
 
 
 
-
-
-
 cameraBtn.addEventListener('click', videoShare);
 audioBtn.addEventListener('click', audioShare);
 screenBtn.addEventListener('click', screenShare);
 switchCam.addEventListener('click',switchCamera);
 speakerBtn.addEventListener('click',muteAudio);
 textarea.addEventListener('input', adjustTextareaHeight);
-
-
 
 
  //  MODEL VIEW.
@@ -283,28 +301,6 @@ textarea.addEventListener('input', adjustTextareaHeight);
     }
   });
 
-
-
-
-  // document.querySelector('.up').addEventListener('click', function() {
-  //   document.querySelector('.modal-content-form').classList.remove('popup-form');
-  //   setTimeout(()=>{
-  //     document.getElementById('myModal').style.display = 'none';
-  //   },500)
-    
-  // });
-  // window.addEventListener('click', function(event) {
-  //   if (event.target == document.getElementById('myModal')) {
-  //     document.querySelector('.modal-content-form').classList.remove('popup-form');
-  //     setTimeout(()=>{
-  //       document.getElementById('myModal').style.display = 'none';
-  //     },500)
-  //   }
-  // });
-
-
-
-
   document.querySelector('.down').addEventListener('click', function() {
     document.querySelector('.modal-content-new').classList.remove('popup-new');
     setTimeout(()=>{
@@ -323,7 +319,7 @@ textarea.addEventListener('input', adjustTextareaHeight);
 
 let clientVdo = document.getElementById('client-video');
  let cvid =  document.querySelector('.video');
- let fullScreen = false;
+ 
 
  clientVdo.addEventListener('click',()=>{
   fullScreen = !fullScreen;
@@ -365,29 +361,6 @@ async function shareMeetId(){
   }
 }
 
-function openCreateMeet(){
-
- let name = localStorage.getItem("name");
-
-
-
-if(name=="" || name==null){
-  document.getElementById('myModal').style.display = 'block';
-  setTimeout(()=>{
-    document.querySelector('.modal-content-new').classList.add('popup-new');
-      },500)
-}else{
-  socket.emit('create-meet',{name:name});
-}
-
-  
-  
-  // document.getElementById('myModal').style.display = 'block';
-  // setTimeout(()=>{
-  //   document.querySelector('.modal-content-new').classList.add('popup-new');
-  //     },500)
-}
-
 function changeName(){
 
   document.getElementById('myModal').style.display = 'block';
@@ -395,33 +368,6 @@ function changeName(){
     document.querySelector('.modal-content-new').classList.add('popup-new');
       },500);
 }
-
-
-// function submitNameToShare(){
-//   document.querySelector('.modal-content-form').classList.remove('popup-form');
-//   setTimeout(()=>{
-//     document.getElementById('myModal').style.display = 'none';
-//   },500);
-
-//   let paramid = window.location.search;
-//   let urlparams =new URLSearchParams(paramid);
-//   let id =urlparams.get('id');
-
-//   let clientName = document.getElementById('remote-name');
-//    let name = clientName.value;
-//    clientName.value="";
-//     name = name.split(" ");
-//     name = name[0];
-//   if (name ==null) return;
-//    navigator.share({
-//     title:'Join Request on SYI MeeT.',
-//     text:'Join me now on SYI MeeT click on the link :',
-//     url:`?name=${name}&id=${id}`
-//   })
-//   .catch((err)=>console.log(err));
-//   name.value = "";
-  
-// }
 
 function zoomRemoreVideo(){
   const video = document.getElementById('remote-video');
@@ -453,17 +399,6 @@ function muteAudio(){
 
 }
 
-
-
-const socket = io();
-
-let chatArea = document.getElementById('text');
-let msgCount = 0;
-
-
-
-
-
 function createMeet(){
   let clientName = document.getElementById('client-name');
   let name = clientName.value;
@@ -488,36 +423,7 @@ function createMeet(){
   
 }
 
-socket.on('create-meet',({status,rid})=>{
-    if(status){
-      location.href=`/?id=${rid}`;
-    }else alert('some error occurred while createing meet.');
-    
 
-})
-
-socket.on('text',({from,message})=>{
-  let chatBox = document.getElementById('chat-box');
-  let isOpened = chatBox.classList.contains('textdoc-open');
-  let hasPTag = chatArea.querySelector('p') !== null;
-    
-  if(!isOpened){
-    if(!hasPTag){
-      let unReadTag = document.createElement('p');
-      unReadTag.classList.add('new-msg');
-      unReadTag.innerHTML="Unread Messages";
-      chatArea.appendChild(unReadTag);
-    }
-    msgCount++;
-    let notifyBadge = document.querySelector('.msg-notification');
-    notifyBadge.innerHTML = msgCount;
-    notifyBadge.style.visibility='visible';
-  }
-  let pre = document.createElement('pre');
-  pre.innerHTML=`${from} : ${message}`;
-  chatArea.appendChild(pre);
-  scrollDown();
-})
 
 function scrollDown(){
   let messageArea = document.getElementById('text');
@@ -533,191 +439,7 @@ function chatToggle(){
   chatInput.classList.toggle('msg-input-open');
 }
 
-function sendMsg(){
-  if(textarea.value!==""){
-    let paramid = window.location.search;
-    let urlparams =new URLSearchParams(paramid);
-    let id =urlparams.get('id');
-    let name =localStorage.getItem("name");
-    socket.emit('text',{from:name ,to:id, message:textarea.value});
-    textarea.value="";
-    textarea.style.height='50px';
-    let hasPTag = chatArea.querySelector('p');
-    if(hasPTag !== null){
-      hasPTag.remove();
-    }
-  }
-}
 
-function videoPaused(){
-  let uid = sessionStorage.getItem('uid');
-  socket.emit('video-paused',{to:uid});
-}
-
-socket.on('video-paused',(data)=>{
-  if(data.paused){
-    remoteVideo.style.display='none';
-    remoteVdoBtn.style.display='none';
-  }
-});
-
-function audioPaused(){
-  let uid = sessionStorage.getItem('uid');
-  socket.emit('audio-paused',{to:uid});
-}
-
-socket.on('audio-paused',(data)=>{
-  if(data.paused){
-    document.querySelector('.mic').style.display='none';
-    speakerBtn.style.display='none';
-  }
-});
-
-socket.on('connection-lost',(user)=>{
-  if(user.disconnected){
-    remoteVideo.style.display='none';
-    speakerBtn.style.display='none';
-    document.querySelector('.share-id').style.display='block';
-  }
-})
-
-function joinMeeT(){
-  let name = localStorage.getItem("name");
-  if(name==""|| name==null || name==undefined){
-      document.getElementById('myModal').style.display = 'block';
-  setTimeout(()=>{
-    document.querySelector('.modal-content-new').classList.add('popup-new');
-      },500)
-      return;
-  }
-
-  document.getElementById('username').innerHTML=name;
-  // document.getElementById('join-name').value=name;
-  let paramid = window.location.search;
-  let urlparams =new URLSearchParams(paramid);
-  let id =urlparams.get('id');
-  // let name =urlparams.get('name');
-  if(id!==null && id!==''){
-    socket.emit('room',{roomId:id,userName:name});
-
-  }
-}
-
-socket.on('room',(data)=>{
-    if (data.status){
-      let paramid = window.location.search;
-      let urlparams =new URLSearchParams(paramid);
-      let id =urlparams.get('id');
-      let name = localStorage.getItem("name");
-
-      document.getElementById('name').innerHTML=name;
-      document.getElementById('room-id').innerHTML=id;
-
-      document.querySelector('.user-details').style.display='flex';
-      document.querySelector('.join').style.display='none';
-      document.querySelector('.main').style.display='block';
-      document.getElementById('myModal').style.display = 'block';
-      setTimeout(()=>{
-        document.querySelector('.modal-content').classList.add('popup');
-      },500);
-      
-    }else{
-      let err = document.querySelector('.container h5');
-      err.style.visibility = 'visible';
-      document.getElementById('err').innerHTML=data.message;
-      setTimeout(()=>{
-        err.style.visibility = 'hidden';
-      },5000)
-    }
-})
-
-
-
-  
-const peerConnection = new RTCPeerConnection({
-  iceServers: [{ urls: 'stun:stun.l.google.com:19302' }],
-});
-       
-peerConnection.ontrack = (event) => {
-  // console.log(`ontrack ${event.track.kind}`);
-  if (event.track.kind === 'video') {
-    remoteVideo.style.display='block';
-    remoteVdoBtn.style.display='block';
-        remoteVideo.srcObject = event.streams[0];
-    
-} else if (event.track.kind === 'audio') {
-    document.querySelector('.mic').style.display='inline-block';
-    speakerBtn.style.display='block';
-    remoteAudio.srcObject = event.streams[0];
-    remoteAudio.play()
-    .catch((err)=>{
-      console.log(err);
-    });
-    }
-}          
-peerConnection.onicecandidate = (event) => {
-  if (event.candidate) {
-    socket.emit('ice-candidate', { to: otherUserId, candidate: event.candidate });
-  }
-};
-
-let otherUserId;
-
-
-
-socket.on('update-user-list', ( users ) => {
-  displayUsers(users.users);
-});
-
-socket.on('offer', (data) => {
-  otherUserId = data.from;
-  const remoteOffer = data.sdp;
-  // const stat = confirm('new join Request');
-    peerConnection.setRemoteDescription(new RTCSessionDescription(remoteOffer))
-    .then(() => peerConnection.createAnswer())
-    .then((answer) => peerConnection.setLocalDescription(answer))
-    .then(() => socket.emit('answer', { to: data.from, sdp: peerConnection.localDescription }))
-    .catch(error => console.error('Error setting remote description:', error));  
-});
-
-socket.on('answer', (data) => {
-  const remoteAnswer = data.sdp;
-  peerConnection.setRemoteDescription(new RTCSessionDescription(remoteAnswer))
-  .then(()=>{
-    console.log("connection established");
-
-})
-  .catch(error => console.error('Error setting remote description:', error));
-});
-
-socket.on('ice-candidate', (data) => {
-  peerConnection.addIceCandidate(new RTCIceCandidate(data.candidate));
-});
-
-function displayUsers(users) {
-  const userList = document.getElementById('userList');
-  userList.innerHTML = '';
-  sessionStorage.setItem('sid',socket.id);
-  users.forEach(user => {
-    if (user.id === socket.id) return;
-    document.querySelector('.share-id').style.display='none';
-    sessionStorage.setItem('uid',user.id);
-    const userElement = document.createElement('li');
-    let contentDiv = `<div></div><strong>${user.name}</strong><i class="fa-solid fa-microphone mic"></i>`;
-    userElement.innerHTML = contentDiv;
-    userElement.addEventListener('click', () =>{
-     initiateCall(socket.id,user.id);
-    });
-    userList.appendChild(userElement);
-  });
-}
-
-function initiateCall(fromId,toId) {
-  peerConnection.createOffer()
-    .then((offer) => peerConnection.setLocalDescription(offer))
-    .then(() => socket.emit('offer', { from:fromId,to: toId, sdp: peerConnection.localDescription }))
-    .catch(error => console.error('Error creating offer:', error));
-}
 
 hangupButton.addEventListener('click', () => {
   console.log("hangup");
@@ -741,8 +463,3 @@ hangupButton.addEventListener('click', () => {
 
     
 });
-
-
-
-
-window.onload=joinMeeT;

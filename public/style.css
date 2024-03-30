@@ -16,7 +16,7 @@ h1{
   font-style: normal;
   background-color: rgb(11, 83, 192);
   color: white;
-  height: 5%;
+  height: 6%;
 
 }
 .username h3{
@@ -111,7 +111,9 @@ h1{
     
 }
 .text{
-    height: 50vh;
+    height: 52vh;
+    border-top: 3px solid gray;
+    border-bottom: 3px solid gray;
     width: 100%;
     margin-top: 50px;
     overflow-y: scroll;
@@ -122,7 +124,7 @@ h1{
     width: max-content;
     min-width: 200px;
     border-radius: 5px;
-    margin: 10px 2px;
+    margin: 10px 20px;
     padding: 10px 5px;
     color: black;
     
@@ -185,6 +187,36 @@ li .mic{
 #hang-up{
     transform: rotate(-135deg);
 }
+.msg-div{
+    display: flex;
+    flex-direction: column;
+    /* align-items: center; */
+    width: 20%;
+    width: max-content;
+    max-width: 90%;
+    height: max-content;
+    margin: 20px;
+    /* margin-bottom: 30px; */
+    border-radius: 20px;
+    padding: 10px 25px;
+    background-color: rgb(32, 105, 189);
+    color: white;
+    overflow-wrap: break-word;
+    position: relative;
+}
+.msg-div h4{
+    width: 100%;
+    padding-bottom: 10px;
+    color: rgb(182, 182, 182);
+}
+.msg-div img{
+    width: 215px;
+}
+.msg-div i{
+    position: absolute;
+    right: 20px;
+    cursor: pointer;
+}
 .msg-input{
     width: 100%;
     height:auto;
@@ -200,13 +232,20 @@ li .mic{
     height: 100%;
     min-height: 50px;
     width: 100%;
-    margin-top: 10px;
+    margin: 5px 5px;
     outline: none;
     border: 2px solid #e4e1dc;
     padding: 10px 16px;
     resize:none;
     overflow:auto;
     margin-left: 5px;
+    border-radius: 30px;
+}
+.msg-input .file-send{
+    font-size: 25px;
+    margin: 15px 10px;
+    color: white;
+    cursor: pointer;
 }
 .msg-input .msg-btn{
     background-color: #2e4db6;
@@ -465,6 +504,7 @@ margin: 30px 0;
         right: 0;
         min-width: 0;
         width: 0;
+        max-width: 450px;
         transition: all ease-in-out 0.2s;
         
     }
@@ -474,7 +514,7 @@ margin: 30px 0;
         width: 100%;
         height: 70%;
         min-width: 310px;
-        background-color: #e4e1dc;
+        /* background-color: #e4e1dc; */
         z-index: 1;
     }
     .screen{
@@ -507,6 +547,9 @@ margin: 30px 0;
         padding: 5px 15px;
         border-radius: 20px;
     
+    }
+    .msg-div img{
+        width: 250px;
     }
 }
 
@@ -551,6 +594,9 @@ margin: 30px 0;
       }
       .textdoc-open{
         height: 75%;
+      }
+      .text{
+        height: 56vh;
       }
 }
 @media screen and (max-width:500px) {
