@@ -224,7 +224,24 @@ let fileReader = document.getElementById('atch-file');
 function sendFile(){
   fileReader.click();
 }
-
+function copytext(btn){
+    let textbox = btn.nextElementSibling.querySelector('pre');
+    let text = textbox.innerText;
+    navigator.clipboard.writeText(text)
+    .then(()=>{
+      btn.querySelector('i').classList='fa-solid fa-check';
+      btn.querySelector('small').innerText='copied!';
+      setTimeout(() => {
+        btn.querySelector('i').classList='fa-regular fa-clipboard';
+        btn.querySelector('small').innerText='copy';
+        
+      }, 3000);
+      // <i class="fa-solid fa-check"></i>
+    })
+    .catch((err)=>{
+      console.log(err);
+    })
+}
 function download(url){
   let link = document.createElement('a');
   link.href=url;
@@ -349,7 +366,7 @@ async function shareMeetId(){
 
     navigator.share({
      title:'Join Request on SYI MeeT.',
-     text:'Join me now on SYI MeeT click on the link :',
+     text:`Join me now on SYI MeeT MeeT ID: ${id} | click on the link :`,
      url:`?id=${id}`
    })
    .catch((err)=>console.log(err));
@@ -409,7 +426,6 @@ function createMeet(){
   if( name=='')return;
   if (!regex.test(name))return;
   if(name.length<3)return;
-  if (name =='admin'|| name == 'Admin')return;
 
 
   document.querySelector('.modal-content-new').classList.remove('popup-new');

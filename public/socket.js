@@ -42,9 +42,18 @@ socket.on('text',({from,message})=>{
     notifyBadge.innerHTML = msgCount;
     notifyBadge.style.visibility='visible';
   }
+  let div = document.createElement('div');
+  div.classList='msg-div';
+  let div2 = document.createElement('div');
+  div2.classList = 'overflow-control';
+  let h4 = `<h4>${from}</h4><div class="clipboard" onclick='copytext(this)'><i class="fa-regular fa-clipboard"></i> <small>copy</small></div>`;
   let pre = document.createElement('pre');
-  pre.innerHTML=`${from} : ${message}`;
-  chatArea.appendChild(pre);
+  pre.innerHTML=message;
+  div.innerHTML=h4;
+  div2.appendChild(pre);
+  div.appendChild(div2);
+  chatArea.appendChild(div);
+
   scrollDown();
 })
 
@@ -83,7 +92,7 @@ function sendMsg(){
     }
     let div = document.createElement('div');
     div.classList='msg-div';
-    let h4 = `<h4>${from}</h4> <i class="fa-solid fa-download" onclick="download('${file}')"></i>`;
+    let h4 = `<h4>${from}</h4> <i class="fa-solid fa-download download" onclick="download('${file}')"></i>`;
     let img = document.createElement('img');
     img.src=file;
     div.innerHTML=h4;
@@ -117,7 +126,7 @@ function sendMsg(){
         // ss.createBlobReadStream(data).pipe(stream);
       }
       else{
-        socket.emit('file',{from:name,to:id,file:dataURL,message:`New ${extn} file.`});
+        socket.emit('file',{from:name,to:id,file:dataURL,message:`Send new ${extn} file.`});
         fileReader.value="";
       }
       
@@ -151,7 +160,7 @@ function sendMsg(){
     }
     let div = document.createElement('div');
     div.classList='msg-div';
-    let h4 = `<h4>${from}</h4> <i class="fa-solid fa-download" onclick="download('${file}')"></i>`;
+    let h4 = `<h4>${from}</h4> <i class="fa-solid fa-download download" onclick="download('${file}')"></i>`;
     let h5 = document.createElement('h5');
     h5.innerHTML=message;
     div.innerHTML=h4;
@@ -190,6 +199,7 @@ function sendMsg(){
     if(user.disconnected){
       remoteVideo.style.display='none';
       speakerBtn.style.display='none';
+      remoteVdoBtn.style.display='none';
       document.querySelector('.share-id').style.display='block';
     }
   })
