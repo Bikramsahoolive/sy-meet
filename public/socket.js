@@ -92,7 +92,7 @@ function sendMsg(){
     }
     let div = document.createElement('div');
     div.classList='msg-div';
-    let h4 = `<h4>${from}</h4> <i class="fa-solid fa-download download" onclick="download('${file}')"></i>`;
+    let h4 = `<h4>${from}</h4> <i class="fa-solid fa-download download" onclick="download(this,'${file}')"></i>`;
     let img = document.createElement('img');
     img.src=file;
     div.innerHTML=h4;
@@ -118,18 +118,23 @@ function sendMsg(){
       let reader = new FileReader();
     reader.addEventListener('load',()=>{
       let dataURL = reader.result;
-      if(extn=='jpg'||extn=='png'||extn=='jpeg'){;
+      if(extn=='jpg'||extn=='png'||extn=='jpeg'||extn=='webp'){
         // const stream = ss.createStream();
-        let data = {from:name,to:id,file:dataURL};
-        socket.emit('image',data);
+        let conf = confirm("Sure! send image file.");
+        if(conf){
+          let data = {from:name,to:id,file:dataURL};
+          socket.emit('image',data);
+        }
         fileReader.value="";
         // ss.createBlobReadStream(data).pipe(stream);
       }
       else{
+        let conf = confirm(`Sure! send ${extn} file.`);
+        if(conf){
         socket.emit('file',{from:name,to:id,file:dataURL,message:`Send new ${extn} file.`});
-        fileReader.value="";
       }
-      
+      fileReader.value="";
+    }
   
     });
     reader.readAsDataURL(file);
@@ -160,7 +165,7 @@ function sendMsg(){
     }
     let div = document.createElement('div');
     div.classList='msg-div';
-    let h4 = `<h4>${from}</h4> <i class="fa-solid fa-download download" onclick="download('${file}')"></i>`;
+    let h4 = `<h4>${from}</h4> <i class="fa-solid fa-download download" onclick="download(this,'${file}')"></i>`;
     let h5 = document.createElement('h5');
     h5.innerHTML=message;
     div.innerHTML=h4;

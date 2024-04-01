@@ -242,11 +242,16 @@ function copytext(btn){
       console.log(err);
     })
 }
-function download(url){
+function download(btn,url){
+  btn.classList='fa-solid fa-check download';
   let link = document.createElement('a');
   link.href=url;
   link.download = "meet_file";
   link.click();
+  
+  // setTimeout(() => {
+  //   btn.classList='fa-solid fa-download download';
+  // }, 10000);
 }
 
 function switchCamera(){
