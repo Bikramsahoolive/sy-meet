@@ -92,7 +92,7 @@ function sendMsg(){
     }
     let div = document.createElement('div');
     div.classList='msg-div';
-    let h4 = `<h4>${from}</h4> <i class="fa-solid fa-download download" onclick="download(this,'${file}')"></i>`;
+    let h4 = `<h4>${from}</h4> <i class="fa-solid fa-download download" onclick="download(this,'${Date.now()}','${file}')"></i>`;
     let img = document.createElement('img');
     img.src=file;
     div.innerHTML=h4;
@@ -101,15 +101,10 @@ function sendMsg(){
     scrollDown();
   })
 
-
+let dataUrlVal;
+let extnVal;
   function showFile(){
-    let paramid = window.location.search;
-    let urlparams =new URLSearchParams(paramid);
-    let id =urlparams.get('id');
-    let name =localStorage.getItem("name");
-
     let file = fileReader.files[0];
-  
     let size = file.size;
     let extnAr = file.name.split('.');
     let elength = extnAr.length;
@@ -118,24 +113,11 @@ function sendMsg(){
       let reader = new FileReader();
     reader.addEventListener('load',()=>{
       let dataURL = reader.result;
-      if(extn=='jpg'||extn=='png'||extn=='jpeg'||extn=='webp'){
-        // const stream = ss.createStream();
-        let conf = confirm("Sure! send image file.");
-        if(conf){
-          let data = {from:name,to:id,file:dataURL};
-          socket.emit('image',data);
-        }
-        fileReader.value="";
-        // ss.createBlobReadStream(data).pipe(stream);
-      }
-      else{
-        let conf = confirm(`Sure! send ${extn} file.`);
-        if(conf){
-        socket.emit('file',{from:name,to:id,file:dataURL,message:`Send new ${extn} file.`});
-      }
+        dataUrlVal=dataURL;
+        extnVal=extn;
+      document.getElementById('smodal').style.display='block';
       fileReader.value="";
-    }
-  
+
     });
     reader.readAsDataURL(file);
     }else{
@@ -165,14 +147,36 @@ function sendMsg(){
     }
     let div = document.createElement('div');
     div.classList='msg-div';
-    let h4 = `<h4>${from}</h4> <i class="fa-solid fa-download download" onclick="download(this,'${file}')"></i>`;
+    let h4 = `<h4>${from}</h4> <i class="fa-solid fa-download download" onclick="download(this,'${Date.now()}','${file}')"></i>`;
     let h5 = document.createElement('h5');
     h5.innerHTML=message;
     div.innerHTML=h4;
     div.appendChild(h5);
     chatArea.appendChild(div);
     scrollDown();
-  })
+  });
+
+  function sendFileConf(){
+    let paramid = window.location.search;
+    let urlparams =new URLSearchParams(paramid);
+    let id =urlparams.get('id');
+    let name =localStorage.getItem("name");
+
+    if(extnVal=='jpg'||extnVal=='png'||extnVal=='jpeg'||extnVal=='webp'){
+      socket.emit('image',{from:name,to:id,file:dataUrlVal});
+    }else{
+      socket.emit('file',{from:name,to:id,file:dataUrlVal,message:`Send new ${extnVal} file.`});
+    }
+    dataUrlVal='';
+    extnVal='';
+    document.getElementById('smodal').style.display='none';
+  }
+
+  function cancelFileConf(){
+    dataUrlVal='';
+    extnVal='';
+    document.getElementById('smodal').style.display='none';
+  }
 
 
   
@@ -185,6 +189,9 @@ function sendMsg(){
     if(data.paused){
       remoteVideo.style.display='none';
       remoteVdoBtn.style.display='none';
+      if (document.fullscreenElement) {
+        document.exitFullscreen();
+         }
     }
   });
   
@@ -206,6 +213,9 @@ function sendMsg(){
       speakerBtn.style.display='none';
       remoteVdoBtn.style.display='none';
       document.querySelector('.share-id').style.display='block';
+      if (document.fullscreenElement) {
+        document.exitFullscreen();
+         }
     }
   })
   

@@ -235,18 +235,17 @@ function copytext(btn){
         btn.querySelector('i').classList='fa-regular fa-clipboard';
         btn.querySelector('small').innerText='copy';
         
-      }, 3000);
-      // <i class="fa-solid fa-check"></i>
+      }, 5000);
     })
     .catch((err)=>{
       console.log(err);
     })
 }
-function download(btn,url){
+function download(btn,extname,url){
   btn.classList='fa-solid fa-check download';
   let link = document.createElement('a');
   link.href=url;
-  link.download = "meet_file";
+  link.download = `meet_file_${extname}`;
   link.click();
   
   // setTimeout(() => {
@@ -371,7 +370,7 @@ async function shareMeetId(){
 
     navigator.share({
      title:'Join Request on SYI MeeT.',
-     text:`Join me now on SYI MeeT MeeT ID: ${id} | click on the link :`,
+     text:`Join me now on SYI MeeT with MeeT ID: ${id} | click on the link :`,
      url:`?id=${id}`
    })
    .catch((err)=>console.log(err));
