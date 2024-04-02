@@ -127,7 +127,7 @@
                 <i class="fa-solid fa-expand" id="zoom-remote-video" onclick="zoomRemoreVideo()"></i>
                 <!-- <video id="remote-screen" muted autoplay></video> -->
             </div>
-            <div class="textdoc" id="chat-box">       
+            <div class="textdoc" id="chat-box">      
                 <div class="text" id="text">
                     
                     <!-- <p class="new-msg">Unread Messages</p> -->
@@ -135,8 +135,10 @@
                         <h4>Bikram</h4>
                         <img src="images/bikramSahoo.jpg">
                     </div> -->
+                    
                 </div>
                 <div class="msg-input" id="msgInput">
+                    <i class="fa-solid fa-angle-down scroll-down" id="scroll-down" onclick="scrollDown()"></i> 
                     <textarea id="text-msg" placeholder="Type a mssage..."></textarea>
                     <input type="file" id="atch-file" style="display: none;" onchange="showFile()">
                     <i class="fa-solid fa-paperclip file-send msg-btn" id="file-btn" onclick="sendFile()"></i>

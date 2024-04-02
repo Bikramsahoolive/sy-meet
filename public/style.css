@@ -118,6 +118,7 @@ h1{
     margin-top: 50px;
     overflow-y: scroll;
     scrollbar-width: thin;
+    scroll-behavior: smooth;
 }
 .text pre{
     background-color: rgb(43, 42, 42);
@@ -514,14 +515,24 @@ margin: 30px 0;
     width: 90px;
     margin: 5px;
   }
-
+  #scroll-down{
+    display: none;
+    position: absolute;
+    bottom: 100px;
+    right: 10px;
+    padding: 14px 13px 11px 14px;
+    border-radius: 50%;
+    color: white;
+    background-color: #5c5c5c;
+    text-align: center;
+  }
   .modal-content-new{
     background-color: #1047ad;
     border-radius: 10px;
     padding: 10px;
     border: none;
     width: 30%;
-    height: 20%;
+    height: 15%;
     min-width: 315px;
     position: absolute;
     top:-100%;

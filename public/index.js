@@ -413,6 +413,24 @@ function zoomRemoreVideo(){
 
 }
 
+function playSound(soundFor){
+  let audio =  document.createElement('audio');
+
+  if (soundFor=='join'){
+    audio.src = 'sounds/join.mp3';
+    audio.play();
+  } else if(soundFor=='leave'){
+    audio.src = 'sounds/leave.mp3';
+    audio.play();
+  }else if(soundFor=='message'){
+    audio.src = 'sounds/message.mp3';
+    audio.play();
+  }else if(soundFor=='alert'){
+    audio.src = 'sounds/alert.mp3';
+    audio.play();
+  }
+};
+ 
 
 
 
@@ -437,10 +455,18 @@ function createMeet(){
     name = name.split(" ");
     name = name[0];
     var regex = /^[a-zA-Z]+$/;
-  if( name=='')return;
-  if (!regex.test(name))return;
-  if(name.length<3)return;
-
+  if( name==''){
+    playSound('alert');
+    return
+  };
+  if (!regex.test(name)){
+    playSound('alert');
+    return;
+  };
+  if(name.length<3){
+    playSound('alert');
+    return;
+  };
 
   document.querySelector('.modal-content-new').classList.remove('popup-new');
   setTimeout(()=>{
@@ -453,7 +479,21 @@ function createMeet(){
   
 }
 
+let scrollableDiv = document.getElementById('text');
+let scrollBtn = document.getElementById('scroll-down');
+let lastScrollTop = 0;
+scrollableDiv.addEventListener('scroll',()=>{
+  if(scrollableDiv.scrollTop > lastScrollTop){
+    scrollBtn.style.display='none';
+  }else{
+    scrollBtn.style.display='block';
+  }
+  if(scrollableDiv.scrollTop + scrollableDiv.clientHeight >= scrollableDiv.scrollHeight){
+    scrollBtn.style.display='none';
+  }
 
+   lastScrollTop = scrollableDiv.scrollTop;
+})
 
 function scrollDown(){
   let messageArea = document.getElementById('text');

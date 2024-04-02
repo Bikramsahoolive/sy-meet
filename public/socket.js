@@ -41,6 +41,7 @@ socket.on('text',({from,message})=>{
     let notifyBadge = document.querySelector('.msg-notification');
     notifyBadge.innerHTML = msgCount;
     notifyBadge.style.visibility='visible';
+    playSound('message');
   }
   let div = document.createElement('div');
   div.classList='msg-div';
@@ -91,6 +92,7 @@ function sendMsg(){
       let notifyBadge = document.querySelector('.msg-notification');
       notifyBadge.innerHTML = msgCount;
       notifyBadge.style.visibility='visible';
+      playSound('mssage');
     }
     let div = document.createElement('div');
     div.classList='msg-div';
@@ -146,6 +148,7 @@ let extnVal;
       let notifyBadge = document.querySelector('.msg-notification');
       notifyBadge.innerHTML = msgCount;
       notifyBadge.style.visibility='visible';
+      playSound('message');
     }
     let div = document.createElement('div');
     div.classList='msg-div';
@@ -211,6 +214,7 @@ let extnVal;
   
   socket.on('connection-lost',(user)=>{
     if(user.disconnected){
+      playSound('leave');
       remoteVideo.style.display='none';
       speakerBtn.style.display='none';
       remoteVdoBtn.style.display='none';
@@ -262,6 +266,7 @@ let extnVal;
         },500);
         
       }else{
+        playSound('alert');
         let err = document.querySelector('.container h5');
         err.style.visibility = 'visible';
         document.getElementById('err').innerHTML=data.message;
@@ -307,6 +312,7 @@ let extnVal;
   
   socket.on('update-user-list', ( users ) => {
     displayUsers(users.users);
+    
   });
   
   socket.on('offer', (data) => {
@@ -324,7 +330,7 @@ let extnVal;
     const remoteAnswer = data.sdp;
     peerConnection.setRemoteDescription(new RTCSessionDescription(remoteAnswer))
     .then(()=>{
-      console.log("connection established");
+      // console.log("connection established");
   
   })
     .catch(error => console.error('Error setting remote description:', error));
@@ -340,6 +346,7 @@ let extnVal;
     sessionStorage.setItem('sid',socket.id);
     users.forEach(user => {
       if (user.id === socket.id) return;
+      playSound('join');
       document.querySelector('.share-id').style.display='none';
       sessionStorage.setItem('uid',user.id);
       const userElement = document.createElement('li');

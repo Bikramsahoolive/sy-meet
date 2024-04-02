@@ -36,7 +36,7 @@ const constDefultRoomIds = ['123456'];
 const io = socketIo(server,{
   maxHttpBufferSize: 2e7,
   pingTimeout:1800000,
-  pingInterval:25000
+  // pingInterval:25000
 });
 
 io.on('connection', (socket) => {
