@@ -282,6 +282,16 @@ const textarea = document.querySelector('#text-msg');
 const parentMaxHeight = parseInt(window.getComputedStyle(textarea.parentElement).maxHeight);
 
 function adjustTextareaHeight() {
+
+    if((textarea.value).length > 0){
+      document.querySelector('#file-btn').style.display='none';
+      document.querySelector('#send-btn').style.display='block';
+    }else{
+      document.querySelector('#file-btn').style.display='block';
+      document.querySelector('#send-btn').style.display='none';
+    }
+  
+
     textarea.style.height = 'auto';
     let newHeight = textarea.scrollHeight;
     if (newHeight > parentMaxHeight) {
@@ -290,7 +300,7 @@ function adjustTextareaHeight() {
     } else {
         textarea.style.overflowY = 'hidden';
     }
-    textarea.style.height = `${newHeight}px`;
+    textarea.style.height = `${newHeight-10}px`;
 }
 
 
@@ -462,7 +472,6 @@ function chatToggle(){
 
 
 hangupButton.addEventListener('click', () => {
-  console.log("hangup");
     
     if (peerConnection) {
         peerConnection.close();

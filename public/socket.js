@@ -65,7 +65,9 @@ function sendMsg(){
       let name =localStorage.getItem("name");
       socket.emit('text',{from:name ,to:id, message:textarea.value});
       textarea.value="";
-      textarea.style.height='50px';
+      document.querySelector('#file-btn').style.display='block';
+      document.querySelector('#send-btn').style.display='none';
+      textarea.style.height='40px';
       let hasPTag = chatArea.querySelector('p');
       if(hasPTag !== null){
         hasPTag.remove();
@@ -109,7 +111,7 @@ let extnVal;
     let extnAr = file.name.split('.');
     let elength = extnAr.length;
     extn=extnAr[elength-1];
-    if(size < 1048576){
+    if(size < 16777216){
       let reader = new FileReader();
     reader.addEventListener('load',()=>{
       let dataURL = reader.result;
