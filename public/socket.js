@@ -29,7 +29,6 @@ socket.on('text',({from,message})=>{
   let chatBox = document.getElementById('chat-box');
   let isOpened = chatBox.classList.contains('textdoc-open');
   let hasPTag = chatArea.querySelector('p') !== null;
-    
   if(!isOpened){
     if(!hasPTag){
       let unReadTag = document.createElement('p');
@@ -41,7 +40,6 @@ socket.on('text',({from,message})=>{
     let notifyBadge = document.querySelector('.msg-notification');
     notifyBadge.innerHTML = msgCount;
     notifyBadge.style.visibility='visible';
-    playSound('message');
   }
   let div = document.createElement('div');
   div.classList='msg-div';
@@ -54,7 +52,7 @@ socket.on('text',({from,message})=>{
   div2.appendChild(pre);
   div.appendChild(div2);
   chatArea.appendChild(div);
-
+  playSound('new-message');
   scrollDown();
 })
 
@@ -64,7 +62,23 @@ function sendMsg(){
       let urlparams =new URLSearchParams(paramid);
       let id =urlparams.get('id');
       let name =localStorage.getItem("name");
+      let sendDiv = document.createElement('div');
+      sendDiv.classList='send-div';
+      let div = document.createElement('div');
+      div.classList='msg-div';
+      let div2 = document.createElement('div');
+      div2.classList = 'overflow-control';
+      let h4 = `<h4>${name}</h4><div class="clipboard" onclick='copytext(this)'><i class="fa-regular fa-clipboard"></i> <small>copy</small></div>`;
+      let pre = document.createElement('pre');
+      pre.innerHTML=textarea.value;
+      div.innerHTML=h4;
+      div2.appendChild(pre);
+      div.appendChild(div2);
+      sendDiv.appendChild(div)
+      chatArea.appendChild(sendDiv);
+      scrollDown();
       socket.emit('text',{from:name ,to:id, message:textarea.value});
+      playSound('message-sent');
       textarea.value="";
       document.querySelector('#file-btn').style.display='block';
       document.querySelector('#send-btn').style.display='none';
@@ -92,7 +106,6 @@ function sendMsg(){
       let notifyBadge = document.querySelector('.msg-notification');
       notifyBadge.innerHTML = msgCount;
       notifyBadge.style.visibility='visible';
-      playSound('mssage');
     }
     let div = document.createElement('div');
     div.classList='msg-div';
@@ -102,6 +115,7 @@ function sendMsg(){
     div.innerHTML=h4;
     div.appendChild(img);
     chatArea.appendChild(div);
+    playSound('new-message');
     scrollDown();
   })
 
@@ -131,7 +145,7 @@ let extnVal;
   }
 
 
-  socket.on('file',({from,file,message})=>{
+  socket.on('file',({from,file,extn})=>{
     // console.log(from,file);
     let chatBox = document.getElementById('chat-box');
     let isOpened = chatBox.classList.contains('textdoc-open');
@@ -148,16 +162,16 @@ let extnVal;
       let notifyBadge = document.querySelector('.msg-notification');
       notifyBadge.innerHTML = msgCount;
       notifyBadge.style.visibility='visible';
-      playSound('message');
     }
     let div = document.createElement('div');
     div.classList='msg-div';
     let h4 = `<h4>${from}</h4> <i class="fa-solid fa-download download" onclick="download(this,'${Date.now()}','${file}')"></i>`;
     let h5 = document.createElement('h5');
-    h5.innerHTML=message;
+    h5.innerHTML=`Received new ${extn} file.`;
     div.innerHTML=h4;
     div.appendChild(h5);
     chatArea.appendChild(div);
+    playSound('new-message');
     scrollDown();
   });
 
@@ -168,9 +182,36 @@ let extnVal;
     let name =localStorage.getItem("name");
 
     if(extnVal=='jpg'||extnVal=='png'||extnVal=='jpeg'||extnVal=='webp'){
+      let sendDiv = document.createElement('div');
+      sendDiv.classList='send-div';
+      let div = document.createElement('div');
+      div.classList='msg-div';
+      let h4 = `<h4>${name}</h4>`;
+      let img = document.createElement('img');
+      let imageSrc=dataUrlVal;
+      img.src=imageSrc;
+      div.innerHTML=h4;
+      div.appendChild(img);
+      sendDiv.appendChild(div);
+      chatArea.appendChild(sendDiv);
+      scrollDown();
       socket.emit('image',{from:name,to:id,file:dataUrlVal});
+      playSound('message-sent');
     }else{
-      socket.emit('file',{from:name,to:id,file:dataUrlVal,message:`Send new ${extnVal} file.`});
+      let sendDiv = document.createElement('div');
+      sendDiv.classList='send-div';
+      let div = document.createElement('div');
+      div.classList='msg-div';
+      let h4 = `<h4>${name}</h4>`;
+      let h5 = document.createElement('h5');
+      h5.innerHTML=`Send new ${extnVal} file.`;
+      div.innerHTML=h4;
+      div.appendChild(h5);
+      sendDiv.appendChild(div);
+      chatArea.appendChild(sendDiv);
+      scrollDown();
+      socket.emit('file',{from:name,to:id,file:dataUrlVal,extn:extnVal});
+      playSound('message-sent');
     }
     dataUrlVal='';
     extnVal='';

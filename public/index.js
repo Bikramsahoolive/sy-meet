@@ -422,11 +422,14 @@ function playSound(soundFor){
   } else if(soundFor=='leave'){
     audio.src = 'sounds/leave.mp3';
     audio.play();
-  }else if(soundFor=='message'){
+  }else if(soundFor=='new-message'){
     audio.src = 'sounds/message.mp3';
     audio.play();
   }else if(soundFor=='alert'){
     audio.src = 'sounds/alert.mp3';
+    audio.play();
+  }else if(soundFor=='message-sent'){
+    audio.src = 'sounds/message_sent.mp3';
     audio.play();
   }
 };

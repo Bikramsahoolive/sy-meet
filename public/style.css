@@ -202,7 +202,7 @@ li .mic{
     align-items: center;
     width: 20%;
     width: max-content;
-    max-width: 88%;
+    max-width: 80%;
     height: max-content;
     margin: 20px;
     /* margin-bottom: 30px; */
@@ -514,6 +514,11 @@ margin: 30px 0;
     cursor: pointer;
     width: 90px;
     margin: 5px;
+  }
+  .send-div{
+    display: flex;
+    width: 100%;
+    justify-content: end;
   }
   #scroll-down{
     display: none;
