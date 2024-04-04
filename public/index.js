@@ -277,21 +277,59 @@ function hideClientVideo(){
     toggleBtn.classList='fa-solid fa-angle-up';
   }
 }
-
+// const backspace = document.getElementById('backspace');
 const textarea = document.querySelector('#text-msg');
+const inputType = document.getElementById('input-type');
+let codeType = false;
+inputType.addEventListener('click',()=>{
+  codeType= !codeType;
+  if(codeType){
+    inputType.classList = 'fa-solid fa-comment input-type';
+    textarea.placeholder = 'Type a code...';
+  }else{
+  inputType.classList = 'fa-solid fa-code input-type';
+  textarea.placeholder = 'Type a message...';
+  }
+})
+
 const parentMaxHeight = parseInt(window.getComputedStyle(textarea.parentElement).maxHeight);
+// backspace.addEventListener('click',()=>{
+//   let vl = textarea.value;
+//   let emojiRegex = /[\uD800-\uDBFF][\uDC00-\uDFFF]$/;
+//   if(emojiRegex.test(vl)){
+//     textarea.value = vl.substring(0,vl.length - 2);
+//   }else{
+//     textarea.value = vl.substring(0,vl.length - 1);
+//   }
 
+//   // if(textarea.length < 0){
+//   //   backspace.style.display = 'none';
+//   // }
+  
+// })
+textarea.addEventListener('focus',()=>{
+  document.querySelector('.emoji-picker').classList= 'emoji-picker';
+})
+// textarea.addEventListener('keyup', ()=>{
+//   // playSound('keypad');
+// });
 function adjustTextareaHeight() {
-
+  let name =localStorage.getItem("name");
+  let paramid = window.location.search;
+  let urlparams =new URLSearchParams(paramid);
+  let id =urlparams.get('id');
+  socket.emit('typing',{name:name,to:id});
     if((textarea.value).length > 0){
+      inputType.style.display = 'none';
       document.querySelector('#file-btn').style.display='none';
       document.querySelector('#send-btn').style.display='block';
     }else{
+      inputType.style.display = 'block';
       document.querySelector('#file-btn').style.display='block';
       document.querySelector('#send-btn').style.display='none';
     }
   
-
+   
     textarea.style.height = 'auto';
     let newHeight = textarea.scrollHeight;
     if (newHeight > parentMaxHeight) {
@@ -300,7 +338,8 @@ function adjustTextareaHeight() {
     } else {
         textarea.style.overflowY = 'hidden';
     }
-    textarea.style.height = `${newHeight-10}px`;
+    console.log(newHeight,parentMaxHeight,textarea.scrollHeight);
+    textarea.style.height = `${newHeight-20}px`;
 }
 
 
@@ -413,11 +452,26 @@ function zoomRemoreVideo(){
 
 }
 
+document.getElementById('emoji').addEventListener('click',()=>{
+  document.querySelector('.emoji-picker').classList.toggle('emoji-picker-open');
+})
+document.querySelector('emoji-picker')
+  .addEventListener('emoji-click', (event) =>{
+    //  console.log(event.detail)
+     let val = textarea.value;
+    //  if(val.length==0){textarea.value =`${event.detail.unicode}`;}
+    //  else{
+     textarea.value =`${val}${event.detail.unicode}`;
+    //  }
+     adjustTextareaHeight();
+
+  });
+  
 function playSound(soundFor){
   let audio =  document.createElement('audio');
-
-  if (soundFor=='join'){
-    audio.src = 'sounds/join.mp3';
+  if(soundFor=='keypad'){
+    audio.src = 'sounds/keypad.mp3';
+    audio.currentTime= 0;
     audio.play();
   } else if(soundFor=='leave'){
     audio.src = 'sounds/leave.mp3';
@@ -430,6 +484,9 @@ function playSound(soundFor){
     audio.play();
   }else if(soundFor=='message-sent'){
     audio.src = 'sounds/message_sent.mp3';
+    audio.play();
+  }else if (soundFor=='join'){
+    audio.src = 'sounds/join.mp3';
     audio.play();
   }
 };

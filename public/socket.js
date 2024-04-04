@@ -54,11 +54,40 @@ socket.on('text',({from,message})=>{
   chatArea.appendChild(div);
   playSound('new-message');
   scrollDown();
-})
+});
 
+socket.on('chat',({from,message})=>{
+  let chatBox = document.getElementById('chat-box');
+  let isOpened = chatBox.classList.contains('textdoc-open');
+  let hasPTag = chatArea.querySelector('p') !== null;
+  if(!isOpened){
+    if(!hasPTag){
+      let unReadTag = document.createElement('p');
+      unReadTag.classList.add('new-msg');
+      unReadTag.innerHTML="Unread Messages";
+      chatArea.appendChild(unReadTag);
+    }
+    msgCount++;
+    let notifyBadge = document.querySelector('.msg-notification');
+    notifyBadge.innerHTML = msgCount;
+    notifyBadge.style.visibility='visible';
+  }
+  let div = document.createElement('div');
+  div.classList='msg-div';
+  let h4 = `<h4>${from}</h4><div class="clipboard" onclick='copytext(this)'><i class="fa-regular fa-clipboard"></i> <small>copy</small></div>`;
+  let span = document.createElement('span');
+  span.innerHTML=message;
+  div.innerHTML=h4;
+  div.appendChild(span);
+  chatArea.appendChild(div);
+  playSound('new-message');
+  scrollDown();
+})
+const inputTypeBtn = document.getElementById('input-type');
 function sendMsg(){
     if(textarea.value!==""){
-      let paramid = window.location.search;
+      if(codeType){
+        let paramid = window.location.search;
       let urlparams =new URLSearchParams(paramid);
       let id =urlparams.get('id');
       let name =localStorage.getItem("name");
@@ -68,7 +97,7 @@ function sendMsg(){
       div.classList='msg-div';
       let div2 = document.createElement('div');
       div2.classList = 'overflow-control';
-      let h4 = `<h4>${name}</h4><div class="clipboard" onclick='copytext(this)'><i class="fa-regular fa-clipboard"></i> <small>copy</small></div>`;
+      let h4 = `<h4>${name}</h4><div class="clipboard" onclick='copytext(this)'><i class="fa-regular fa-clipboard"></i> <small>Copy code</small></div>`;
       let pre = document.createElement('pre');
       pre.innerHTML=textarea.value;
       div.innerHTML=h4;
@@ -76,10 +105,28 @@ function sendMsg(){
       div.appendChild(div2);
       sendDiv.appendChild(div)
       chatArea.appendChild(sendDiv);
-      scrollDown();
       socket.emit('text',{from:name ,to:id, message:textarea.value});
+      }else{
+        let paramid = window.location.search;
+      let urlparams =new URLSearchParams(paramid);
+      let id =urlparams.get('id');
+      let name =localStorage.getItem("name");
+      let sendDiv = document.createElement('div');
+      sendDiv.classList='send-div';
+      let div = document.createElement('div');
+      div.classList='msg-div';
+      let h4 = `<h4>${name}</h4><div class="clipboard" onclick='copytext(this)'><i class="fa-regular fa-clipboard"></i> <small>Copy text</small></div>`;
+      let span = document.createElement('span');
+      span.innerHTML=textarea.value;
+      div.innerHTML=h4;
+      div.appendChild(span);
+      sendDiv.appendChild(div)
+      chatArea.appendChild(sendDiv);
+      socket.emit('chat',{from:name ,to:id, message:textarea.value});
+      }
       playSound('message-sent');
       textarea.value="";
+      scrollDown();
       document.querySelector('#file-btn').style.display='block';
       document.querySelector('#send-btn').style.display='none';
       textarea.style.height='40px';
@@ -88,7 +135,17 @@ function sendMsg(){
         hasPTag.remove();
       }
     }
+    document.querySelector('.emoji-picker').classList='emoji-picker';
+    inputTypeBtn.style.display='block';
   }
+  let typetime ;
+  socket.on('typing',({name})=>{
+    document.getElementById('typing').innerHTML=`${name} is typing...`;
+    clearTimeout(typetime);
+    typetime = setTimeout(()=>{
+      document.getElementById('typing').innerHTML='';
+    },3000)
+  })
 
   socket.on('image',({from,file})=>{
     let chatBox = document.getElementById('chat-box');

@@ -97,9 +97,16 @@ io.on('connection', (socket) => {
       io.to(roomId).emit('update-user-list', { users: Object.values(roomUsers[roomId].users) });
 
         
-          
+      socket.on('typing',({name,to})=>{
+        socket.broadcast.to(to).emit('typing',{name});
+      });
+
       socket.on('text',({from,to,message})=>{
         socket.broadcast.to(to).emit('text',{from,message});
+      });
+
+      socket.on('chat',({from,to,message})=>{
+        socket.broadcast.to(to).emit('chat',{from,message});
       });
 
       socket.on('image',({from,to,file})=>{
