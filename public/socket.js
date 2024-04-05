@@ -100,6 +100,7 @@ let meridiem = sec.split(' ')[1];
   div.classList='msg-div';
   let h4 = `<h4>${from}</h4><div class="clipboard" onclick='copyChat(this)'><i class="fa-regular fa-clipboard"></i> <small>Copy text</small></div>`;
   let span = document.createElement('span');
+  span.classList = 'span-msg';
   let small = document.createElement('small');
   small.classList='time';
   small.innerHTML=`${hour}:${minute} ${meridiem}`;
@@ -158,6 +159,7 @@ function sendMsg(){
       div.classList='msg-div';
       let h4 = `<h4>${name}</h4><div class="clipboard" onclick='copyChat(this)'><i class="fa-regular fa-clipboard"></i> <small>Copy text</small></div>`;
       let span = document.createElement('span');
+      span.classList = 'span-msg';
       span.innerHTML=textarea.value;
       let small = document.createElement('small');
       small.classList='time';
@@ -193,6 +195,15 @@ function sendMsg(){
   })
 
   socket.on('image',({from,file})=>{
+    let currentDate  =new Date();
+    let ISTOptions = {timeZone: 'Asia/Kolkata'};
+let currentISTTime = currentDate.toLocaleString('en-IN', ISTOptions);
+let [date,time] = currentISTTime.split(',');
+let [hour, minute, sec] = time.split(':');
+console.log(typeof minute);
+let hr = hour.trim().padStart(2 ,"0");
+let meridiem = sec.split(' ')[1];
+
     let chatBox = document.getElementById('chat-box');
     let isOpened = chatBox.classList.contains('textdoc-open');
     let hasPTag = chatArea.querySelector('p') !== null;
@@ -215,7 +226,11 @@ function sendMsg(){
     let img = document.createElement('img');
     img.src=file;
     div.innerHTML=h4;
+    let small =document.createElement('small');
+    small.classList = 'time';
+    small.innerHTML=`${hr}:${minute} ${meridiem}`;
     div.appendChild(img);
+    div.appendChild(small);
     chatArea.appendChild(div);
     playSound('new-message');
     scrollDown();
@@ -248,6 +263,14 @@ let extnVal;
 
 
   socket.on('file',({from,file,extn})=>{
+    let currentDate  =new Date();
+    let ISTOptions = {timeZone: 'Asia/Kolkata'};
+let currentISTTime = currentDate.toLocaleString('en-IN', ISTOptions);
+let [date,time] = currentISTTime.split(',');
+let [hour, minute, sec] = time.split(':');
+let hr = hour.trim().padStart(2 ,"0");
+let meridiem = sec.split(' ')[1];
+
     // console.log(from,file);
     let chatBox = document.getElementById('chat-box');
     let isOpened = chatBox.classList.contains('textdoc-open');
@@ -269,15 +292,51 @@ let extnVal;
     div.classList='msg-div';
     let h4 = `<h4>${from}</h4> <i class="fa-solid fa-download download" onclick="download(this,'${Date.now()}','${file}')"></i>`;
     let h5 = document.createElement('h5');
+    let img = document.createElement('img');
+    if(extn=='pdf'){
+      img.src="images/SVGfile/file-type-standard-drawing-pdf-document.svg";
+    }else if(extn=='mp3'|| extn=='wav'|| extn=='aac'||extn=='m4a'){
+      img.src="images/SVGfile/file-type-standard-drawing-sound-file.svg";
+    }else if(extn=='doc' || extn=='docx'){
+      img.src="images/SVGfile/file-type-standard-drawing-word-document.svg";
+    }else if(extn=='txt'){
+      img.src="images/SVGfile/document-type-standard-drawing-notepad.svg";
+    }else if(extn=='xls'||extn=='xlsx'||extn=='xlsm'||extn=='xlsb'){
+      img.src="images/SVGfile/document-type-standard-drawing-worksheet.svg";
+    }else if(extn=='zip'||extn=='rar'){
+      img.src="images/SVGfile/file-type-standard-drawing-compressed-file.svg";
+    }else if(extn=='mp4'||extn=='3gp'){
+      img.src="images/SVGfile/file-type-standard-drawing-video-file.svg";
+    }else if(extn=='pptx'){
+      img.src="images/SVGfile/document-type-standard-drawing-slide.svg";
+    }else if(extn=='json'){
+      img.src="images/SVGfile/json-5.svg";
+    }else{
+      img.src="images/SVGfile/file-type-standard-drawing-unknown-file.svg";
+    }
     h5.innerHTML=`Received new ${extn} file.`;
     div.innerHTML=h4;
+    div.appendChild(img);
     div.appendChild(h5);
+    let small = document.createElement('small');
+    small.classList = 'time';
+    small.innerHTML = `${hr}:${minute} ${meridiem}`;
+    div.appendChild(small);
     chatArea.appendChild(div);
     playSound('new-message');
     scrollDown();
   });
 
   function sendFileConf(){
+    let currentDate  =new Date();
+    let ISTOptions = {timeZone: 'Asia/Kolkata'};
+let currentISTTime = currentDate.toLocaleString('en-IN', ISTOptions);
+let [date,time] = currentISTTime.split(',');
+let [hour, minute, sec] = time.split(':');
+console.log(typeof minute);
+let hr = hour.trim().padStart(2 ,"0");
+let meridiem = sec.split(' ')[1];
+
     let paramid = window.location.search;
     let urlparams =new URLSearchParams(paramid);
     let id =urlparams.get('id');
@@ -293,7 +352,11 @@ let extnVal;
       let imageSrc=dataUrlVal;
       img.src=imageSrc;
       div.innerHTML=h4;
+      let small = document.createElement('small');
+      small.classList='time';
+      small.innerHTML = `${hr}:${minute} ${meridiem}`
       div.appendChild(img);
+      div.appendChild(small);
       sendDiv.appendChild(div);
       chatArea.appendChild(sendDiv);
       scrollDown();
@@ -308,7 +371,34 @@ let extnVal;
       let h5 = document.createElement('h5');
       h5.innerHTML=`Send new ${extnVal} file.`;
       div.innerHTML=h4;
+      let img = document.createElement('img');
+      if(extn=='pdf'){
+        img.src="images/SVGfile/file-type-standard-drawing-pdf-document.svg";
+      }else if(extn=='mp3'|| extn=='wav'|| extn=='aac'||extn=='m4a'){
+        img.src="images/SVGfile/file-type-standard-drawing-sound-file.svg";
+      }else if(extn=='doc' || extn=='docx'){
+        img.src="images/SVGfile/file-type-standard-drawing-word-document.svg";
+      }else if(extn=='txt'){
+        img.src="images/SVGfile/document-type-standard-drawing-notepad.svg";
+      }else if(extn=='xls'||extn=='xlsx'||extn=='xlsm'||extn=='xlsb'){
+        img.src="images/SVGfile/document-type-standard-drawing-worksheet.svg";
+      }else if(extn=='zip'||extn=='rar'){
+        img.src="images/SVGfile/file-type-standard-drawing-compressed-file.svg";
+      }else if(extn=='mp4'||extn=='3gp'){
+        img.src="images/SVGfile/file-type-standard-drawing-video-file.svg";
+      }else if(extn=='pptx'){
+        img.src="images/SVGfile/document-type-standard-drawing-slide.svg";
+      }else if(extn=='json'){
+        img.src="images/SVGfile/json-5.svg";
+      }else{
+        img.src="images/SVGfile/file-type-standard-drawing-unknown-file.svg";
+      }
+      div.appendChild(img);
       div.appendChild(h5);
+      let small = document.createElement('small');
+      small.classList='time';
+      small.innerHTML = `${hr}:${minute} ${meridiem}`
+      div.appendChild(small);
       sendDiv.appendChild(div);
       chatArea.appendChild(sendDiv);
       scrollDown();
@@ -393,10 +483,9 @@ let extnVal;
 let currentISTTime = currentDate.toLocaleString('en-IN', ISTOptions);
 let [date,time] = currentISTTime.split(',');
 let [hour, minute, sec] = time.split(':');
-console.log(typeof minute);
 let hr = hour.trim().padStart(2 ,"0");
 let meridiem = sec.split(' ')[1];
-    document.getElementById('dev-msg').innerHTML = `Hi ${name}! welcome to the chat.This is a defult message for all users.If you facing any error/ complaint take a screen shot and send 📧mail to  <a href="mailto:bikramsahoo@live.in">bikramsahoo@live.in</a> .
+    document.getElementById('dev-msg').innerHTML = `Hi ${name}! welcome to MeeT. This is a system generated message for all users.If you facing any error/ complaint take a screen shot and send 📧mail to  <a href="mailto:bikramsahoo@live.in">bikramsahoo@live.in</a> .
     Thanking You 🙏🏼 <br> Happy MeeTing 😊
     <small class="time">${hr}:${minute} ${meridiem}</small>`
 

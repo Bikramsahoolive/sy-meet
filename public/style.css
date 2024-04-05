@@ -128,9 +128,12 @@ h1{
     /* margin: 10px 20px; */
     padding: 18px 10px;
     color: white;
+    font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+    font-size: 1em;
+    line-height: 1.5;
     
 }
-.text span{
+.text .span-msg{
     color: rgb(0, 0, 0);
     min-width: 220px;
     width:-webkit-fill-available;
@@ -138,15 +141,17 @@ h1{
     border-radius: 10px;
     padding: 18px 8px;
     font-family: Arial, Helvetica, sans-serif;
-    text-align: justify;
+    text-align: start;
 }
 .text .time{
+    font-family: Arial, Helvetica, sans-serif;
     position: absolute;
     right:10px;
     bottom:5px;
     color: rgba(0, 0, 0, 0.719);
 }
 .text .time-w{
+    font-family: Arial, Helvetica, sans-serif;
     position: absolute;
     right:10px;
     bottom:5px;
@@ -281,6 +286,7 @@ li .mic{
 }
 .msg-div img{
     width: 215px;
+    margin-bottom: 15px;
 }
 .msg-div .clipboard{
     position: absolute;
