@@ -241,6 +241,23 @@ function copytext(btn){
       console.log(err);
     })
 }
+function copyChat(btn){
+  let textbox = btn.nextElementSibling;
+  let text = textbox.innerText;
+  navigator.clipboard.writeText(text)
+  .then(()=>{
+    btn.querySelector('i').classList='fa-solid fa-check';
+    btn.querySelector('small').innerText='copied!';
+    setTimeout(() => {
+      btn.querySelector('i').classList='fa-regular fa-clipboard';
+      btn.querySelector('small').innerText='copy';
+      
+    }, 5000);
+  })
+  .catch((err)=>{
+    console.log(err);
+  })
+}
 function download(btn,extname,url){
   btn.classList='fa-solid fa-check download';
   let link = document.createElement('a');
@@ -286,9 +303,19 @@ inputType.addEventListener('click',()=>{
   if(codeType){
     inputType.classList = 'fa-solid fa-comment input-type';
     textarea.placeholder = 'Type a code...';
+//     textarea.value = `<code class="language-javascript">
+// //Chose your language above.
+// // Paste your code here
+
+
+   
+//     </code>`;
+//     textarea.style.height='180px'
   }else{
   inputType.classList = 'fa-solid fa-code input-type';
   textarea.placeholder = 'Type a message...';
+  textarea.value = '';
+  textarea.style.height = '40px'
   }
 })
 
@@ -338,7 +365,6 @@ function adjustTextareaHeight() {
     } else {
         textarea.style.overflowY = 'hidden';
     }
-    console.log(newHeight,parentMaxHeight,textarea.scrollHeight);
     textarea.style.height = `${newHeight-20}px`;
 }
 

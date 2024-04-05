@@ -26,6 +26,16 @@ socket.on('create-meet',({status,rid})=>{
 })
 
 socket.on('text',({from,message})=>{
+
+  let currentDate  =new Date();
+  let ISTOptions = {timeZone: 'Asia/Kolkata'};
+let currentISTTime = currentDate.toLocaleString('en-IN', ISTOptions);
+let [date,time] = currentISTTime.split(',');
+let [hour, minute, sec] = time.split(':');
+console.log(typeof minute);
+let hr = hour.trim().padStart(2 ,"0");
+let meridiem = sec.split(' ')[1];
+
   let chatBox = document.getElementById('chat-box');
   let isOpened = chatBox.classList.contains('textdoc-open');
   let hasPTag = chatArea.querySelector('p') !== null;
@@ -49,7 +59,11 @@ socket.on('text',({from,message})=>{
   let pre = document.createElement('pre');
   pre.innerHTML=message;
   div.innerHTML=h4;
+  let small = document.createElement('small');
+  small.classList='time-w';
+  small.innerHTML=`${hour}:${minute} ${meridiem}`;
   div2.appendChild(pre);
+  div2.appendChild(small);
   div.appendChild(div2);
   chatArea.appendChild(div);
   playSound('new-message');
@@ -57,6 +71,16 @@ socket.on('text',({from,message})=>{
 });
 
 socket.on('chat',({from,message})=>{
+  let currentDate  =new Date();
+  let ISTOptions = {timeZone: 'Asia/Kolkata'};
+let currentISTTime = currentDate.toLocaleString('en-IN', ISTOptions);
+let [date,time] = currentISTTime.split(',');
+let [hour, minute, sec] = time.split(':');
+console.log(typeof minute);
+let hr = hour.trim().padStart(2 ,"0");
+let meridiem = sec.split(' ')[1];
+
+
   let chatBox = document.getElementById('chat-box');
   let isOpened = chatBox.classList.contains('textdoc-open');
   let hasPTag = chatArea.querySelector('p') !== null;
@@ -74,11 +98,15 @@ socket.on('chat',({from,message})=>{
   }
   let div = document.createElement('div');
   div.classList='msg-div';
-  let h4 = `<h4>${from}</h4><div class="clipboard" onclick='copytext(this)'><i class="fa-regular fa-clipboard"></i> <small>copy</small></div>`;
+  let h4 = `<h4>${from}</h4><div class="clipboard" onclick='copyChat(this)'><i class="fa-regular fa-clipboard"></i> <small>Copy text</small></div>`;
   let span = document.createElement('span');
+  let small = document.createElement('small');
+  small.classList='time';
+  small.innerHTML=`${hour}:${minute} ${meridiem}`;
   span.innerHTML=message;
   div.innerHTML=h4;
   div.appendChild(span);
+  div.appendChild(small);
   chatArea.appendChild(div);
   playSound('new-message');
   scrollDown();
@@ -86,6 +114,15 @@ socket.on('chat',({from,message})=>{
 const inputTypeBtn = document.getElementById('input-type');
 function sendMsg(){
     if(textarea.value!==""){
+      let currentDate  =new Date();
+      let ISTOptions = {timeZone: 'Asia/Kolkata'};
+  let currentISTTime = currentDate.toLocaleString('en-IN', ISTOptions);
+  let [date,time] = currentISTTime.split(',');
+  let [hour, minute, sec] = time.split(':');
+  console.log(typeof minute);
+  let hr = hour.trim().padStart(2 ,"0");
+  let meridiem = sec.split(' ')[1];
+
       if(codeType){
         let paramid = window.location.search;
       let urlparams =new URLSearchParams(paramid);
@@ -99,9 +136,13 @@ function sendMsg(){
       div2.classList = 'overflow-control';
       let h4 = `<h4>${name}</h4><div class="clipboard" onclick='copytext(this)'><i class="fa-regular fa-clipboard"></i> <small>Copy code</small></div>`;
       let pre = document.createElement('pre');
+      let small = document.createElement('small');
+      small.classList='time-w';
+      small.innerHTML=`${hour}:${minute} ${meridiem}`;
       pre.innerHTML=textarea.value;
       div.innerHTML=h4;
       div2.appendChild(pre);
+      div2.appendChild(small);
       div.appendChild(div2);
       sendDiv.appendChild(div)
       chatArea.appendChild(sendDiv);
@@ -115,11 +156,15 @@ function sendMsg(){
       sendDiv.classList='send-div';
       let div = document.createElement('div');
       div.classList='msg-div';
-      let h4 = `<h4>${name}</h4><div class="clipboard" onclick='copytext(this)'><i class="fa-regular fa-clipboard"></i> <small>Copy text</small></div>`;
+      let h4 = `<h4>${name}</h4><div class="clipboard" onclick='copyChat(this)'><i class="fa-regular fa-clipboard"></i> <small>Copy text</small></div>`;
       let span = document.createElement('span');
       span.innerHTML=textarea.value;
+      let small = document.createElement('small');
+      small.classList='time';
+      small.innerHTML=`${hour}:${minute} ${meridiem}`;
       div.innerHTML=h4;
       div.appendChild(span);
+      div.appendChild(small);
       sendDiv.appendChild(div)
       chatArea.appendChild(sendDiv);
       socket.emit('chat',{from:name ,to:id, message:textarea.value});
@@ -343,7 +388,27 @@ let extnVal;
       socket.emit('room',{roomId:id,userName:name});
   
     }
+    let currentDate  =new Date();
+    let ISTOptions = {timeZone: 'Asia/Kolkata'};
+let currentISTTime = currentDate.toLocaleString('en-IN', ISTOptions);
+let [date,time] = currentISTTime.split(',');
+let [hour, minute, sec] = time.split(':');
+console.log(typeof minute);
+let hr = hour.trim().padStart(2 ,"0");
+let meridiem = sec.split(' ')[1];
+    document.getElementById('dev-msg').innerHTML = `Hi ${name}! welcome to the chat.This is a defult message for all users.If you facing any error/ complaint take a screen shot and send 📧mail to  <a href="mailto:bikramsahoo@live.in">bikramsahoo@live.in</a> .
+    Thanking You 🙏🏼 <br> Happy MeeTing 😊
+    <small class="time">${hr}:${minute} ${meridiem}</small>`
+
   }
+
+  socket.on('joined-data',({})=>{
+    if(isVideoShared || isAudioShared || isScreenShared){
+      let uid =  sessionStorage.getItem('uid');
+      let sid = sessionStorage.getItem('sid');
+      initiateCall(sid,uid);
+    }
+  })
   
   socket.on('room',(data)=>{
       if (data.status){
@@ -445,6 +510,12 @@ let extnVal;
     users.forEach(user => {
       if (user.id === socket.id) return;
       playSound('join');
+
+      let paramid = window.location.search;
+      let urlparams =new URLSearchParams(paramid);
+      let mid =urlparams.get('id');
+      socket.emit('joined-data',{pid:mid});
+
       document.querySelector('.share-id').style.display='none';
       sessionStorage.setItem('uid',user.id);
       const userElement = document.createElement('li');

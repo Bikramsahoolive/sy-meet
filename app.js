@@ -96,7 +96,9 @@ io.on('connection', (socket) => {
 
       io.to(roomId).emit('update-user-list', { users: Object.values(roomUsers[roomId].users) });
 
-        
+        socket.on('joined-data',({pid})=>{
+          socket.broadcast.to(pid).emit('joined-data',{});
+        })
       socket.on('typing',({name,to})=>{
         socket.broadcast.to(to).emit('typing',{name});
       });
