@@ -55,14 +55,21 @@ let meridiem = sec.split(' ')[1];
   div.classList='msg-div';
   let div2 = document.createElement('div');
   div2.classList = 'overflow-control';
-  let h4 = `<h4>${from}</h4><div class="clipboard" onclick='copytext(this)'><i class="fa-regular fa-clipboard"></i> <small>copy</small></div>`;
+  let h4 = `<h4>${from}</h4><div class="clipboard" onclick='copytext(this)'><i class="fa-regular fa-clipboard"></i> <small>Copy code</small></div>`;
+
   let pre = document.createElement('pre');
-  pre.innerHTML=message;
+  let code = document.createElement('code');
+  code.textContent = message;
+  let pLang = (message).split('|')[0];
+  code.classList=`language-${pLang}`;
+  pre.appendChild(code);
+  div2.appendChild(pre);
+  Prism.highlightElement(code);
+
   div.innerHTML=h4;
   let small = document.createElement('small');
   small.classList='time-w';
   small.innerHTML=`${hour}:${minute} ${meridiem}`;
-  div2.appendChild(pre);
   div2.appendChild(small);
   div.appendChild(div2);
   chatArea.appendChild(div);
@@ -136,13 +143,20 @@ function sendMsg(){
       let div2 = document.createElement('div');
       div2.classList = 'overflow-control';
       let h4 = `<h4>${name}</h4><div class="clipboard" onclick='copytext(this)'><i class="fa-regular fa-clipboard"></i> <small>Copy code</small></div>`;
-      let pre = document.createElement('pre');
       let small = document.createElement('small');
       small.classList='time-w';
       small.innerHTML=`${hour}:${minute} ${meridiem}`;
-      pre.innerHTML=textarea.value;
-      div.innerHTML=h4;
+
+      let pre = document.createElement('pre');
+      let code = document.createElement('code');
+      code.textContent=textarea.value;
+      let pLang = (textarea.value).split('|')[0];
+      code.classList=`language-${pLang}`;
+      pre.appendChild(code);
       div2.appendChild(pre);
+      Prism.highlightElement(code);
+
+      div.innerHTML=h4;
       div2.appendChild(small);
       div.appendChild(div2);
       sendDiv.appendChild(div)

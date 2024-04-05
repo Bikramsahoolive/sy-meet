@@ -302,7 +302,7 @@ inputType.addEventListener('click',()=>{
   codeType= !codeType;
   if(codeType){
     inputType.classList = 'fa-solid fa-comment input-type';
-    textarea.placeholder = 'Type a code...';
+    textarea.placeholder = 'lang | paste your code...';
 //     textarea.value = `<code class="language-javascript">
 // //Chose your language above.
 // // Paste your code here
@@ -315,7 +315,7 @@ inputType.addEventListener('click',()=>{
   inputType.classList = 'fa-solid fa-code input-type';
   textarea.placeholder = 'Type a message...';
   textarea.value = '';
-  textarea.style.height = '40px'
+  // textarea.style.height = '40px'
   }
 })
 
