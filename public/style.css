@@ -111,11 +111,11 @@ h1{
     
 }
 .text{
-    height: 52vh;
+    height: 55vh;
     border-top: 3px solid gray;
     border-bottom: 3px solid gray;
     width: 100%;
-    margin-top: 50px;
+    margin-top: 35px;
     overflow-y: scroll;
     scrollbar-width: thin;
     scroll-behavior: smooth;
@@ -132,6 +132,9 @@ h1{
     font-size: 1em;
     line-height: 1.5;
     
+}
+.text .dev-msg{
+    display: none;
 }
 .text .span-msg{
     color: rgb(0, 0, 0);
@@ -166,8 +169,8 @@ h1{
  ul{
     margin: 20px 20px;
     position: absolute;
-    right: 0;
-    top: 70px;
+    right: -30px;
+    top: 60px;
     display: flex;
     
 }
@@ -260,7 +263,7 @@ li .mic{
     height: max-content;
     margin: 20px;
     /* margin-bottom: 30px; */
-    border-radius: 10px;
+    border-radius: 0px 20px 10px 10px;
     padding: 5px 5px 5px 5px;
     background-image:linear-gradient(to top left,white, rgb(10, 57, 146));
     color: white;
@@ -268,7 +271,35 @@ li .mic{
     position: relative;
     /* padding-bottom: 30px; */
 }
+.send-msg{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 20%;
+    width: max-content;
+    max-width: 80%;
+    height: max-content;
+    margin: 20px;
+    /* margin-bottom: 30px; */
+    border-radius: 20px 0 10px 10px;
+    padding: 5px 5px 5px 5px;
+    background-image:linear-gradient(to top left,white, rgb(10, 57, 146));
+    color: white;
+    overflow-wrap: break-word;
+    position: relative;
+    /* padding-bottom: 30px; */
+
+    
+
+}
 .msg-div h4{
+    width: 80%;
+    padding-bottom: 10px;
+    color: wheat;
+    position: relative;
+    left: -20px;
+}
+.send-msg h4{
     width: 80%;
     padding-bottom: 10px;
     color: wheat;
@@ -295,12 +326,39 @@ li .mic{
     /* bottom: 10px; */
     color: rgb(38 38 38);
 }
+.send-msg h5{
+    height: 50px;
+    width: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #343434;
+    font-size: 15px;
+}
+.send-msg img{
+    width: 215px;
+    margin-bottom: 15px;
+}
+.send-msg .clipboard{
+    position: absolute;
+    right: 20px;
+    cursor: pointer;
+    /* bottom: 10px; */
+    color: rgb(38 38 38);
+}
 .clipboard small{
     user-select: none;
     -webkit-user-select: none;
     -moz-user-select: none;
 }
 .msg-div .download{
+    position: absolute;
+    right: 0px;
+    cursor: pointer;
+    padding: 0 20px;
+    color: rgb(75 73 73);
+}
+.send-msg .download{
     position: absolute;
     right: 0px;
     cursor: pointer;
@@ -342,7 +400,7 @@ li .mic{
 .emoji-picker{
     height: 300px;
     width: 100%;
-    z-index: -1;
+    z-index: -5;
     opacity: 0;
     position: relative;
     top: -300px;
@@ -356,7 +414,7 @@ li .mic{
     width: 100%; */
     /* position: relative; */
     opacity: 1;
-    top: -285px;
+    top: -300px;
     z-index: 1;
     transition: all 0.3s;
     
@@ -705,6 +763,9 @@ margin: 30px 0;
     .msg-div img{
         width: 250px;
     }
+    .send-msg img{
+        width: 250px;
+    }
 }
 
 @media screen and (max-width:800px){
@@ -746,11 +807,15 @@ margin: 30px 0;
         transition: top 0.5s;
         top: 25%;
       }
+      .textdoc{
+        height: 90vh;
+      }
       .textdoc-open{
-        height: 75%;
+        height: 85%;
       }
       .text{
-        height: 56vh;
+        height: 65vh;
+        margin-top: 50px;
       }
 }
 @media screen and (max-width:500px) {
@@ -773,6 +838,9 @@ margin: 30px 0;
 }
 @media screen and (min-height:784px) {
     .text{
-        height: 61vh;
+        height: 75vh;
+      }
+      .emoji-picker-open{
+        top: 350px;
       }
 }

@@ -55,9 +55,10 @@ let meridiem = sec.split(' ')[1];
   div.classList='msg-div';
   let div2 = document.createElement('div');
   div2.classList = 'overflow-control';
-  let h4 = `<h4>${from}</h4><div class="clipboard" onclick='copytext(this)'><i class="fa-regular fa-clipboard"></i> <small>Copy code</small></div>`;
+  let h4 = `<h4>${from}</h4><i class="fa-solid fa-trash-can"></i><div class="clipboard" onclick='copytext(this)'><i class="fa-regular fa-clipboard"></i> <small>copy</small></div>`;
 
   let pre = document.createElement('pre');
+  pre.classList = "line-numbers";
   let code = document.createElement('code');
   code.textContent = message;
   let pLang = (message).split('|')[0];
@@ -105,7 +106,7 @@ let meridiem = sec.split(' ')[1];
   }
   let div = document.createElement('div');
   div.classList='msg-div';
-  let h4 = `<h4>${from}</h4><div class="clipboard" onclick='copyChat(this)'><i class="fa-regular fa-clipboard"></i> <small>Copy text</small></div>`;
+  let h4 = `<h4>${from}</h4><div class="clipboard" onclick='copyChat(this)'><i class="fa-regular fa-clipboard"></i> <small>copy</small></div>`;
   let span = document.createElement('span');
   span.classList = 'span-msg';
   let small = document.createElement('small');
@@ -130,24 +131,28 @@ function sendMsg(){
   console.log(typeof minute);
   let hr = hour.trim().padStart(2 ,"0");
   let meridiem = sec.split(' ')[1];
-
+    
       if(codeType){
-        let paramid = window.location.search;
+        let notCommand = checkInput(textarea.value);
+        if(notCommand){
+
+          let paramid = window.location.search;
       let urlparams =new URLSearchParams(paramid);
       let id =urlparams.get('id');
       let name =localStorage.getItem("name");
       let sendDiv = document.createElement('div');
       sendDiv.classList='send-div';
       let div = document.createElement('div');
-      div.classList='msg-div';
+      div.classList='send-msg';
       let div2 = document.createElement('div');
       div2.classList = 'overflow-control';
-      let h4 = `<h4>${name}</h4><div class="clipboard" onclick='copytext(this)'><i class="fa-regular fa-clipboard"></i> <small>Copy code</small></div>`;
+      let h4 = `<h4>${name}</h4><div class="clipboard" onclick='copytext(this)'><i class="fa-regular fa-clipboard"></i> <small>copy</small></div>`;
       let small = document.createElement('small');
       small.classList='time-w';
       small.innerHTML=`${hour}:${minute} ${meridiem}`;
 
       let pre = document.createElement('pre');
+      pre.classList = "line-numbers";
       let code = document.createElement('code');
       code.textContent=textarea.value;
       let pLang = (textarea.value).split('|')[0];
@@ -162,6 +167,10 @@ function sendMsg(){
       sendDiv.appendChild(div)
       chatArea.appendChild(sendDiv);
       socket.emit('text',{from:name ,to:id, message:textarea.value});
+
+
+        }
+      
       }else{
         let paramid = window.location.search;
       let urlparams =new URLSearchParams(paramid);
@@ -170,8 +179,8 @@ function sendMsg(){
       let sendDiv = document.createElement('div');
       sendDiv.classList='send-div';
       let div = document.createElement('div');
-      div.classList='msg-div';
-      let h4 = `<h4>${name}</h4><div class="clipboard" onclick='copyChat(this)'><i class="fa-regular fa-clipboard"></i> <small>Copy text</small></div>`;
+      div.classList='send-msg';
+      let h4 = `<h4>${name}</h4><div class="clipboard" onclick='copyChat(this)'><i class="fa-regular fa-clipboard"></i> <small>copy</small></div>`;
       let span = document.createElement('span');
       span.classList = 'span-msg';
       span.innerHTML=textarea.value;
@@ -360,7 +369,7 @@ let meridiem = sec.split(' ')[1];
       let sendDiv = document.createElement('div');
       sendDiv.classList='send-div';
       let div = document.createElement('div');
-      div.classList='msg-div';
+      div.classList='send-msg';
       let h4 = `<h4>${name}</h4>`;
       let img = document.createElement('img');
       let imageSrc=dataUrlVal;
@@ -380,7 +389,7 @@ let meridiem = sec.split(' ')[1];
       let sendDiv = document.createElement('div');
       sendDiv.classList='send-div';
       let div = document.createElement('div');
-      div.classList='msg-div';
+      div.classList='send-msg';
       let h4 = `<h4>${name}</h4>`;
       let h5 = document.createElement('h5');
       h5.innerHTML=`Send new ${extnVal} file.`;
@@ -499,9 +508,22 @@ let [date,time] = currentISTTime.split(',');
 let [hour, minute, sec] = time.split(':');
 let hr = hour.trim().padStart(2 ,"0");
 let meridiem = sec.split(' ')[1];
-    document.getElementById('dev-msg').innerHTML = `Hi ${name}! welcome to MeeT. This is a system generated message for all users.If you facing any error/ complaint take a screen shot and send 📧mail to  <a href="mailto:bikramsahoo@live.in">bikramsahoo@live.in</a> .
-    Thanking You 🙏🏼 <br> Happy MeeTing 😊
-    <small class="time">${hr}:${minute} ${meridiem}</small>`
+let devMsg = document.getElementById('dev-msg');
+devMsg.innerHTML = `Hi ${name}! welcome to MeeT. This is a system generated message for all users.If you facing any error/ complaint take a screen shot and send 📧mail to  <a href="mailto:bikramsahoo@live.in">bikramsahoo@live.in</a> .
+    For programming help send command [ code-help ] on code box .<br> Thanking You 🙏🏼 Happy MeeTing 😊
+    <small class="time">${hr}:${minute} ${meridiem}</small>`;
+    setTimeout(()=>{
+      document.querySelector('.dev-msg').style.display='flex';
+      let chatBox = document.getElementById('chat-box');
+      let isOpened = chatBox.classList.contains('textdoc-open');
+      if(!isOpened){
+         msgCount++;
+      let notifyBadge = document.querySelector('.msg-notification');
+    notifyBadge.innerHTML = msgCount;
+    notifyBadge.style.visibility='visible';
+      }
+     
+    },5000)
 
   }
 
