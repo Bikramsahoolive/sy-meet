@@ -403,18 +403,16 @@ li .mic{
     z-index: -1;
     opacity: 0;
     position: relative;
-    top: -300px;
+    top: -270px;
     transition: all 0.3s;
 }
-/* #backspace{
-    display: none;
-} */
+
 .emoji-picker-open{
     /* height: 300px;
     width: 100%; */
     /* position: relative; */
     opacity: 1;
-    top: -300px;
+    top: -290px;
     z-index: 1;
     transition: all 0.3s;
     
@@ -841,6 +839,10 @@ margin: 30px 0;
         height: 75vh;
       }
       .emoji-picker-open{
-        top: 350px;
+        position: relative;
+        opacity: 1;
+        top: -330px;
+        z-index: 1;
+        transition: all 0.3s;
       }
 }

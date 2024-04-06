@@ -510,7 +510,7 @@ let hr = hour.trim().padStart(2 ,"0");
 let meridiem = sec.split(' ')[1];
 let devMsg = document.getElementById('dev-msg');
 devMsg.innerHTML = `Hi ${name}! welcome to MeeT. This is a system generated message for all users.If you facing any error/ complaint take a screen shot and send 📧mail to  <a href="mailto:bikramsahoo@live.in">bikramsahoo@live.in</a> .
-    For programming help send command [ code-help ] on code box .<br> Thanking You 🙏🏼 Happy MeeTing 😊
+    For programming help send command [ code-help ] on code input box .<br> Thanking You 🙏🏼 | Happy MeeTing 😊
     <small class="time">${hr}:${minute} ${meridiem}</small>`;
     setTimeout(()=>{
       document.querySelector('.dev-msg').style.display='flex';
