@@ -198,7 +198,7 @@ function sendMsg(){
       scrollDown();
       document.querySelector('#file-btn').style.display='block';
       document.querySelector('#send-btn').style.display='none';
-      textarea.style.height='40px';
+      textarea.style.height='25px';
       let hasPTag = chatArea.querySelector('p');
       if(hasPTag !== null){
         hasPTag.remove();

@@ -365,7 +365,12 @@ function adjustTextareaHeight() {
     } else {
         textarea.style.overflowY = 'hidden';
     }
-    textarea.style.height = `${newHeight-20}px`;
+    if(textarea.value ==""){
+      // textarea.style.height='30px';
+    }else{
+      textarea.style.height = `${newHeight}px`;
+    }
+    
 }
 
 
