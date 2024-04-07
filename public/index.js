@@ -317,6 +317,7 @@ inputType.addEventListener('click',()=>{
   textarea.value = '';
   // textarea.style.height = '40px'
   }
+  textarea.focus();
 })
 
 const parentMaxHeight = parseInt(window.getComputedStyle(textarea.parentElement).maxHeight);

@@ -244,14 +244,46 @@ li .mic{
     margin: 5px;
     font-size: 20px;
 }
+.typing-div{
+    flex-direction: column;
+    align-items: center;
+    width: 20%;
+    width: max-content;
+    max-width: 80%;
+    height: max-content;
+    margin: 10px 20px;
+    /* margin-bottom: 30px; */
+    border-radius: 0px 20px 10px 10px;
+    padding: 5px 5px 5px 5px;
+    background-image:linear-gradient(to top left,white, rgb(10, 57, 146));
+    color: white;
+    overflow-wrap: break-word;
+    position: relative;
+}
+.typing-div::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-right: 20px solid  rgb(25 65 141);
+    border-radius: 6px;
+    top: 0px;
+    left: -10px;
+    transform: rotate(-90deg);
+}
 .typing{
-    top: 25px;
+    /* top: 25px;
     position: absolute;
     color: #d2e7d29e;
     font-size: 15px;
     left: 10px;
     font-style: italic;
-    font-family:Arial, Helvetica, sans-serif;
+    font-family:Arial, Helvetica, sans-serif; */
+    width: 70px;
+    border-radius: 10px 20px 5px 5px;
+    margin: 0;
 }
 .msg-div{
     display: flex;

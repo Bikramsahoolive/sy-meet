@@ -26,6 +26,10 @@ socket.on('create-meet',({status,rid})=>{
 })
 
 socket.on('text',({from,message})=>{
+  let typDiv = document.getElementById('typing');
+  if(typDiv !== null){
+   typDiv.parentNode.removeChild(typDiv);
+  }
 
   let currentDate  =new Date();
   let ISTOptions = {timeZone: 'Asia/Kolkata'};
@@ -78,6 +82,11 @@ let meridiem = sec.split(' ')[1];
 });
 
 socket.on('chat',({from,message})=>{
+  let typDiv = document.getElementById('typing');
+  if(typDiv !== null){
+   typDiv.parentNode.removeChild(typDiv);
+  }
+
   let currentDate  =new Date();
   let ISTOptions = {timeZone: 'Asia/Kolkata'};
 let currentISTTime = currentDate.toLocaleString('en-IN', ISTOptions);
@@ -199,6 +208,7 @@ function sendMsg(){
       document.querySelector('#file-btn').style.display='block';
       document.querySelector('#send-btn').style.display='none';
       textarea.style.height='25px';
+      textarea.focus();
       let hasPTag = chatArea.querySelector('p');
       if(hasPTag !== null){
         hasPTag.remove();
@@ -209,23 +219,28 @@ function sendMsg(){
   }
   let typetime ;
   socket.on('typing',({name})=>{
-    document.getElementById('typing').innerHTML=`${name} is typing...`;
-    // let div = document.createElement('div');
-    // div.classList='msg-div';
-    // let id = Date.now();
-    // div.id = id;
+    // document.getElementById('typing').innerHTML=`${name} is typing...`;
+    let notypingDiv = chatArea.querySelector('.typing-div') == null;
+    if(notypingDiv){
+    let div = document.createElement('div');
+    div.classList='typing-div';
+    div.id = 'typing';
     // let h4 = `<h4>${name}</h4>`;
-    // let img = document.createElement('img');
-    // img.src="images/typing.gif";
-    // img.style.width='100px';
+    let img = document.createElement('img');
+    img.classList='typing';
+    img.src="images/typing.gif";
     // div.innerHTML=h4;
-    // div.appendChild(img);
-    // chatArea.appendChild(div);
-    // scrollDown();
-
+    div.appendChild(img);
+    chatArea.appendChild(div);
+    scrollDown();
+    }
+    
     clearTimeout(typetime);
     typetime = setTimeout(()=>{
-      document.getElementById('typing').innerHTML='';
+     let typDiv = document.getElementById('typing');
+     if(typDiv !== null){
+      typDiv.parentNode.removeChild(typDiv);
+     }
     },3000)
   })
 
