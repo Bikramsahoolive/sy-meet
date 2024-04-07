@@ -6,7 +6,7 @@ let isAudioShared = false;
 // let videoActive = false;
 let camSwithc = true;
 let fullScreen = false;
-let isMuted=true;
+let isMuted=false;
 
 let videoStream = null;
 let audioStream = null;
@@ -525,10 +525,10 @@ function muteAudio(){
   isMuted= !isMuted;
   if(isMuted){
     remoteAudio.muted=true;
-    document.getElementById('speaker').classList='fa-solid fa-volume-high';
+    document.getElementById('speaker').classList='fa-solid fa-volume-xmark';
   }else{
     remoteAudio.muted=false;
-    document.getElementById('speaker').classList='fa-solid fa-volume-xmark';
+    document.getElementById('speaker').classList='fa-solid fa-volume-high';
   }
 
 

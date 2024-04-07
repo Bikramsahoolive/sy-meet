@@ -32,7 +32,6 @@ socket.on('text',({from,message})=>{
 let currentISTTime = currentDate.toLocaleString('en-IN', ISTOptions);
 let [date,time] = currentISTTime.split(',');
 let [hour, minute, sec] = time.split(':');
-console.log(typeof minute);
 let hr = hour.trim().padStart(2 ,"0");
 let meridiem = sec.split(' ')[1];
 
@@ -211,6 +210,19 @@ function sendMsg(){
   let typetime ;
   socket.on('typing',({name})=>{
     document.getElementById('typing').innerHTML=`${name} is typing...`;
+    // let div = document.createElement('div');
+    // div.classList='msg-div';
+    // let id = Date.now();
+    // div.id = id;
+    // let h4 = `<h4>${name}</h4>`;
+    // let img = document.createElement('img');
+    // img.src="images/typing.gif";
+    // img.style.width='100px';
+    // div.innerHTML=h4;
+    // div.appendChild(img);
+    // chatArea.appendChild(div);
+    // scrollDown();
+
     clearTimeout(typetime);
     typetime = setTimeout(()=>{
       document.getElementById('typing').innerHTML='';

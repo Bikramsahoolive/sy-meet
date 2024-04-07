@@ -261,7 +261,7 @@ li .mic{
     width: max-content;
     max-width: 80%;
     height: max-content;
-    margin: 20px;
+    margin: 10px 20px;
     /* margin-bottom: 30px; */
     border-radius: 0px 20px 10px 10px;
     padding: 5px 5px 5px 5px;
@@ -271,6 +271,20 @@ li .mic{
     position: relative;
     /* padding-bottom: 30px; */
 }
+
+.msg-div::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-right: 20px solid  rgb(25 65 141);
+    border-radius: 6px;
+    top: 0px;
+    left: -10px;
+    transform: rotate(-90deg);
+}
 .send-msg{
     display: flex;
     flex-direction: column;
@@ -279,7 +293,7 @@ li .mic{
     width: max-content;
     max-width: 80%;
     height: max-content;
-    margin: 20px;
+    margin: 10px 20px;
     /* margin-bottom: 30px; */
     border-radius: 20px 0 10px 10px;
     padding: 5px 5px 5px 5px;
@@ -288,9 +302,19 @@ li .mic{
     overflow-wrap: break-word;
     position: relative;
     /* padding-bottom: 30px; */
-
-    
-
+}
+.send-msg::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-radius: 6px;
+    top: 0;
+    border-left: 20px solid #8ea4ce;
+    right: -10px;
+    transform: rotate(-270deg);
 }
 .msg-div h4{
     width: 80%;
