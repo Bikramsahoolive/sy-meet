@@ -894,7 +894,7 @@ margin: 30px 0;
 }
 @media screen and (min-height:784px) {
     .text{
-        height: 72vh;
+        height: 78vh;
       }
       .emoji-picker-open{
         position: relative;

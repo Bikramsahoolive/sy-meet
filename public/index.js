@@ -941,76 +941,80 @@ let meridiem = sec.split(' ')[1];
 
 const video = document.getElementById('remote-video');
 
-// // Check if Picture-in-Picture is supported
-// if ('pictureInPictureEnabled' in document) {
-//   // Add event listener for when the browser window is minimized
-//   window.addEventListener('resize', () => {
-//     // Check if the video is in Picture-in-Picture mode
-//     if (document.pictureInPictureElement && document.hidden) {
-//       // If the video is in Picture-in-Picture mode and the browser window is minimized,
-//       // exit Picture-in-Picture mode to prevent it from being hidden
-//       document.exitPictureInPicture();
-//     }
-//   });
-// }
+
 
  // Check for browser support
-  if (typeof document.hidden !== "undefined") { // Chrome, Firefox, Opera, Safari
-    var hidden = "hidden";
-    var visibilityChange = "visibilitychange";
-  } else if (typeof document.msHidden !== "undefined") { // IE 10+
-    var hidden = "msHidden";
-    var visibilityChange = "msvisibilitychange";
-  } else if (typeof document.webkitHidden !== "undefined") { // Chrome, Safari, Edge
-    var hidden = "webkitHidden";
-    var visibilityChange = "webkitvisibilitychange";
-  }
+  // if (typeof document.hidden !== "undefined") { // Chrome, Firefox, Opera, Safari
+  //   var hidden = "hidden";
+  //   var visibilityChange = "visibilitychange";
+  // } else if (typeof document.msHidden !== "undefined") { // IE 10+
+  //   var hidden = "msHidden";
+  //   var visibilityChange = "msvisibilitychange";
+  // } else if (typeof document.webkitHidden !== "undefined") { // Chrome, Safari, Edge
+  //   var hidden = "webkitHidden";
+  //   var visibilityChange = "webkitvisibilitychange";
+  // }
 
   // Function to handle visibility change
-  async function handleVisibilityChange() {
-    if (document[hidden]) {
-      console.log("Tab is now hidden");
-      if (!document.pictureInPictureElement) {
-        // If not already in Picture-in-Picture mode, request it
-        await video.requestPictureInPicture();
-      } else {
-        // If already in Picture-in-Picture mode, exit it
-        await document.exitPictureInPicture();
-      }
-      // Add your code here to handle when the tab becomes hidden
-    } else {
-      console.log("Tab is now visible");
-      if (!document.pictureInPictureElement) {
-        // If not already in Picture-in-Picture mode, request it
-        await video.requestPictureInPicture();
-      } else {
-        // If already in Picture-in-Picture mode, exit it
-        await document.exitPictureInPicture();
-      }
-      // Add your code here to handle when the tab becomes visible
-    }
-  }
+  // async function handleVisibilityChange() {
+  //   if (document[hidden]) {
+  //     console.log("Tab is now hidden");
+  //     if (!document.pictureInPictureElement) {
+  //       // If not already in Picture-in-Picture mode, request it
+  //       await video.requestPictureInPicture();
+  //     } else {
+  //       // If already in Picture-in-Picture mode, exit it
+  //       await document.exitPictureInPicture();
+  //     }
+  //     // Add your code here to handle when the tab becomes hidden
+  //   } else {
+  //     console.log("Tab is now visible");
+  //     if (!document.pictureInPictureElement) {
+  //       // If not already in Picture-in-Picture mode, request it
+  //       await video.requestPictureInPicture();
+  //     } else {
+  //       // If already in Picture-in-Picture mode, exit it
+  //       await document.exitPictureInPicture();
+  //     }
+  //     // Add your code here to handle when the tab becomes visible
+  //   }
+  // }
 
   // Add event listener for visibility change
-  document.addEventListener(visibilityChange, handleVisibilityChange, false);
+  // document.addEventListener(visibilityChange, handleVisibilityChange, false);
 
+
+
+
+  // // Check if Picture-in-Picture is supported
+if ('pictureInPictureEnabled' in document) {
+  // Add event listener for when the browser window is minimized
+  window.addEventListener('resize', () => {
+    // Check if the video is in Picture-in-Picture mode
+    if (document.pictureInPictureElement && document.hidden) {
+      // If the video is in Picture-in-Picture mode and the browser window is minimized,
+      // exit Picture-in-Picture mode to prevent it from being hidden
+      document.exitPictureInPicture();
+    }
+  });
+}
 // Function to toggle Picture-in-Picture mode
-// async function togglePictureInPicture() {
-//   try {
-//     if (!document.pictureInPictureElement) {
-//       // If not already in Picture-in-Picture mode, request it
-//       await video.requestPictureInPicture();
-//     } else {
-//       // If already in Picture-in-Picture mode, exit it
-//       await document.exitPictureInPicture();
-//     }
-//   } catch(error) {
-//     console.error('Error entering/exiting Picture-in-Picture mode:', error);
-//   }
-// }
+async function togglePictureInPicture() {
+  try {
+    if (!document.pictureInPictureElement) {
+      // If not already in Picture-in-Picture mode, request it
+      await video.requestPictureInPicture();
+    } else {
+      // If already in Picture-in-Picture mode, exit it
+      await document.exitPictureInPicture();
+    }
+  } catch(error) {
+    console.error('Error entering/exiting Picture-in-Picture mode:', error);
+  }
+}
 
 // // Add click event listener to the video element to toggle Picture-in-Picture mode
-// video.addEventListener('click', togglePictureInPicture);
+video.addEventListener('click', togglePictureInPicture);
 
 hangupButton.addEventListener('click', () => {
     
