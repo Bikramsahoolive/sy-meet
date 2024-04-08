@@ -103,12 +103,16 @@ io.on('connection', (socket) => {
         socket.broadcast.to(to).emit('typing',{name});
       });
 
-      socket.on('text',({from,to,message})=>{
-        socket.broadcast.to(to).emit('text',{from,message});
+      socket.on('delete-chat',({to,id})=>{
+        socket.broadcast.to(to).emit('delete-chat',{id});
+      })
+
+      socket.on('text',({from,to,DivId,message})=>{
+        socket.broadcast.to(to).emit('text',{from,DivId,message});
       });
 
-      socket.on('chat',({from,to,message})=>{
-        socket.broadcast.to(to).emit('chat',{from,message});
+      socket.on('chat',({from,to,DivId,message})=>{
+        socket.broadcast.to(to).emit('chat',{from,DivId,message});
       });
 
       socket.on('image',({from,to,file})=>{

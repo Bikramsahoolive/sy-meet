@@ -80,6 +80,9 @@
           </div>
       </div>
 
+
+
+      
     
     <section class="join">
         <div class="container">
@@ -107,9 +110,6 @@
 
 
     <section class="main">
-
-
-
         <div class="content">
             <ul id="userList">
                 <!-- <li><div></div><strong>Bikram</strong> <i class="fa-solid fa-microphone mic"></i></li> -->
@@ -134,14 +134,25 @@
                 <div class="text" id="text">
                     
                     <!-- <p class="new-msg">Unread Messages</p> -->
-                    <!-- <div class="send-div"> -->
+
                     <div class="msg-div dev-msg">
                         <h4>Bikram (Dev)</h4>
-                        <span class="span-msg" id="dev-msg">
-                           
-                        </span>
-                        
+                        <span class="span-msg" id="dev-msg"></span>
                     </div>
+
+                    <!-- <div class="send-div">
+                        <div class="send-msg" id="123">
+                        <h4>Bikram</h4>
+                         <div class="opt" >
+                            <div><i class="fa-solid fa-trash-can" onclick="deleteChat('123')"></i></div>
+                            <div onclick="copyChat(this)"><i class="fa-regular fa-clipboard"></i> <small> copy</small></div>
+                         </div>
+                        <span class="span-msg">
+                            <p>Hi Tral Msg...</p>
+                            <small class="time">18:36 pm</small>
+                        </span>
+                    </div>
+                </div> -->
                     
 
                 </div>
@@ -172,6 +183,8 @@
         </div>
 
     </section>
+
+
     <script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io-stream/0.9.1/socket.io-stream.min.js" integrity="sha512-LTN7WQKvmCiOWbwxE4XRu3NCRqLzkFo28vBDHVhAyKjhmorNGjtvFxQgbvAttO31Ij6An4AIXU4GVaYOC0eNpQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> -->

@@ -25,7 +25,7 @@ socket.on('create-meet',({status,rid})=>{
 
 })
 
-socket.on('text',({from,message})=>{
+socket.on('text',({from,DivId,message})=>{
   let typDiv = document.getElementById('typing');
   if(typDiv !== null){
    typDiv.parentNode.removeChild(typDiv);
@@ -56,9 +56,10 @@ let meridiem = sec.split(' ')[1];
   }
   let div = document.createElement('div');
   div.classList='msg-div';
+  div.id = DivId;
   let div2 = document.createElement('div');
   div2.classList = 'overflow-control';
-  let h4 = `<h4>${from}</h4><i class="fa-solid fa-trash-can"></i><div class="clipboard" onclick='copytext(this)'><i class="fa-regular fa-clipboard"></i> <small>copy</small></div>`;
+  let h4 = `<h4>${from}</h4><div class="clipboard" onclick='copytext(this)'><i class="fa-regular fa-clipboard"></i> <small>copy</small></div>`;
 
   let pre = document.createElement('pre');
   pre.classList = "line-numbers";
@@ -81,7 +82,7 @@ let meridiem = sec.split(' ')[1];
   scrollDown();
 });
 
-socket.on('chat',({from,message})=>{
+socket.on('chat',({from,DivId,message})=>{
   let typDiv = document.getElementById('typing');
   if(typDiv !== null){
    typDiv.parentNode.removeChild(typDiv);
@@ -114,6 +115,7 @@ let meridiem = sec.split(' ')[1];
   }
   let div = document.createElement('div');
   div.classList='msg-div';
+  div.id = DivId;
   let h4 = `<h4>${from}</h4><div class="clipboard" onclick='copyChat(this)'><i class="fa-regular fa-clipboard"></i> <small>copy</small></div>`;
   let span = document.createElement('span');
   span.classList = 'span-msg';
@@ -152,9 +154,15 @@ function sendMsg(){
       sendDiv.classList='send-div';
       let div = document.createElement('div');
       div.classList='send-msg';
+      let divId = Date.now();
+      div.id= divId
       let div2 = document.createElement('div');
       div2.classList = 'overflow-control';
-      let h4 = `<h4>${name}</h4><div class="clipboard" onclick='copytext(this)'><i class="fa-regular fa-clipboard"></i> <small>copy</small></div>`;
+      let h4 = `<h4>${name}</h4>
+                        <div class="opt" >
+                            <div><i class="fa-solid fa-trash-can" onclick="deleteChat('${divId}')"></i></div>
+                            <div onclick="copytext(this)"><i class="fa-regular fa-clipboard"></i> <small> copy</small></div>
+                        </div>`;
       let small = document.createElement('small');
       small.classList='time-w';
       small.innerHTML=`${hour}:${minute} ${meridiem}`;
@@ -174,7 +182,7 @@ function sendMsg(){
       div.appendChild(div2);
       sendDiv.appendChild(div)
       chatArea.appendChild(sendDiv);
-      socket.emit('text',{from:name ,to:id, message:textarea.value});
+      socket.emit('text',{from:name ,to:id, DivId:divId,message:textarea.value});
 
 
         }
@@ -188,7 +196,13 @@ function sendMsg(){
       sendDiv.classList='send-div';
       let div = document.createElement('div');
       div.classList='send-msg';
-      let h4 = `<h4>${name}</h4><div class="clipboard" onclick='copyChat(this)'><i class="fa-regular fa-clipboard"></i> <small>copy</small></div>`;
+      let divId = Date.now();
+      div.id = divId;
+      let h4 = `<h4>${name}</h4>
+                        <div class="opt" >
+                            <div><i class="fa-solid fa-trash-can" onclick="deleteChat('${divId}')"></i></div>
+                            <div onclick="copyChat(this)"><i class="fa-regular fa-clipboard"></i> <small> copy</small></div>
+                        </div>`;
       let span = document.createElement('span');
       span.classList = 'span-msg';
       span.innerHTML=textarea.value;
@@ -200,7 +214,7 @@ function sendMsg(){
       div.appendChild(small);
       sendDiv.appendChild(div)
       chatArea.appendChild(sendDiv);
-      socket.emit('chat',{from:name ,to:id, message:textarea.value});
+      socket.emit('chat',{from:name ,to:id,DivId:divId ,message:textarea.value});
       }
       playSound('message-sent');
       textarea.value="";
@@ -217,6 +231,12 @@ function sendMsg(){
     document.querySelector('.emoji-picker').classList='emoji-picker';
     inputTypeBtn.style.display='block';
   }
+
+  socket.on('delete-chat',({id})=>{
+    console.log(document.getElementById(id));
+    document.getElementById(id).innerHTML=`<span class="dlt-msg"><i class="fa-solid fa-ban" onclick="clearChat('${id}')"></i><h5>This msg is deleted.</h5></span>`;
+  })
+
   let typetime ;
   socket.on('typing',({name})=>{
     // document.getElementById('typing').innerHTML=`${name} is typing...`;
@@ -392,7 +412,7 @@ let meridiem = sec.split(' ')[1];
     let id =urlparams.get('id');
     let name =localStorage.getItem("name");
 
-    if(extnVal=='jpg'||extnVal=='png'||extnVal=='jpeg'||extnVal=='webp'){
+    if(extnVal=='jpg'||extnVal=='png'||extnVal=='jpeg'||extnVal=='webp'||extnVal=='gif'){
       let sendDiv = document.createElement('div');
       sendDiv.classList='send-div';
       let div = document.createElement('div');

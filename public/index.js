@@ -225,7 +225,7 @@ function sendFile(){
   fileReader.click();
 }
 function copytext(btn){
-    let textbox = btn.nextElementSibling.querySelector('pre');
+    let textbox = btn.parentElement.nextElementSibling.querySelector('pre');
     let text = textbox.innerText;
     navigator.clipboard.writeText(text)
     .then(()=>{
@@ -242,21 +242,32 @@ function copytext(btn){
     })
 }
 function copyChat(btn){
-  let textbox = btn.nextElementSibling;
+  let textbox = btn.parentElement.nextElementSibling;
   let text = textbox.innerText;
   navigator.clipboard.writeText(text)
   .then(()=>{
     btn.querySelector('i').classList='fa-solid fa-check';
-    btn.querySelector('small').innerText='copied!';
+    btn.querySelector('small').innerText=' copied!';
     setTimeout(() => {
       btn.querySelector('i').classList='fa-regular fa-clipboard';
-      btn.querySelector('small').innerText='copy';
+      btn.querySelector('small').innerText=' copy';
       
     }, 5000);
   })
   .catch((err)=>{
     console.log(err);
   })
+}
+function deleteChat(divId){
+  let paramid = window.location.search;
+      let urlparams =new URLSearchParams(paramid);
+      let id =urlparams.get('id');
+  document.getElementById(divId).innerHTML=`<span class="dlt-msg"><i class="fa-solid fa-ban" onclick="clearChat('${divId}')"></i><h5>You deleted this msg.</h5></span>`;
+  socket.emit('delete-chat',{to:id,id:divId});
+}
+function clearChat(did){
+ let deletedDiv = document.getElementById(did);
+ deletedDiv.parentNode.removeChild(deletedDiv);
 }
 function download(btn,extname,url){
   btn.classList='fa-solid fa-check download';
@@ -297,49 +308,27 @@ function hideClientVideo(){
 // const backspace = document.getElementById('backspace');
 const textarea = document.querySelector('#text-msg');
 const inputType = document.getElementById('input-type');
+const emoji = document.getElementById('emoji');
 let codeType = false;
 inputType.addEventListener('click',()=>{
   codeType= !codeType;
   if(codeType){
     inputType.classList = 'fa-solid fa-comment input-type';
-    textarea.placeholder = 'lang | paste your code...';
-//     textarea.value = `<code class="language-javascript">
-// //Chose your language above.
-// // Paste your code here
-
-
-   
-//     </code>`;
-//     textarea.style.height='180px'
+    textarea.placeholder = 'lang | code/command...';
   }else{
   inputType.classList = 'fa-solid fa-code input-type';
   textarea.placeholder = 'Type a message...';
   textarea.value = '';
-  // textarea.style.height = '40px'
   }
   textarea.focus();
 })
 
 const parentMaxHeight = parseInt(window.getComputedStyle(textarea.parentElement).maxHeight);
-// backspace.addEventListener('click',()=>{
-//   let vl = textarea.value;
-//   let emojiRegex = /[\uD800-\uDBFF][\uDC00-\uDFFF]$/;
-//   if(emojiRegex.test(vl)){
-//     textarea.value = vl.substring(0,vl.length - 2);
-//   }else{
-//     textarea.value = vl.substring(0,vl.length - 1);
-//   }
-
-//   // if(textarea.length < 0){
-//   //   backspace.style.display = 'none';
-//   // }
-  
-// })
 textarea.addEventListener('focus',()=>{
   document.querySelector('.emoji-picker').classList= 'emoji-picker';
 })
 // textarea.addEventListener('keyup', ()=>{
-//   // playSound('keypad');
+//   playSound('keypad');
 // });
 function adjustTextareaHeight() {
   let name =localStorage.getItem("name");
@@ -484,7 +473,7 @@ function zoomRemoreVideo(){
 
 }
 
-document.getElementById('emoji').addEventListener('click',()=>{
+emoji.addEventListener('click',()=>{
   document.querySelector('.emoji-picker').classList.toggle('emoji-picker-open');
 })
 document.querySelector('emoji-picker')
