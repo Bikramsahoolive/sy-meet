@@ -125,6 +125,7 @@
                 <audio id="remoteAudio" preload="auto"></audio>
             </div>
             <div class="screen">
+                <!-- <img src="images/video-screen.png" alt=""> -->
                 <video id="remote-video" muted autoplay></video>
                 <i class="fa-solid fa-expand" id="zoom-remote-video" onclick="zoomRemoreVideo()"></i>
                 <!-- <video id="remote-screen" muted autoplay></video> -->
@@ -136,7 +137,7 @@
                     <!-- <p class="new-msg">Unread Messages</p> -->
 
                     <div class="msg-div dev-msg">
-                        <h4>Bikram (Dev)</h4>
+                        <h4>Bikram (Dev.)</h4>
                         <span class="span-msg" id="dev-msg"></span>
                     </div>
 
@@ -144,11 +145,17 @@
                         <div class="send-msg" id="123">
                         <h4>Bikram</h4>
                          <div class="opt" >
-                            <div><i class="fa-solid fa-trash-can" onclick="deleteChat('123')"></i></div>
+                            <i class="fa-solid fa-share" onclick="taggedChat('123')"></i>
+                            <div ><i class="fa-solid fa-trash-can" onclick="deleteChat('123')"></i></div>
                             <div onclick="copyChat(this)"><i class="fa-regular fa-clipboard"></i> <small> copy</small></div>
                          </div>
+                        <span class="tagged-msg">
+                        <strong>Bikram</strong>
+                            Hi Tral Msg...Replayed message. ljsdbbhbdc bhbdcbb dkcbkb dckh bkhbckbkhc bkhb adkhbakhbb Hi Tral Msg...Replayed message. ljsdbbhbdc bhbdcbb dkcbkb dckh bkhbckbkhc bkhb adkhbakhbb
+                            Hi Tral Msg...Replayed message. ljsdbbhbdc bhbdcbb dkcbkb dckh bkhbckbkhc bkhb adkhbakhbb
+                        </span>
                         <span class="span-msg">
-                            <p>Hi Tral Msg...</p>
+                             ahbhka bvkbh asb h  bvhbahb vhbvhbhk
                             <small class="time">18:36 pm</small>
                         </span>
                     </div>
@@ -156,8 +163,18 @@
                     
 
                 </div>
+                                
+                
                 <emoji-picker class="emoji-picker"></emoji-picker>
                 <div class="msg-input" id="msgInput">
+                    <div class="tagged-input">
+                        <i class="fa-solid fa-circle-xmark" style="position: absolute; right: 15px; top: 15px; cursor: pointer;" onclick="closeTaggedInput()"></i>
+                        <strong style="display:block;" id="sender-name"></strong>
+                        <span id="tagged-in-msg" class="tagged-in-msg">
+                        </span>
+                        <input type="text" style="display: none;" id="tagged-id">
+                </div>
+                <div class="input-controls">
                     <i class="fa-solid fa-angle-down scroll-down" id="scroll-down" onclick="scrollDown()"></i> 
                     <i class="fa-regular fa-face-smile emoji" id="emoji"></i>
                     <textarea id="text-msg" placeholder="Type a mssage..." cols="1" rows="1"></textarea>
@@ -167,6 +184,9 @@
                     <!-- <i class="fa-solid fa-delete-left input-type" id="backspace"></i> -->
                     <i class="fa-solid fa-paperclip file-send msg-btn" id="file-btn" onclick="sendFile()"></i>
                     <i class="fa-solid fa-arrow-up-from-bracket msg-btn" id="send-btn" onclick="sendMsg()"></i>
+
+                </div>
+                    
                 </div>
             </div>
 

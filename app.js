@@ -115,6 +115,10 @@ io.on('connection', (socket) => {
         socket.broadcast.to(to).emit('chat',{from,DivId,message});
       });
 
+      socket.on('tagged-chat',({from,to,DivId,message,taggedId})=>{
+        socket.broadcast.to(to).emit('tagged-chat',{from,DivId,message,taggedId});
+      });
+      
       socket.on('image',({from,to,file})=>{
       
           socket.broadcast.to(to).emit('image',{from,file});

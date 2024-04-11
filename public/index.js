@@ -219,6 +219,78 @@ function screenShare() {
 }
 
 
+const textarea = document.querySelector('#text-msg');
+const inputType = document.getElementById('input-type');
+
+let codeType = false;
+inputType.addEventListener('click',()=>{
+  codeType= !codeType;
+  if(codeType){
+    inputType.classList = 'fa-solid fa-comment input-type';
+    textarea.placeholder = 'lang | code/command...';
+  }else{
+  inputType.classList = 'fa-solid fa-code input-type';
+  textarea.placeholder = 'Type a message...';
+  textarea.value = '';
+  }
+  textarea.focus();
+})
+
+
+let taggedMsgSet = false;
+function createTaggedInput(div){
+  // alert(div.querySelector('h4').innerText);
+  document.getElementById('tagged-id').value = div.id;
+  document.getElementById('sender-name').innerText = div.querySelector('h4').innerText;
+  document.getElementById('tagged-in-msg').innerText = div.querySelector('.span-msg').innerText;
+  document.querySelector('.tagged-input').style.display ='block';
+  inputType.style.display = 'none';
+  if(codeType){
+    codeType = false;
+    inputType.classList = 'fa-solid fa-code input-type';
+    textarea.placeholder = 'Type a message...';
+    textarea.value = '';
+  }
+
+  taggedMsgSet = true;
+  textarea.focus();
+}
+
+function createTaggedInputBtn(btn){
+  // alert(div.querySelector('h4').innerText);
+  let targetDiv = btn.parentElement.parentElement;
+  document.getElementById('tagged-id').value = targetDiv.id;
+  document.getElementById('sender-name').innerText = targetDiv.querySelector('h4').innerText;
+  document.getElementById('tagged-in-msg').innerText = targetDiv.querySelector('.span-msg').innerText;
+  document.querySelector('.tagged-input').style.display ='block';
+  inputType.style.display = 'none';
+  if(codeType){
+    codeType = false;
+    inputType.classList = 'fa-solid fa-code input-type';
+    textarea.placeholder = 'Type a message...';
+    textarea.value = '';
+  }
+  taggedMsgSet = true;
+  textarea.focus();
+}
+function closeTaggedInput()
+{
+  document.querySelector('.tagged-input').style.display = 'none';
+  document.getElementById('tagged-in-msg').innerHTML='';
+  document.getElementById('tagged-id').value = "";
+  inputType.style.display = 'block'
+  taggedMsgSet = false;
+}
+
+function scrollToDiv(divid){
+  div = document.getElementById(divid);
+  div.scrollIntoView({behavior:'smooth',block:'start'});
+  div.parentElement.classList.add('scroll-effect');
+  setTimeout(()=>{
+    div.parentElement.classList.remove('scroll-effect');
+  },6000)
+}
+
 let fileReader = document.getElementById('atch-file');
 
 function sendFile(){
@@ -242,7 +314,7 @@ function copytext(btn){
     })
 }
 function copyChat(btn){
-  let textbox = btn.parentElement.nextElementSibling;
+  let textbox = btn.parentElement.parentElement.querySelector('.span-msg');
   let text = textbox.innerText;
   navigator.clipboard.writeText(text)
   .then(()=>{
@@ -268,6 +340,9 @@ function deleteChat(divId){
 function clearChat(did){
  let deletedDiv = document.getElementById(did);
  deletedDiv.parentNode.removeChild(deletedDiv);
+}
+function taggedChat(did){
+  console.log(did);
 }
 function download(btn,extname,url){
   btn.classList='fa-solid fa-check download';
@@ -305,23 +380,6 @@ function hideClientVideo(){
     toggleBtn.classList='fa-solid fa-angle-up';
   }
 }
-// const backspace = document.getElementById('backspace');
-const textarea = document.querySelector('#text-msg');
-const inputType = document.getElementById('input-type');
-const emoji = document.getElementById('emoji');
-let codeType = false;
-inputType.addEventListener('click',()=>{
-  codeType= !codeType;
-  if(codeType){
-    inputType.classList = 'fa-solid fa-comment input-type';
-    textarea.placeholder = 'lang | code/command...';
-  }else{
-  inputType.classList = 'fa-solid fa-code input-type';
-  textarea.placeholder = 'Type a message...';
-  textarea.value = '';
-  }
-  textarea.focus();
-})
 
 const parentMaxHeight = parseInt(window.getComputedStyle(textarea.parentElement).maxHeight);
 textarea.addEventListener('focus',()=>{
@@ -341,9 +399,12 @@ function adjustTextareaHeight() {
       document.querySelector('#file-btn').style.display='none';
       document.querySelector('#send-btn').style.display='block';
     }else{
-      inputType.style.display = 'block';
-      document.querySelector('#file-btn').style.display='block';
-      document.querySelector('#send-btn').style.display='none';
+      if(!taggedMsgSet){
+        inputType.style.display = 'block';
+        document.querySelector('#file-btn').style.display='block';
+        document.querySelector('#send-btn').style.display='none';
+      }
+
     }
   
    
@@ -472,7 +533,7 @@ function zoomRemoreVideo(){
 }
 
 }
-
+const emoji = document.getElementById('emoji');
 emoji.addEventListener('click',()=>{
   document.querySelector('.emoji-picker').classList.toggle('emoji-picker-open');
 })
@@ -600,7 +661,7 @@ let [hour, minute, sec] = time.split(':');
 console.log(typeof minute);
 let hr = hour.trim().padStart(2 ,"0");
 let meridiem = sec.split(' ')[1];
-  if(val =='code-help' || val =='Code-help'){
+  if(val =='code|help' || val =='Code|help'){
     let message= `  input appropriate language the value as
      lang on textbox then a pipe ' | ' and paste your code.
      
@@ -933,6 +994,11 @@ let meridiem = sec.split(' ')[1];
   }
   return true;
 }
+
+
+window.addEventListener('beforeunload',(e)=>{
+  e.preventDefault();
+})
 
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -93,7 +93,6 @@ socket.on('chat',({from,DivId,message})=>{
 let currentISTTime = currentDate.toLocaleString('en-IN', ISTOptions);
 let [date,time] = currentISTTime.split(',');
 let [hour, minute, sec] = time.split(':');
-console.log(typeof minute);
 let hr = hour.trim().padStart(2 ,"0");
 let meridiem = sec.split(' ')[1];
 
@@ -113,10 +112,46 @@ let meridiem = sec.split(' ')[1];
     notifyBadge.innerHTML = msgCount;
     notifyBadge.style.visibility='visible';
   }
+  let receiveDiv = document.createElement('div');
+  receiveDiv.classList='receive-div';
   let div = document.createElement('div');
   div.classList='msg-div';
   div.id = DivId;
-  let h4 = `<h4>${from}</h4><div class="clipboard" onclick='copyChat(this)'><i class="fa-regular fa-clipboard"></i> <small>copy</small></div>`;
+
+  div.addEventListener('touchstart', function(event) {
+    touchStartX = event.touches[0].clientX;
+});
+
+div.addEventListener('touchmove', function(event) {
+    touchEndX = event.touches[0].clientX;
+});
+
+div.addEventListener('touchend', function(event) {
+    if (touchEndX < touchStartX) {
+        // Left swipe detected
+        // alert("Left swipe detected!");
+         touchStartX = 0;
+         touchEndX = 0;
+        return;
+    }
+    
+    if (touchEndX - touchStartX > 150) {
+        // Right swipe detected
+        // alert("Right swipe detected!");
+
+        createTaggedInput(this);
+
+         touchStartX = 0;
+         touchEndX = 0;
+        // Your action for right swipe here
+    }
+});
+
+  let h4 = `<h4>${from}</h4>
+                         <div class="opt" >
+                            <i class="fa-solid fa-share" onclick="createTaggedInputBtn(this)"></i>
+                            <div onclick="copyChat(this)"><i class="fa-regular fa-clipboard"></i> <small> copy</small></div>
+                        </div>`;
   let span = document.createElement('span');
   span.classList = 'span-msg';
   let small = document.createElement('small');
@@ -126,11 +161,116 @@ let meridiem = sec.split(' ')[1];
   div.innerHTML=h4;
   div.appendChild(span);
   div.appendChild(small);
-  chatArea.appendChild(div);
+  receiveDiv.appendChild(div);
+  chatArea.appendChild(receiveDiv);
   playSound('new-message');
   scrollDown();
 })
+
+
+socket.on('tagged-chat',({from,DivId,message,taggedId})=>{
+  let typDiv = document.getElementById('typing');
+  if(typDiv !== null){
+   typDiv.parentNode.removeChild(typDiv);
+  }
+
+  let currentDate  =new Date();
+  let ISTOptions = {timeZone: 'Asia/Kolkata'};
+let currentISTTime = currentDate.toLocaleString('en-IN', ISTOptions);
+let [date,time] = currentISTTime.split(',');
+let [hour, minute, sec] = time.split(':');
+let hr = hour.trim().padStart(2 ,"0");
+let meridiem = sec.split(' ')[1];
+
+
+  let chatBox = document.getElementById('chat-box');
+  let isOpened = chatBox.classList.contains('textdoc-open');
+  let hasPTag = chatArea.querySelector('p') !== null;
+  if(!isOpened){
+    if(!hasPTag){
+      let unReadTag = document.createElement('p');
+      unReadTag.classList.add('new-msg');
+      unReadTag.innerHTML="Unread Messages";
+      chatArea.appendChild(unReadTag);
+    }
+    msgCount++;
+    let notifyBadge = document.querySelector('.msg-notification');
+    notifyBadge.innerHTML = msgCount;
+    notifyBadge.style.visibility='visible';
+  }
+  let receiveDiv = document.createElement('div');
+  receiveDiv.classList='receive-div';
+  let div = document.createElement('div');
+  div.classList='msg-div';
+  div.id = DivId;
+
+  div.addEventListener('touchstart', function(event) {
+    touchStartX = event.touches[0].clientX;
+});
+
+div.addEventListener('touchmove', function(event) {
+    touchEndX = event.touches[0].clientX;
+});
+
+div.addEventListener('touchend', function(event) {
+    if (touchEndX < touchStartX) {
+        // Left swipe detected
+        // alert("Left swipe detected!");
+         touchStartX = 0;
+         touchEndX = 0;
+        return;
+    }
+    
+    if (touchEndX - touchStartX > 150) {
+        // Right swipe detected
+        // alert("Right swipe detected!");
+
+        createTaggedInput(this);
+
+         touchStartX = 0;
+         touchEndX = 0;
+        // Your action for right swipe here
+    }
+});
+
+  let h4 = `<h4>${from}</h4>
+                         <div class="opt" >
+                            <i class="fa-solid fa-share" onclick="createTaggedInputBtn(this)"></i>
+                            <div onclick="copyChat(this)"><i class="fa-regular fa-clipboard"></i> <small> copy</small></div>
+                        </div>`;
+
+
+
+
+                        let taggedSpan = document.createElement('span');
+                        taggedSpan.classList = 'tagged-msg';
+                        let taggedMainDiv = document.getElementById(taggedId);
+                        let taggedName = taggedMainDiv.querySelector('h4').innerText;
+                        taggedSpan.innerHTML=`<strong>${taggedName}</strong> ${taggedMainDiv.querySelector('.span-msg').innerText}`;
+                        taggedSpan.setAttribute('onclick',`scrollToDiv(${taggedId})`);
+
+  let span = document.createElement('span');
+  span.classList = 'span-msg';
+  let small = document.createElement('small');
+  small.classList='time';
+  small.innerHTML=`${hour}:${minute} ${meridiem}`;
+  span.innerHTML=message;
+  div.innerHTML=h4;
+  div.appendChild(taggedSpan);
+  div.appendChild(span);
+  div.appendChild(small);
+  receiveDiv.appendChild(div);
+  chatArea.appendChild(receiveDiv);
+  playSound('new-message');
+  scrollDown();
+})
+
+
+
+
 const inputTypeBtn = document.getElementById('input-type');
+let touchStartX = 0;
+let touchEndX = 0;
 function sendMsg(){
     if(textarea.value!==""){
       let currentDate  =new Date();
@@ -138,7 +278,6 @@ function sendMsg(){
   let currentISTTime = currentDate.toLocaleString('en-IN', ISTOptions);
   let [date,time] = currentISTTime.split(',');
   let [hour, minute, sec] = time.split(':');
-  console.log(typeof minute);
   let hr = hour.trim().padStart(2 ,"0");
   let meridiem = sec.split(' ')[1];
     
@@ -188,33 +327,139 @@ function sendMsg(){
         }
       
       }else{
-        let paramid = window.location.search;
-      let urlparams =new URLSearchParams(paramid);
-      let id =urlparams.get('id');
-      let name =localStorage.getItem("name");
-      let sendDiv = document.createElement('div');
-      sendDiv.classList='send-div';
-      let div = document.createElement('div');
-      div.classList='send-msg';
-      let divId = Date.now();
-      div.id = divId;
-      let h4 = `<h4>${name}</h4>
-                        <div class="opt" >
-                            <div><i class="fa-solid fa-trash-can" onclick="deleteChat('${divId}')"></i></div>
-                            <div onclick="copyChat(this)"><i class="fa-regular fa-clipboard"></i> <small> copy</small></div>
-                        </div>`;
-      let span = document.createElement('span');
-      span.classList = 'span-msg';
-      span.innerHTML=textarea.value;
-      let small = document.createElement('small');
-      small.classList='time';
-      small.innerHTML=`${hour}:${minute} ${meridiem}`;
-      div.innerHTML=h4;
-      div.appendChild(span);
-      div.appendChild(small);
-      sendDiv.appendChild(div)
-      chatArea.appendChild(sendDiv);
-      socket.emit('chat',{from:name ,to:id,DivId:divId ,message:textarea.value});
+        if(!taggedMsgSet){
+          let paramid = window.location.search;
+          let urlparams =new URLSearchParams(paramid);
+          let id =urlparams.get('id');
+          let name =localStorage.getItem("name");
+          let sendDiv = document.createElement('div');
+          sendDiv.classList='send-div';
+          let div = document.createElement('div');
+          div.classList='send-msg';
+          let divId = Date.now();
+          div.id = divId;
+          
+          div.addEventListener('touchstart', function(event) {
+        touchStartX = event.touches[0].clientX;
+    });
+    
+    div.addEventListener('touchmove', function(event) {
+        touchEndX = event.touches[0].clientX;
+    });
+    
+    div.addEventListener('touchend', function(event) {
+        if (touchEndX < touchStartX) {
+            // Left swipe detected
+            // alert("Left swipe detected!");
+             touchStartX = 0;
+             touchEndX = 0;
+            return;
+        }
+        
+        if (touchEndX - touchStartX > 150) {
+            // Right swipe detected
+            // alert("Right swipe detected!");
+    
+            createTaggedInput(this);
+    
+             touchStartX = 0;
+             touchEndX = 0;
+            // Your action for right swipe here
+        }
+    });
+    
+          let h4 = `<h4>${name}</h4>
+                            <div class="opt" >
+                            <i class="fa-solid fa-share" onclick="createTaggedInputBtn(this)"></i>
+                                <div><i class="fa-solid fa-trash-can" onclick="deleteChat('${divId}')"></i></div>
+                                <div onclick="copyChat(this)"><i class="fa-regular fa-clipboard"></i> <small> copy</small></div>
+                            </div>`;
+          let span = document.createElement('span');
+          span.classList = 'span-msg';
+          span.innerHTML=textarea.value;
+          let small = document.createElement('small');
+          small.classList='time';
+          small.innerHTML=`${hour}:${minute} ${meridiem}`;
+          div.innerHTML=h4;
+          div.appendChild(span);
+          div.appendChild(small);
+          sendDiv.appendChild(div)
+          chatArea.appendChild(sendDiv);
+          socket.emit('chat',{from:name ,to:id,DivId:divId ,message:textarea.value});
+        }else {
+          ///////////////////////////////////////Tagged chat//////////////////////////////////////////////////////
+          let paramid = window.location.search;
+          let urlparams =new URLSearchParams(paramid);
+          let id =urlparams.get('id');
+          let name =localStorage.getItem("name");
+          let sendDiv = document.createElement('div');
+          sendDiv.classList='send-div';
+          let div = document.createElement('div');
+          div.classList='send-msg';
+          let divId = Date.now();
+          div.id = divId;
+          
+          div.addEventListener('touchstart', function(event) {
+        touchStartX = event.touches[0].clientX;
+    });
+    
+    div.addEventListener('touchmove', function(event) {
+        touchEndX = event.touches[0].clientX;
+    });
+    
+    div.addEventListener('touchend', function(event) {
+        if (touchEndX < touchStartX) {
+            // Left swipe detected
+            // alert("Left swipe detected!");
+             touchStartX = 0;
+             touchEndX = 0;
+            return;
+        }
+        
+        if (touchEndX - touchStartX > 150) {
+            // Right swipe detected
+            // alert("Right swipe detected!");
+    
+            createTaggedInput(this);
+    
+             touchStartX = 0;
+             touchEndX = 0;
+        }
+    });
+    
+          let h4 = `<h4>${name}</h4>
+                            <div class="opt" >
+                            <i class="fa-solid fa-share" onclick="createTaggedInputBtn(this)"></i>
+                                <div><i class="fa-solid fa-trash-can" onclick="deleteChat('${divId}')"></i></div>
+                                <div onclick="copyChat(this)"><i class="fa-regular fa-clipboard"></i> <small> copy</small></div>
+                            </div>`;
+
+           let taggedSpan = document.createElement('span');
+           taggedSpan.classList = 'tagged-msg';
+           let taggedContentId = document.getElementById('tagged-id');
+           let taggedMainDiv = document.getElementById(taggedContentId.value);
+           let taggedName = taggedMainDiv.querySelector('h4').innerText;
+           taggedSpan.innerHTML=`<strong>${taggedName}</strong> ${taggedMainDiv.querySelector('.span-msg').innerText}`;
+           taggedSpan.setAttribute('onclick',`scrollToDiv(${taggedContentId.value})`);
+
+
+          let span = document.createElement('span');
+          span.classList = 'span-msg';
+          span.innerHTML=textarea.value;
+          let small = document.createElement('small');
+          small.classList='time';
+          small.innerHTML=`${hour}:${minute} ${meridiem}`;
+          div.innerHTML=h4;
+          div.appendChild(taggedSpan);
+          div.appendChild(span);
+          div.appendChild(small);
+          sendDiv.appendChild(div);
+          chatArea.appendChild(sendDiv);
+          socket.emit('tagged-chat',{from:name,to:id,DivId:divId,message:textarea.value,taggedId:taggedContentId.value});
+          taggedContentId.value = "";
+          closeTaggedInput();
+        }
+       
       }
       playSound('message-sent');
       textarea.value="";
@@ -233,8 +478,11 @@ function sendMsg(){
   }
 
   socket.on('delete-chat',({id})=>{
-    console.log(document.getElementById(id));
-    document.getElementById(id).innerHTML=`<span class="dlt-msg"><i class="fa-solid fa-ban" onclick="clearChat('${id}')"></i><h5>This msg is deleted.</h5></span>`;
+    let targetDiv = document.getElementById(id);
+    if(targetDiv !==null ){
+      targetDiv.innerHTML=`<span class="dlt-msg"><i class="fa-solid fa-ban" onclick="clearChat('${id}')"></i><h5>This msg is deleted.</h5></span>`;
+    }
+    
   })
 
   let typetime ;
@@ -261,7 +509,7 @@ function sendMsg(){
      if(typDiv !== null){
       typDiv.parentNode.removeChild(typDiv);
      }
-    },3000)
+    },5000)
   })
 
   socket.on('image',({from,file})=>{
