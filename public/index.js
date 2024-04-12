@@ -283,8 +283,8 @@ function closeTaggedInput()
 }
 
 function scrollToDiv(divid){
-  div = document.getElementById(divid);
-  div.scrollIntoView({behavior:'smooth',block:'start'});
+ let div = document.getElementById(divid);
+  div.scrollIntoView({behavior:'smooth',block:'center'});
   div.parentElement.classList.add('scroll-effect');
   setTimeout(()=>{
     div.parentElement.classList.remove('scroll-effect');
@@ -500,8 +500,8 @@ async function shareMeetId(){
     let id =urlparams.get('id');
 
     navigator.share({
-     title:'Join Request on SYI MeeT.',
-     text:`Join me now on SYI MeeT with MeeT ID: ${id} | click on the link :`,
+     title:'Join Request on SY MeeT.',
+     text:`Join me now on SY MeeT with MeeT ID: ${id} | or click on the link  :`,
      url:`?id=${id}`
    })
    .catch((err)=>console.log(err));
@@ -649,6 +649,16 @@ function chatToggle(){
   chatbox.classList.toggle('textdoc-open');
   let chatInput = document.getElementById('msgInput');
   chatInput.classList.toggle('msg-input-open');
+  let isChatOpen = chatbox.classList.contains('textdoc-open');
+  if (isChatOpen){
+    setTimeout(()=>{
+      document.getElementById('text').style.display = 'block';
+    },300)
+    
+  }else{
+    document.getElementById('text').style.display = 'none';
+
+  }
 }
 
 

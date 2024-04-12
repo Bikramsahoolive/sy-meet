@@ -24,6 +24,20 @@ socket.on('create-meet',({status,rid})=>{
     
 
 })
+ //        to establish continiue connection with socket.
+setInterval(()=>{
+  if(isAudioShared || isScreenShared || isVideoShared){
+    let paramid = window.location.search;
+    let urlparams =new URLSearchParams(paramid);
+    let id =urlparams.get('id');
+    socket.emit('client-active',{to:id});
+  }else{
+  }
+},900000);
+
+socket.on('client-active',()=>{
+  console.log('remote user is still active...');
+});
 
 socket.on('text',({from,DivId,message})=>{
   let typDiv = document.getElementById('typing');
@@ -377,6 +391,16 @@ function sendMsg(){
           let span = document.createElement('span');
           span.classList = 'span-msg';
           span.innerHTML=textarea.value;
+
+          let alphanumericSpecialWhitespaceRegex  = /^[a-zA-Z0-9!@#$%^&*()_+{}\[\]:;<>,.?\/\\~\s-]+$/;
+
+          let isLeters = alphanumericSpecialWhitespaceRegex .test(textarea.value);
+          if (!isLeters){
+            if( textarea.value.length==2 || textarea.value.length==3|| textarea.value.length==4 ||textarea.value.length==5 ||textarea.value.length==7 ){
+              span.setAttribute('style','font-size:100px;text-align:center;');
+            }
+          }
+
           let small = document.createElement('small');
           small.classList='time';
           small.innerHTML=`${hour}:${minute} ${meridiem}`;

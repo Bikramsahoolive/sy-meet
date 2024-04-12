@@ -103,6 +103,10 @@ io.on('connection', (socket) => {
         socket.broadcast.to(to).emit('typing',{name});
       });
 
+      socket.on('client-active',({to})=>{
+        socket.broadcast.to(to).emit('client-active',{});
+      });
+
       socket.on('delete-chat',({to,id})=>{
         socket.broadcast.to(to).emit('delete-chat',{id});
       })
