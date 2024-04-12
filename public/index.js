@@ -996,9 +996,6 @@ let meridiem = sec.split(' ')[1];
 }
 
 
-window.addEventListener('beforeunload',(e)=>{
-  e.preventDefault();
-})
 
 
 ////////////////////////////////////////////////////////////////////////////////
