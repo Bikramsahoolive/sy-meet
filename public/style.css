@@ -88,7 +88,7 @@ h1{
 }
 .screen{
     box-shadow: 0px 35px 0 -33px wheat;
-    width: 50%;
+    width: 55%;
     height: 70vh;
     position: relative;
     background-image: url('images/video-screen.png');
@@ -109,7 +109,7 @@ h1{
 }
 .textdoc{
     box-shadow: 0 0 5px 2px wheat;
-    width: 30%;
+    width: 25%;
     height: 70vh;
     min-width: 310px;
     position: relative;

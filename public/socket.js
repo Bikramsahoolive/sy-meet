@@ -172,6 +172,15 @@ div.addEventListener('touchend', function(event) {
   small.classList='time';
   small.innerHTML=`${hour}:${minute} ${meridiem}`;
   span.innerHTML=message;
+
+  let alphanumericSpecialWhitespaceRegex  = /^[a-zA-Z0-9!@#$%^&*()_+{}\[\]:;<>,.?\/\\~\s-]+$/;
+  let isLeters = alphanumericSpecialWhitespaceRegex .test(message);
+  if (!isLeters){
+    if( message.length==2 || message.length==3|| message.length==4 ||message.length==5 ||message.length==7 ){
+      span.setAttribute('style','font-size:100px;text-align:center;');
+    }
+  }
+
   div.innerHTML=h4;
   div.appendChild(span);
   div.appendChild(small);
@@ -393,7 +402,6 @@ function sendMsg(){
           span.innerHTML=textarea.value;
 
           let alphanumericSpecialWhitespaceRegex  = /^[a-zA-Z0-9!@#$%^&*()_+{}\[\]:;<>,.?\/\\~\s-]+$/;
-
           let isLeters = alphanumericSpecialWhitespaceRegex .test(textarea.value);
           if (!isLeters){
             if( textarea.value.length==2 || textarea.value.length==3|| textarea.value.length==4 ||textarea.value.length==5 ||textarea.value.length==7 ){
