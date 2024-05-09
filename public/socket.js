@@ -55,10 +55,11 @@ let meridiem = sec.split(' ')[1];
 
   let chatBox = document.getElementById('chat-box');
   let isOpened = chatBox.classList.contains('textdoc-open');
-  let hasPTag = chatArea.querySelector('p') !== null;
+  let hasPTag = chatArea.querySelector('.unread') !== null;
   if(!isOpened){
     if(!hasPTag){
       let unReadTag = document.createElement('p');
+      unReadTag.classList='unread';
       unReadTag.classList.add('new-msg');
       unReadTag.innerHTML="Unread Messages";
       chatArea.appendChild(unReadTag);
@@ -93,7 +94,8 @@ let meridiem = sec.split(' ')[1];
   div.appendChild(div2);
   chatArea.appendChild(div);
   playSound('new-message');
-  scrollDown();
+  setTimeout(()=>scrollDown(),500)
+  
 });
 
 socket.on('chat',({from,DivId,message})=>{
@@ -113,10 +115,11 @@ let meridiem = sec.split(' ')[1];
 
   let chatBox = document.getElementById('chat-box');
   let isOpened = chatBox.classList.contains('textdoc-open');
-  let hasPTag = chatArea.querySelector('p') !== null;
+  let hasPTag = chatArea.querySelector('.unread') !== null;
   if(!isOpened){
     if(!hasPTag){
       let unReadTag = document.createElement('p');
+      unReadTag.classList='unread';
       unReadTag.classList.add('new-msg');
       unReadTag.innerHTML="Unread Messages";
       chatArea.appendChild(unReadTag);
@@ -208,10 +211,11 @@ let meridiem = sec.split(' ')[1];
 
   let chatBox = document.getElementById('chat-box');
   let isOpened = chatBox.classList.contains('textdoc-open');
-  let hasPTag = chatArea.querySelector('p') !== null;
+  let hasPTag = chatArea.querySelector('.unread') !== null;
   if(!isOpened){
     if(!hasPTag){
       let unReadTag = document.createElement('p');
+      unReadTag.classList='unread';
       unReadTag.classList.add('new-msg');
       unReadTag.innerHTML="Unread Messages";
       chatArea.appendChild(unReadTag);
@@ -295,23 +299,233 @@ const inputTypeBtn = document.getElementById('input-type');
 let touchStartX = 0;
 let touchEndX = 0;
 function sendMsg(){
-    if(textarea.value!==""){
-      let currentDate  =new Date();
-      let ISTOptions = {timeZone: 'Asia/Kolkata'};
-  let currentISTTime = currentDate.toLocaleString('en-IN', ISTOptions);
-  let [date,time] = currentISTTime.split(',');
-  let [hour, minute, sec] = time.split(':');
-  let hr = hour.trim().padStart(2 ,"0");
-  let meridiem = sec.split(' ')[1];
+
+  let currentDate  =new Date();
+  let ISTOptions = {timeZone: 'Asia/Kolkata'};
+let currentISTTime = currentDate.toLocaleString('en-IN', ISTOptions);
+let [date,time] = currentISTTime.split(',');
+let [hour, minute, sec] = time.split(':');
+let hr = hour.trim().padStart(2 ,"0");
+let meridiem = sec.split(' ')[1];
+
+let paramid = window.location.search;
+let urlparams =new URLSearchParams(paramid);
+let id =urlparams.get('id');
+let name =localStorage.getItem("name");
+
+
+
+
+  if(fileType){
+    let msgVal = textarea.value;
+    if(extnVal=='jpg'||extnVal=='png'||extnVal=='jpeg'||extnVal=='webp'||extnVal=='gif'){
+      
+      let sendDiv = document.createElement('div');
+      sendDiv.classList='send-div';
+      let div = document.createElement('div');
+      div.classList='send-msg';
+      let divId = Date.now();
+      div.id= divId
+
+      div.addEventListener('touchstart', function(event) {
+        touchStartX = event.touches[0].clientX;
+    });
     
+    div.addEventListener('touchmove', function(event) {
+        touchEndX = event.touches[0].clientX;
+    });
+    
+    div.addEventListener('touchend', function(event) {
+        if (touchEndX < touchStartX) {
+            // Left swipe detected
+            // alert("Left swipe detected!");
+             touchStartX = 0;
+             touchEndX = 0;
+            return;
+        }
+        
+        if (touchEndX - touchStartX > 150) {
+            // Right swipe detected
+            alert("Right swipe detected!");
+    
+            // createTaggedInput(this);
+    
+             touchStartX = 0;
+             touchEndX = 0;
+        }
+    });
+
+      if(msgVal.length > 0){
+   
+
+        let h4 = `<h4>${name}</h4>
+        <div class="opt" >
+            <div><i class="fa-solid fa-trash-can" onclick="deleteChat('${divId}')"></i></div>
+            <div onclick="copyChat(this)"><i class="fa-regular fa-clipboard"></i> <small> copy</small></div>
+        </div>`;
+        let img = document.createElement('img');
+        let imageSrc=dataUrlVal;
+        img.src=imageSrc;
+        div.innerHTML=h4;
+        let small = document.createElement('small');
+        small.classList='time';
+        small.innerHTML = `${hr}:${minute} ${meridiem}`
+        div.appendChild(img);
+        div.appendChild(small);
+        let span = document.createElement('span');
+        span.classList = 'span-msg';
+        span.innerText = msgVal;
+        div.appendChild(span);
+        textarea.value="";
+        sendDiv.appendChild(div);
+        chatArea.appendChild(sendDiv);
+        socket.emit('image',{from:name,to:id,file:dataUrlVal,divId:divId,msg:msgVal});
+      }else{
+        let h4 = `<h4>${name}</h4>
+        <div class="opt" >
+            <div><i class="fa-solid fa-trash-can" onclick="deleteChat('${divId}')"></i></div>
+        </div>`;
+        let img = document.createElement('img');
+        let imageSrc=dataUrlVal;
+        img.src=imageSrc;
+        div.innerHTML=h4;
+        let small = document.createElement('small');
+        small.classList='time';
+        small.innerHTML = `${hr}:${minute} ${meridiem}`
+        div.appendChild(img);
+        div.appendChild(small);
+        sendDiv.appendChild(div);
+        chatArea.appendChild(sendDiv);
+        socket.emit('image',{from:name,to:id,file:dataUrlVal,divId:divId});
+      }
+
+    }else{
+      let sendDiv = document.createElement('div');
+      sendDiv.classList='send-div';
+      let div = document.createElement('div');
+      div.classList='send-msg';
+      let divId = Date.now();
+      div.id= divId;
+      if (msgVal.length > 0){
+        let h4 =`<h4>${name}</h4>
+        <div class="opt" >
+            <div><i class="fa-solid fa-trash-can" onclick="deleteChat('${divId}')"></i></div>
+            <div onclick="copyChat(this)"><i class="fa-regular fa-clipboard"></i> <small> copy</small></div>
+        </div>`;
+        div.innerHTML=h4;
+      }else{
+
+      let h4 =`<h4>${name}</h4>
+      <div class="opt" >
+          <div><i class="fa-solid fa-trash-can" onclick="deleteChat('${divId}')"></i></div>
+      </div>`;
+      div.innerHTML=h4;
+      }
+
+
+      div.addEventListener('touchstart', function(event) {
+        touchStartX = event.touches[0].clientX;
+    });
+    
+    div.addEventListener('touchmove', function(event) {
+        touchEndX = event.touches[0].clientX;
+    });
+    
+    div.addEventListener('touchend', function(event) {
+        if (touchEndX < touchStartX) {
+            // Left swipe detected
+            // alert("Left swipe detected!");
+             touchStartX = 0;
+             touchEndX = 0;
+            return;
+        }
+        
+        if (touchEndX - touchStartX > 150) {
+            // Right swipe detected
+            alert("Right swipe detected!");
+    
+            // createTaggedInput(this);
+    
+             touchStartX = 0;
+             touchEndX = 0;
+        }
+    });
+
+      let fileSpan = document.createElement('span');
+      let fileDtls = document.createElement('p');
+      let fileImg = document.createElement('img');
+      fileSpan.classList = 'send-file';
+      fileDtls.classList ='file-desc' ;
+      fileImg.classList = 'file-image';
+
+      if(extn=='pdf'){
+        fileImg.src="images/SVGfile/file-type-standard-drawing-pdf-document.svg";
+      }else if(extn=='mp3'|| extn=='wav'|| extn=='aac'||extn=='m4a'){
+        fileImg.src="images/SVGfile/file-type-standard-drawing-sound-file.svg";
+      }else if(extn=='doc' || extn=='docx'){
+        fileImg.src="images/SVGfile/file-type-standard-drawing-word-document.svg";
+      }else if(extn=='txt'){
+        fileImg.src="images/SVGfile/document-type-standard-drawing-notepad.svg";
+      }else if(extn=='xls'||extn=='xlsx'||extn=='xlsm'||extn=='xlsb'){
+        fileImg.src="images/SVGfile/document-type-standard-drawing-worksheet.svg";
+      }else if(extn=='zip'||extn=='rar'){
+        fileImg.src="images/SVGfile/file-type-standard-drawing-compressed-file.svg";
+      }else if(extn=='mp4'||extn=='3gp'){
+        fileImg.src="images/SVGfile/file-type-standard-drawing-video-file.svg";
+      }else if(extn=='pptx'){
+        fileImg.src="images/SVGfile/document-type-standard-drawing-slide.svg";
+      }else if(extn=='json'){
+        fileImg.src="images/SVGfile/json-5.svg";
+      }else{
+        fileImg.src="images/SVGfile/file-type-standard-drawing-unknown-file.svg";
+      }
+      let small = document.createElement('small');
+      small.classList='time';
+      small.innerHTML = `${hr}:${minute} ${meridiem}`;
+
+      fileDtls.innerHTML = fileName;
+      fileSpan.appendChild(fileImg);
+      fileSpan.appendChild(fileDtls);
+      fileSpan.appendChild(small);
+      div.appendChild(fileSpan)
+
+      if (msgVal.length > 0){
+        let msgSpan = document.createElement('span');
+        msgSpan.classList = 'span-msg';
+        msgSpan.innerHTML = msgVal;
+        textarea.value="";
+        div.appendChild(msgSpan);
+      }
+
+      sendDiv.appendChild(div);
+      chatArea.appendChild(sendDiv);
+      
+      if (msgVal.length > 0){
+        socket.emit('file',{from:name,to:id,file:dataUrlVal,divId:divId,extn:extnVal,filename:fileName,msgVal:msgVal});
+      }else{
+        socket.emit('file',{from:name,to:id,file:dataUrlVal,divId:divId,extn:extnVal,filename:fileName});
+      }
+    }
+    playSound('message-sent');
+    scrollDown();
+    inputType.style.display='block';
+    document.getElementById('file-btn').style.display = 'block';
+    document.getElementById('send-btn').style.display = 'none';
+    document.querySelector('.tagged-input').style.display = 'none';
+    document.getElementById('tagged-file').style .display = 'none';
+    document.querySelector('.emoji-picker').classList='emoji-picker';
+    fileType = false;
+    return;
+  }
+
+
+
+
+    if(textarea.value!==""){
       if(codeType){
         let notCommand = checkInput(textarea.value);
         if(notCommand){
 
-          let paramid = window.location.search;
-      let urlparams =new URLSearchParams(paramid);
-      let id =urlparams.get('id');
-      let name =localStorage.getItem("name");
       let sendDiv = document.createElement('div');
       sendDiv.classList='send-div';
       let div = document.createElement('div');
@@ -351,10 +565,10 @@ function sendMsg(){
       
       }else{
         if(!taggedMsgSet){
-          let paramid = window.location.search;
-          let urlparams =new URLSearchParams(paramid);
-          let id =urlparams.get('id');
-          let name =localStorage.getItem("name");
+          // let paramid = window.location.search;
+          // let urlparams =new URLSearchParams(paramid);
+          // let id =urlparams.get('id');
+          // let name =localStorage.getItem("name");
           let sendDiv = document.createElement('div');
           sendDiv.classList='send-div';
           let div = document.createElement('div');
@@ -420,10 +634,6 @@ function sendMsg(){
           socket.emit('chat',{from:name ,to:id,DivId:divId ,message:textarea.value});
         }else {
           ///////////////////////////////////////Tagged chat//////////////////////////////////////////////////////
-          let paramid = window.location.search;
-          let urlparams =new URLSearchParams(paramid);
-          let id =urlparams.get('id');
-          let name =localStorage.getItem("name");
           let sendDiv = document.createElement('div');
           sendDiv.classList='send-div';
           let div = document.createElement('div');
@@ -493,18 +703,21 @@ function sendMsg(){
         }
        
       }
-      playSound('message-sent');
-      textarea.value="";
-      scrollDown();
-      document.querySelector('#file-btn').style.display='block';
-      document.querySelector('#send-btn').style.display='none';
-      textarea.style.height='25px';
-      textarea.focus();
-      let hasPTag = chatArea.querySelector('p');
-      if(hasPTag !== null){
-        hasPTag.remove();
-      }
+
     }
+
+    playSound('message-sent');
+    textarea.value="";
+    scrollDown();
+    document.querySelector('#file-btn').style.display='block';
+    document.querySelector('#send-btn').style.display='none';
+    textarea.style.height='25px';
+    textarea.focus();
+    let hasPTag = chatArea.querySelector('.unread');
+    if(hasPTag !== null){
+      hasPTag.remove(); //bug
+    }
+
     document.querySelector('.emoji-picker').classList='emoji-picker';
     inputTypeBtn.style.display='block';
   }
@@ -544,23 +757,23 @@ function sendMsg(){
     },5000)
   })
 
-  socket.on('image',({from,file})=>{
+  socket.on('image',(data)=>{
     let currentDate  =new Date();
     let ISTOptions = {timeZone: 'Asia/Kolkata'};
 let currentISTTime = currentDate.toLocaleString('en-IN', ISTOptions);
 let [date,time] = currentISTTime.split(',');
 let [hour, minute, sec] = time.split(':');
-console.log(typeof minute);
 let hr = hour.trim().padStart(2 ,"0");
 let meridiem = sec.split(' ')[1];
 
     let chatBox = document.getElementById('chat-box');
     let isOpened = chatBox.classList.contains('textdoc-open');
-    let hasPTag = chatArea.querySelector('p') !== null;
+    let hasPTag = chatArea.querySelector('.unread') !== null;
       
     if(!isOpened){
       if(!hasPTag){
         let unReadTag = document.createElement('p');
+        unReadTag.classList='unread';
         unReadTag.classList.add('new-msg');
         unReadTag.innerHTML="Unread Messages";
         chatArea.appendChild(unReadTag);
@@ -570,25 +783,70 @@ let meridiem = sec.split(' ')[1];
       notifyBadge.innerHTML = msgCount;
       notifyBadge.style.visibility='visible';
     }
-    let div = document.createElement('div');
+    if(data.msg == null){
+      let receiveDiv = document.createElement('div');
+      receiveDiv.classList = 'receive-div';
+      let div = document.createElement('div');
     div.classList='msg-div';
-    let h4 = `<h4>${from}</h4> <i class="fa-solid fa-download download" onclick="download(this,'${Date.now()}','${file}')"></i>`;
+    div.id = data.divId;
+    let h4 = `<h4>${data.from}</h4> 
+    <div class="opt" >
+    <div> <i class="fa-solid fa-share"></i></div>
+    <div> <i class="fa-solid fa-download download" onclick="download(this,'${Date.now()}','${data.file}')"></i> </div>
+    </div>`;
     let img = document.createElement('img');
-    img.src=file;
+    img.src=data.file;
     div.innerHTML=h4;
     let small =document.createElement('small');
     small.classList = 'time';
     small.innerHTML=`${hr}:${minute} ${meridiem}`;
     div.appendChild(img);
     div.appendChild(small);
-    chatArea.appendChild(div);
+    receiveDiv.appendChild(div);
+    chatArea.appendChild(receiveDiv);
+    }else {
+      let receiveDiv = document.createElement('div');
+      receiveDiv.classList = 'receive-div'
+      let div = document.createElement('div');
+      div.classList='msg-div';
+      div.id = data.divId;
+      let h4 = `<h4>${data.from}</h4>
+      <div class="opt" >
+          <div> <i class="fa-solid fa-share"></i></div>
+          <div><i class="fa-solid fa-download" onclick="download(this,'${Date.now()}','${data.file}')"></i></div>
+          <div onclick="copyChat(this)"><i class="fa-regular fa-clipboard"></i> <small> copy</small></div>
+      </div>`;
+      let img = document.createElement('img');
+      img.src=data.file;
+      div.innerHTML=h4;
+      let small = document.createElement('small');
+      small.classList='time';
+      small.innerHTML = `${hr}:${minute} ${meridiem}`
+      div.appendChild(img);
+      div.appendChild(small);
+      let span = document.createElement('span');
+      span.classList = 'span-msg';
+      span.innerText = data.msg;
+      div.appendChild(span);
+      textarea.value="";
+      receiveDiv.appendChild(div);
+      chatArea.appendChild(receiveDiv);
+    }
     playSound('new-message');
-    scrollDown();
+    setTimeout(()=>{
+      scrollDown();
+    },500);
   })
 
 let dataUrlVal;
 let extnVal;
+let fileName;
   function showFile(){
+    inputType.style.display='none';
+    codeType = false;
+    inputType.classList = 'fa-solid fa-code input-type';
+    textarea.placeholder = 'Type a message...';
+    document.getElementById('sender-name').innerHTML="";
     let file = fileReader.files[0];
     let size = file.size;
     let extnAr = file.name.split('.');
@@ -600,19 +858,26 @@ let extnVal;
       let dataURL = reader.result;
         dataUrlVal=dataURL;
         extnVal=extn;
-      document.getElementById('smodal').style.display='block';
+        fileName= file.name;
+
+      sendFileConf();
       fileReader.value="";
 
     });
     reader.readAsDataURL(file);
     }else{
-      alert("Max 1MB Allowed.");
+      alert("Max 16MB Allowed.");
       fileReader.value="";
     }
   }
 
 
-  socket.on('file',({from,file,extn})=>{
+  socket.on('file',({from,file,divId,filename,extn,msgVal=undefined})=>{
+
+    let typDiv = document.getElementById('typing');
+    if(typDiv !== null){
+     typDiv.parentNode.removeChild(typDiv);
+    }
     let currentDate  =new Date();
     let ISTOptions = {timeZone: 'Asia/Kolkata'};
 let currentISTTime = currentDate.toLocaleString('en-IN', ISTOptions);
@@ -621,14 +886,14 @@ let [hour, minute, sec] = time.split(':');
 let hr = hour.trim().padStart(2 ,"0");
 let meridiem = sec.split(' ')[1];
 
-    // console.log(from,file);
     let chatBox = document.getElementById('chat-box');
     let isOpened = chatBox.classList.contains('textdoc-open');
-    let hasPTag = chatArea.querySelector('p') !== null;
+    let hasPTag = chatArea.querySelector('.unread') !== null;
       
     if(!isOpened){
       if(!hasPTag){
         let unReadTag = document.createElement('p');
+        unReadTag.classList='unread';
         unReadTag.classList.add('new-msg');
         unReadTag.innerHTML="Unread Messages";
         chatArea.appendChild(unReadTag);
@@ -638,131 +903,159 @@ let meridiem = sec.split(' ')[1];
       notifyBadge.innerHTML = msgCount;
       notifyBadge.style.visibility='visible';
     }
+    let sendDiv = document.createElement('div');
+    sendDiv.classList='receive-div';
     let div = document.createElement('div');
     div.classList='msg-div';
-    let h4 = `<h4>${from}</h4> <i class="fa-solid fa-download download" onclick="download(this,'${Date.now()}','${file}')"></i>`;
-    let h5 = document.createElement('h5');
-    let img = document.createElement('img');
-    if(extn=='pdf'){
-      img.src="images/SVGfile/file-type-standard-drawing-pdf-document.svg";
-    }else if(extn=='mp3'|| extn=='wav'|| extn=='aac'||extn=='m4a'){
-      img.src="images/SVGfile/file-type-standard-drawing-sound-file.svg";
-    }else if(extn=='doc' || extn=='docx'){
-      img.src="images/SVGfile/file-type-standard-drawing-word-document.svg";
-    }else if(extn=='txt'){
-      img.src="images/SVGfile/document-type-standard-drawing-notepad.svg";
-    }else if(extn=='xls'||extn=='xlsx'||extn=='xlsm'||extn=='xlsb'){
-      img.src="images/SVGfile/document-type-standard-drawing-worksheet.svg";
-    }else if(extn=='zip'||extn=='rar'){
-      img.src="images/SVGfile/file-type-standard-drawing-compressed-file.svg";
-    }else if(extn=='mp4'||extn=='3gp'){
-      img.src="images/SVGfile/file-type-standard-drawing-video-file.svg";
-    }else if(extn=='pptx'){
-      img.src="images/SVGfile/document-type-standard-drawing-slide.svg";
-    }else if(extn=='json'){
-      img.src="images/SVGfile/json-5.svg";
+    div.id= divId;
+      if(msgVal !== undefined){
+      let h4 =`<h4>${from}</h4>
+      <div class="opt" >
+          <div onclick="copyChat(this)"><i class="fa-regular fa-clipboard"></i> <small> copy</small></div>
+      </div>`;
+      div.innerHTML=h4;
     }else{
-      img.src="images/SVGfile/file-type-standard-drawing-unknown-file.svg";
-    }
-    h5.innerHTML=`Received new ${extn} file.`;
+
+    let h4 =`<h4>${from}</h4>
+    <div class="opt" >
+    </div>`;
+    // <div><i class="fa-solid fa-trash-can" onclick="deleteChat('${divId}')"></i></div>
     div.innerHTML=h4;
-    div.appendChild(img);
-    div.appendChild(h5);
-    let small = document.createElement('small');
-    small.classList = 'time';
-    small.innerHTML = `${hr}:${minute} ${meridiem}`;
-    div.appendChild(small);
-    chatArea.appendChild(div);
-    playSound('new-message');
-    scrollDown();
+    }
+
+
+    div.addEventListener('touchstart', function(event) {
+      touchStartX = event.touches[0].clientX;
+  });
+  
+  div.addEventListener('touchmove', function(event) {
+      touchEndX = event.touches[0].clientX;
+  });
+  
+  div.addEventListener('touchend', function(event) {
+      if (touchEndX < touchStartX) {
+          // Left swipe detected
+          // alert("Left swipe detected!");
+           touchStartX = 0;
+           touchEndX = 0;
+          return;
+      }
+      
+      if (touchEndX - touchStartX > 150) {
+          // Right swipe detected
+          alert("Right swipe detected!");
+  
+          // createTaggedInput(this);
+  
+           touchStartX = 0;
+           touchEndX = 0;
+      }
   });
 
-  function sendFileConf(){
-    let currentDate  =new Date();
-    let ISTOptions = {timeZone: 'Asia/Kolkata'};
-let currentISTTime = currentDate.toLocaleString('en-IN', ISTOptions);
-let [date,time] = currentISTTime.split(',');
-let [hour, minute, sec] = time.split(':');
-console.log(typeof minute);
-let hr = hour.trim().padStart(2 ,"0");
-let meridiem = sec.split(' ')[1];
+    let fileSpan = document.createElement('span');
+    let fileDtls = document.createElement('p');
+    let fileDownload = document.createElement('i');
+    let fileImg = document.createElement('img');
+    fileSpan.classList = 'send-file';
+    fileDtls.classList ='file-desc' ;
+    fileImg.classList = 'file-image';
+    fileDownload.classList = 'fa-regular fa-circle-down download-btn download';
+    fileDownload.setAttribute('onclick',`download(this,'${filename}','${file}')`);
+    if(extn=='pdf'){
+      fileImg.src="images/SVGfile/file-type-standard-drawing-pdf-document.svg";
+    }else if(extn=='mp3'|| extn=='wav'|| extn=='aac'||extn=='m4a'){
+      fileImg.src="images/SVGfile/file-type-standard-drawing-sound-file.svg";
+    }else if(extn=='doc' || extn=='docx'){
+      fileImg.src="images/SVGfile/file-type-standard-drawing-word-document.svg";
+    }else if(extn=='txt'){
+      fileImg.src="images/SVGfile/document-type-standard-drawing-notepad.svg";
+    }else if(extn=='xls'||extn=='xlsx'||extn=='xlsm'||extn=='xlsb'){
+      fileImg.src="images/SVGfile/document-type-standard-drawing-worksheet.svg";
+    }else if(extn=='zip'||extn=='rar'){
+      fileImg.src="images/SVGfile/file-type-standard-drawing-compressed-file.svg";
+    }else if(extn=='mp4'||extn=='3gp'){
+      fileImg.src="images/SVGfile/file-type-standard-drawing-video-file.svg";
+    }else if(extn=='pptx'){
+      fileImg.src="images/SVGfile/document-type-standard-drawing-slide.svg";
+    }else if(extn=='json'){
+      fileImg.src="images/SVGfile/json-5.svg";
+    }else{
+      fileImg.src="images/SVGfile/file-type-standard-drawing-unknown-file.svg";
+    }
+    let small = document.createElement('small');
+    small.classList='time';
+    small.innerHTML = `${hr}:${minute} ${meridiem}`;
 
-    let paramid = window.location.search;
-    let urlparams =new URLSearchParams(paramid);
-    let id =urlparams.get('id');
-    let name =localStorage.getItem("name");
+    fileDtls.innerHTML = filename;
+    fileSpan.appendChild(fileImg);
+    fileSpan.appendChild(fileDtls);
+    fileSpan.appendChild(fileDownload);
+    fileSpan.appendChild(small);
+    div.appendChild(fileSpan)
+
+    if (msgVal !== undefined){
+      let msgSpan = document.createElement('span');
+      msgSpan.classList = 'span-msg';
+      msgSpan.innerHTML = msgVal;
+      textarea.value="";
+      div.appendChild(msgSpan);
+    }
+
+    sendDiv.appendChild(div);
+    chatArea.appendChild(sendDiv);
+    playSound('new-message');
+    setTimeout(()=>{
+      scrollDown();
+    },500);
+  });
+
+
+  let fileType = false;
+  function sendFileConf(){
+                document.querySelector('.tagged-input').style.display = 'block';
+                document.getElementById('tagged-file').style .display = 'flex';
+let fileImage = document.getElementById('tagged img');
+let fileDescription = document.getElementById('tagged-desc');
 
     if(extnVal=='jpg'||extnVal=='png'||extnVal=='jpeg'||extnVal=='webp'||extnVal=='gif'){
-      let sendDiv = document.createElement('div');
-      sendDiv.classList='send-div';
-      let div = document.createElement('div');
-      div.classList='send-msg';
-      let h4 = `<h4>${name}</h4>`;
-      let img = document.createElement('img');
-      let imageSrc=dataUrlVal;
-      img.src=imageSrc;
-      div.innerHTML=h4;
-      let small = document.createElement('small');
-      small.classList='time';
-      small.innerHTML = `${hr}:${minute} ${meridiem}`
-      div.appendChild(img);
-      div.appendChild(small);
-      sendDiv.appendChild(div);
-      chatArea.appendChild(sendDiv);
-      scrollDown();
-      socket.emit('image',{from:name,to:id,file:dataUrlVal});
-      playSound('message-sent');
+     
+      fileImage.src = dataUrlVal;
+      
     }else{
-      let sendDiv = document.createElement('div');
-      sendDiv.classList='send-div';
-      let div = document.createElement('div');
-      div.classList='send-msg';
-      let h4 = `<h4>${name}</h4>`;
-      let h5 = document.createElement('h5');
-      h5.innerHTML=`Send new ${extnVal} file.`;
-      div.innerHTML=h4;
-      let img = document.createElement('img');
+
       if(extn=='pdf'){
-        img.src="images/SVGfile/file-type-standard-drawing-pdf-document.svg";
+        fileImage.src="images/SVGfile/file-type-standard-drawing-pdf-document.svg";
       }else if(extn=='mp3'|| extn=='wav'|| extn=='aac'||extn=='m4a'){
-        img.src="images/SVGfile/file-type-standard-drawing-sound-file.svg";
+        fileImage.src="images/SVGfile/file-type-standard-drawing-sound-file.svg";
       }else if(extn=='doc' || extn=='docx'){
-        img.src="images/SVGfile/file-type-standard-drawing-word-document.svg";
+        fileImage.src="images/SVGfile/file-type-standard-drawing-word-document.svg";
       }else if(extn=='txt'){
-        img.src="images/SVGfile/document-type-standard-drawing-notepad.svg";
+        fileImage.src="images/SVGfile/document-type-standard-drawing-notepad.svg";
       }else if(extn=='xls'||extn=='xlsx'||extn=='xlsm'||extn=='xlsb'){
-        img.src="images/SVGfile/document-type-standard-drawing-worksheet.svg";
+        fileImage.src="images/SVGfile/document-type-standard-drawing-worksheet.svg";
       }else if(extn=='zip'||extn=='rar'){
-        img.src="images/SVGfile/file-type-standard-drawing-compressed-file.svg";
+        fileImage.src="images/SVGfile/file-type-standard-drawing-compressed-file.svg";
       }else if(extn=='mp4'||extn=='3gp'){
-        img.src="images/SVGfile/file-type-standard-drawing-video-file.svg";
+        fileImage.src="images/SVGfile/file-type-standard-drawing-video-file.svg";
       }else if(extn=='pptx'){
-        img.src="images/SVGfile/document-type-standard-drawing-slide.svg";
+        fileImage.src="images/SVGfile/document-type-standard-drawing-slide.svg";
       }else if(extn=='json'){
-        img.src="images/SVGfile/json-5.svg";
+        fileImage.src="images/SVGfile/json-5.svg";
       }else{
-        img.src="images/SVGfile/file-type-standard-drawing-unknown-file.svg";
+        fileImage.src="images/SVGfile/file-type-standard-drawing-unknown-file.svg";
       }
-      div.appendChild(img);
-      div.appendChild(h5);
-      let small = document.createElement('small');
-      small.classList='time';
-      small.innerHTML = `${hr}:${minute} ${meridiem}`
-      div.appendChild(small);
-      sendDiv.appendChild(div);
-      chatArea.appendChild(sendDiv);
-      scrollDown();
-      socket.emit('file',{from:name,to:id,file:dataUrlVal,extn:extnVal});
-      playSound('message-sent');
+
     }
-    dataUrlVal='';
-    extnVal='';
+    fileDescription.innerHTML = fileName;
+    fileType = true;
+    
     document.getElementById('smodal').style.display='none';
+    document.getElementById('file-btn').style.display = 'none';
+    document.getElementById('send-btn').style.display = 'block';
   }
 
-  function cancelFileConf(){
-    dataUrlVal='';
-    extnVal='';
+  function cancelDeleteConf(){
+    deleteDivId = undefined;
     document.getElementById('smodal').style.display='none';
   }
 

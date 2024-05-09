@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1,user-scalable=no">
-    <title>SYI MeeT</title>
+    <title>SY MeeT</title>
     <link rel="manifest" href="manifest.json">
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -71,11 +71,11 @@
 
       <div class="strict-model" id="smodal">
         <div class="modal-content-form">
-            <!-- <span class="close up">&times;</span> -->
+            <span class="close up" onclick="cancelDeleteConf()">&times;</span>
             <dic class="data">
-                <label>Confirm send file.</label>
-                <button id="send-id" onclick="sendFileConf()">Send</button>
-                <button id="cancel File" onclick="cancelFileConf()">Cancel</button>
+                <label>Confirm delete for :</label>
+                <button id="send-id" onclick="deleteChatForMe()">Me</button>
+                <button id="cancel File" onclick="deleteChatForEveryone()" >Both</button>
             </dic>
           </div>
       </div>
@@ -154,15 +154,18 @@
                             Hi Tral Msg...Replayed message. ljsdbbhbdc bhbdcbb dkcbkb dckh bkhbckbkhc bkhb adkhbakhbb Hi Tral Msg...Replayed message. ljsdbbhbdc bhbdcbb dkcbkb dckh bkhbckbkhc bkhb adkhbakhbb
                             Hi Tral Msg...Replayed message. ljsdbbhbdc bhbdcbb dkcbkb dckh bkhbckbkhc bkhb adkhbakhbb
                         </span> -->
+
+
+
                         <!-- file send -->
-                        <!-- <span style="display: flex; align-items: center; justify-content:start; width: 100%; background-color: rgba(238, 238, 238, 0.541); padding-top: 10px; margin-bottom: 5px; padding-left: 20px;border-radius: 20px; min-width: 300px;">
-                            <img src="images/SVGfile/file-type-standard-drawing-picture-file.svg" alt="" style="height: 50px; width: 20%;">
-                            <p style="font-family: Arial, Helvetica, sans-serif; color: rgb(71, 71, 71); width:auto; height: 20px; overflow: hidden; max-width: 60%;">picture_file.svg</p>
-                            <i class="fa-regular fa-circle-down" style="position: absolute; right: 30px; font-size: 25px; color: rgb(41, 39, 39);"></i>
+                        <!-- <span class="send-file">
+                            <img class="file-image" src="images/SVGfile/file-type-standard-drawing-picture-file.svg">
+                            <p class="file-desc">picture_file.svg</p>
+                            <i class="fa-regular fa-circle-down download-btn"></i>
                             <small class="time">18:40 pm</small>
                         </span> -->
                         <!-- <span class="span-msg">
-                             ahbhka bvkbh asb h  bvhbahb vhbvhbhk ahbhka bvkbh asb h  bvhbahb vhbvhbhk ahbhka bvkbh asb h  bvhbahb vhbvhbhk
+                             jknfjkk h  bvhbahb vhbvhbhk
                           
                         </span> -->
                     <!-- </div>
@@ -173,18 +176,22 @@
                                 
                 
                 <emoji-picker class="emoji-picker"></emoji-picker>
+
                 <div class="msg-input" id="msgInput">
+
                     <div class="tagged-input">
                         <i class="fa-solid fa-circle-xmark" style="position: absolute; right: 15px; top: 15px; cursor: pointer;" onclick="closeTaggedInput()"></i>
-                        <strong style="display:block;" id="sender-name"></strong>
+                        <strong class="tagged-name" id="sender-name"></strong>
+
+                        <span class="tagged-in-file" id="tagged-file">
+                            <img class="tagged-img" id="tagged img">
+                            <p class="tagged-desc" id="tagged-desc"></p>
+                        </span>
+
                         <span id="tagged-in-msg" class="tagged-in-msg">
                         </span>
                         <input type="text" style="display: none;" id="tagged-id">
-                        <!-- file send  -->
-                        <!-- <span style="display: flex; align-items: center; justify-content:start; width: 100%;height: 100px; background-color: rgba(238, 238, 238, 0.541); padding-top: 10px; margin-bottom: 5px; padding-left: 20px;border-radius: 20px; min-width: 300px;">
-                            <img src="images/SVGfile/file-type-standard-drawing-picture-file.svg" alt="" style="height: 50px; width: 20%;">
-                            <p style="font-family: Arial, Helvetica, sans-serif; color: rgb(71, 71, 71); width:auto; height: 20px; overflow: hidden; max-width: 60%;">picture_file.svg</p>
-                        </span> -->
+                        
                 </div>
                 <div class="input-controls">
                     <i class="fa-solid fa-angle-down scroll-down" id="scroll-down" onclick="scrollDown()"></i> 

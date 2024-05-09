@@ -123,22 +123,14 @@ io.on('connection', (socket) => {
         socket.broadcast.to(to).emit('tagged-chat',{from,DivId,message,taggedId});
       });
       
-      socket.on('image',({from,to,file})=>{
+      socket.on('image',(data)=>{
       
-          socket.broadcast.to(to).emit('image',{from,file});
+          socket.broadcast.to(data.to).emit('image',data);
         
       });
 
-      // socket.on('video',({from,to,file})=>{
-      //   io.to(to).emit('video',{from,file});
-      // });
-
-      // socket.on('pdf',({from,to,file})=>{
-      //   io.to(to).emit('pdf',{from,file});
-      // });
-
-      socket.on('file',({from,to,file,extn})=>{
-        socket.broadcast.to(to).emit('file',{from,file,extn});
+      socket.on('file',(data)=>{
+        socket.broadcast.to(data.to).emit('file',data);
       });
 
             

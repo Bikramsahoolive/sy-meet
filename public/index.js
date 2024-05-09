@@ -239,7 +239,7 @@ inputType.addEventListener('click',()=>{
 
 let taggedMsgSet = false;
 function createTaggedInput(div){
-  // alert(div.querySelector('h4').innerText);
+  
   document.getElementById('tagged-id').value = div.id;
   document.getElementById('sender-name').innerText = div.querySelector('h4').innerText;
   document.getElementById('tagged-in-msg').innerText = div.querySelector('.span-msg').innerText;
@@ -251,6 +251,8 @@ function createTaggedInput(div){
     textarea.placeholder = 'Type a message...';
     textarea.value = '';
   }
+  document.getElementById('file-btn').style.display='none';
+  document.getElementById('send-btn').style.display='block';
 
   taggedMsgSet = true;
   textarea.focus();
@@ -275,9 +277,16 @@ function createTaggedInputBtn(btn){
 }
 function closeTaggedInput()
 {
+  document.getElementById('tagged-file').style .display = 'none';
   document.querySelector('.tagged-input').style.display = 'none';
   document.getElementById('tagged-in-msg').innerHTML='';
   document.getElementById('tagged-id').value = "";
+  document.getElementById('send-btn').style.display='none';
+  document.getElementById('file-btn').style.display='block';
+  dataUrlVal='';
+  extnVal='';
+  fileName='';
+  fileType=false;
   inputType.style.display = 'block'
   taggedMsgSet = false;
 }
@@ -330,25 +339,45 @@ function copyChat(btn){
     console.log(err);
   })
 }
+let deleteDivId;
 function deleteChat(divId){
+        document.getElementById('smodal').style.display='block';
+        deleteDivId=divId;
   let paramid = window.location.search;
       let urlparams =new URLSearchParams(paramid);
       let id =urlparams.get('id');
-  document.getElementById(divId).innerHTML=`<span class="dlt-msg"><i class="fa-solid fa-ban" onclick="clearChat('${divId}')"></i><h5>You deleted this msg.</h5></span>`;
-  socket.emit('delete-chat',{to:id,id:divId});
+  // document.getElementById(divId).innerHTML=`<span class="dlt-msg"><i class="fa-solid fa-ban" onclick="clearChat('${divId}')"></i><h5>You deleted this msg.</h5></span>`;
+  // socket.emit('delete-chat',{to:id,id:divId});
+}
+function deleteChatForMe(){
+  document.getElementById(deleteDivId).innerHTML=`<span class="dlt-msg"><i class="fa-solid fa-ban" onclick="clearChat('${deleteDivId}')"></i><h5>You deleted this msg.</h5></span>`;
+  deleteDivId = undefined;
+  document.getElementById('smodal').style.display='none';
+}
+
+function deleteChatForEveryone(){
+  document.getElementById(deleteDivId).innerHTML=`<span class="dlt-msg"><i class="fa-solid fa-ban" onclick="clearChat('${deleteDivId}')"></i><h5>You deleted this msg.</h5></span>`;
+ 
+  let paramid = window.location.search;
+  let urlparams =new URLSearchParams(paramid);
+  let id =urlparams.get('id');
+   socket.emit('delete-chat',{to:id,id:deleteDivId});
+  deleteDivId = undefined;
+  document.getElementById('smodal').style.display='none';
 }
 function clearChat(did){
  let deletedDiv = document.getElementById(did);
  deletedDiv.parentNode.removeChild(deletedDiv);
 }
 function taggedChat(did){
-  console.log(did);
+  // console.log(did);
 }
-function download(btn,extname,url){
+function download(btn,filename,url){
+  // console.log(btn,filename);
   btn.classList='fa-solid fa-check download';
   let link = document.createElement('a');
   link.href=url;
-  link.download = `meet_file_${extname}`;
+  link.download = filename;
   link.click();
   
   // setTimeout(() => {
@@ -400,7 +429,7 @@ function adjustTextareaHeight() {
       document.querySelector('#send-btn').style.display='block';
     }else{
       if(!taggedMsgSet){
-        inputType.style.display = 'block';
+        if(!fileType)inputType.style.display = 'block';
         document.querySelector('#file-btn').style.display='block';
         document.querySelector('#send-btn').style.display='none';
       }
