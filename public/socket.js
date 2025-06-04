@@ -611,7 +611,7 @@ let name =localStorage.getItem("name");
                                 <div><i class="fa-solid fa-trash-can" onclick="deleteChat('${divId}')"></i></div>
                                 <div onclick="copyChat(this)"><i class="fa-regular fa-clipboard"></i> <small> copy</small></div>
                             </div>`;
-          let span = document.createElement('span');
+          let span = document.createElement('pre');
           span.classList = 'span-msg';
           span.innerHTML=textarea.value;
 

@@ -702,7 +702,7 @@ let hr = hour.trim().padStart(2 ,"0");
 let meridiem = sec.split(' ')[1];
   if(val =='code|help' || val =='Code|help'){
     let message= `  input appropriate language the value as
-     lang on textbox then a pipe ' | ' and paste your code.
+     lang on textbox then a pipe ' | ' and write your code.
      
     "Markup" - markup, html, xml, svg, mathml, ssml, atom, rss
     "CSS" - css
