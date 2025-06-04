@@ -676,18 +676,18 @@ function chatToggle(){
   document.querySelector('.msg-notification').style.visibility='hidden';
   let chatbox = document.getElementById('chat-box');
   chatbox.classList.toggle('textdoc-open');
-  let chatInput = document.getElementById('msgInput');
-  chatInput.classList.toggle('msg-input-open');
-  let isChatOpen = chatbox.classList.contains('textdoc-open');
-  if (isChatOpen){
-    setTimeout(()=>{
-      document.getElementById('text').style.display = 'block';
-    },300)
+  // let chatInput = document.getElementById('msgInput');
+  // chatInput.classList.toggle('msg-input-open');
+  // let isChatOpen = chatbox.classList.contains('textdoc-open');
+  // if (isChatOpen){
+  //   setTimeout(()=>{
+  //     document.getElementById('text').style.display = 'block';
+  //   },300)
     
-  }else{
-    document.getElementById('text').style.display = 'none';
+  // }else{
+  //   document.getElementById('text').style.display = 'none';
 
-  }
+  // }
 }
 
 
