@@ -1139,3 +1139,9 @@ hangupButton.addEventListener('click', () => {
 
     
 });
+
+document.getElementById('text-msg').addEventListener('keyup', (event) => {
+  if (event.key === 'Enter' && !event.shiftKey) {
+    event.preventDefault();
+    sendMsg();
+}})

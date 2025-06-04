@@ -72,9 +72,10 @@ h1{
     display:none;
 }
 .video{
-    box-shadow: 0 0 5px 2px wheat;
+    box-shadow: 0 0 5px 2px rgba(245, 222, 179, 0.349);
     width: 20%;
-    height: 70vh;
+    height: max-content;
+    position:absolute;
     background-color: #7a7272;
     z-index: 1;
 }
@@ -88,7 +89,7 @@ h1{
 }
 .screen{
     box-shadow: 0px 35px 0 -33px wheat;
-    width: 55%;
+    width: 100%;
     height: 70vh;
     position: relative;
     background-image: url('images/video-screen.png');
@@ -109,8 +110,8 @@ h1{
 }
 .textdoc{
     box-shadow: 0 0 5px 2px wheat;
-    width: 25%;
-    height: 70vh;
+    width: 100%;
+    height: 87%;
     min-width: 310px;
     position: relative;
     background-color: #7a7272;
@@ -119,7 +120,7 @@ h1{
     
 }
 .text{
-    height: 60vh;
+    height: 75vh;
     /* border-top: 3px solid gray; */
     /* border-bottom: 3px solid gray; */
     width: 100%;
@@ -462,18 +463,14 @@ li .mic{
     transform: rotate(-270deg);
 }
 .msg-div h4{
-    width: 80%;
-    padding-bottom: 10px;
+    padding: 10px;
     color: wheat;
-    position: relative;
-    left: -20px;
+    width: 100%;
 }
 .send-msg h4{
-    width: 80%;
-    padding-bottom: 10px;
+    padding: 10px;
     color: wheat;
-    position: relative;
-    left: -20px;
+    width: 100%;
 }
 .msg-div h5{
     height: 50px;
@@ -522,6 +519,7 @@ li .mic{
     gap: 15px;
     color: rgb(38 38 38);
     cursor: pointer;
+    padding: 10px;
 }
 .opt small{
     -webkit-user-select: none;
@@ -886,7 +884,7 @@ margin: 30px 0;
     text-decoration: none;
     cursor: pointer;
   }
-@media screen and (max-width:1320px){
+@media screen and (max-width:2660px){
     #chat-btn{
         display: block;
     }
@@ -901,7 +899,7 @@ margin: 30px 0;
         right: 0;
         min-width: 0;
         width: 0;
-        max-width: 450px;
+        /* max-width: 450px; */
         transition: all ease-in-out 0.2s;
         
     }
@@ -909,14 +907,14 @@ margin: 30px 0;
         transition: all ease-in-out 0.2s;
         box-shadow: 0 0 5px 2px wheat;
         width: 100%;
-        height: 70%;
+        height: 86%;
         min-width: 310px;
         /* background-color: #e4e1dc; */
         z-index: 1;
     }
-    .screen{
+    /* .screen{
         width: 85%;
-    }
+    } */
     .msg-notification{
         display: block;
         width: 15px;
